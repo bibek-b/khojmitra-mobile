@@ -116,7 +116,7 @@ export default function ReportForm({ isEditPost }: { isEditPost: string }) {
             <Text className={`${isDarkMode && "text-[#f5f5f5]"}`}>Title</Text>
             <TextInput
               placeholder="Item title.."
-              className={`border ${isDarkMode && "border-[#f5f5f5]/40 placeholder:text-[#f5f5f5]/50 text-[#f5f5f5]"} border-black/40 rounded-xl px-2`}
+              className={`border ${isDarkMode ? "border-[#f5f5f5]/40  placeholder:text-[#f5f5f5]/50 text-[#f5f5f5]":"border-black/40"}  rounded-xl px-2`}
               value={title}
               onChangeText={setTitle}
             />
@@ -130,9 +130,9 @@ export default function ReportForm({ isEditPost }: { isEditPost: string }) {
               save="value"
               notFoundText="Not found"
               placeholder="Select Category"
-              arrowicon={<FontAwesome name="chevron-down" size={12} color="#f5f5f5" />}
-              searchicon={<FontAwesome name="search" size={12} color="#f5f5f5" /> } 
-              closeicon={<FontAwesome name="close" size={18} color="#f5f5f5" />}
+              arrowicon={<FontAwesome name="chevron-down" size={16} color={isDarkMode ? "#f5f5f5": "black"} />}
+              searchicon={<FontAwesome name="search" size={16} color={isDarkMode ? "#f5f5f5": "black"} /> } 
+              closeicon={<FontAwesome name="close" size={16} color={isDarkMode ? "#f5f5f5": "black"} />}
               searchPlaceholder=""
               inputStyles={{color : isDarkMode ? "silver": "black", paddingLeft: 4}}
               dropdownTextStyles={{color : isDarkMode ? "#f5f5f5": "black"}}
@@ -144,7 +144,7 @@ export default function ReportForm({ isEditPost }: { isEditPost: string }) {
             <Text className={`${isDarkMode && "text-[#f5f5f5]"}`}>{checkedValue} Location</Text>
             <TextInput
               placeholder={`Item ${checkedValue ? checkedValue.toLowerCase() + " location" : "location"}`}
-              className={`border ${isDarkMode && "border-[#f5f5f5]/40 placeholder:text-[#f5f5f5]/50 text-[#f5f5f5]"} border-black/40 rounded-xl px-2`}
+              className={`border ${isDarkMode ? "border-[#f5f5f5]/40  placeholder:text-[#f5f5f5]/50 text-[#f5f5f5]":"border-black/40"}  rounded-xl px-2`}
               value={location}
               onChangeText={setLocation}
             />
@@ -152,7 +152,7 @@ export default function ReportForm({ isEditPost }: { isEditPost: string }) {
           </View>
           <View className="gap-2 ">
             <Text className={`${isDarkMode && "text-[#f5f5f5]"}`}>{checkedValue} Date</Text>
-            <View className={`border ${isDarkMode && "border-[#f5f5f5]/40 placeholder:text-[#f5f5f5]/50 text-[#f5f5f5]"} border-black/40 rounded-xl px-2`}>
+            <View className={`border ${isDarkMode ? "border-[#f5f5f5]/40  placeholder:text-[#f5f5f5]/50 text-[#f5f5f5]":"border-black/40"}  rounded-xl px-2`}>
               <TextInput
                 className={`w-[80%] ${isDarkMode && "text-[#f5f5f5]"}`}
                 value={date.toDateString()}
@@ -183,7 +183,7 @@ export default function ReportForm({ isEditPost }: { isEditPost: string }) {
             <Text className={`${isDarkMode && "text-[#f5f5f5]"}`}>Description</Text>
             <TextInput
               placeholder="Description.."
-              className={`border ${isDarkMode && "border-[#f5f5f5]/40 placeholder:text-[#f5f5f5] text-[#f5f5f5]"} border-black/40 rounded-xl px-2  min-h-[100px]`}
+              className={`border ${isDarkMode ? "border-[#f5f5f5]/40  placeholder:text-[#f5f5f5]/50 text-[#f5f5f5]":"border-black/40"} rounded-xl px-2  min-h-[100px]`}
               multiline={true}
               textAlignVertical="top"
               value={description}
@@ -225,7 +225,7 @@ export default function ReportForm({ isEditPost }: { isEditPost: string }) {
 
           <View className="flex-row gap-6">
             <TouchableOpacity
-              className={`border ${isDarkMode && "border-[#f5f5f5]/40 placeholder:text-[#f5f5f5] text-[#f5f5f5]"} border-black/40 rounded p-2 w-32`}
+              className={`border ${isDarkMode ? "border-[#f5f5f5]/40  placeholder:text-[#f5f5f5]/50 text-[#f5f5f5]":"border-black/40"} rounded p-2 w-32`}
               onPress={() => router.back()}
             >
               <Text className={`text-center text-[16px] ${isDarkMode && "text-[#f5f5f5]"}`}>Cancel</Text>

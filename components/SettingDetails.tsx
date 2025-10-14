@@ -39,7 +39,6 @@ export default function SettingDetails() {
   const { isDarkMode } = useContext(ThemeContext);
    const colorScheme = useColorScheme();
 
-   console.log(colorScheme)
   const handlePress = (label: string) => {
     if(label === "Language") {
       router.push('/languageScreen');

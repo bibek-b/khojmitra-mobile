@@ -1,0 +1,14 @@
+import ReportForm from "@/components/ReportForm";
+import { useLocalSearchParams, useNavigation } from "expo-router";
+import { useLayoutEffect } from "react";
+
+export default function AddReportScreen ()  {
+    const {isEditPost} = useLocalSearchParams();
+    const navigation = useNavigation();
+    useLayoutEffect(() => {
+        navigation.setOptions({
+            title: isEditPost === "true" ? "Edit Report" : "Add Report"
+        })
+    },[navigation])
+    return <ReportForm  isEditPost={Array.isArray(isEditPost) ? isEditPost[0] : isEditPost }/>
+}

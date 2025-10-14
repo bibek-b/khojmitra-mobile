@@ -2,15 +2,11 @@ import Feed from "@/components/Feed";
 import { ScrollView, Text, View } from "react-native";
 import Fab from "../common/Fab";
 import { postData } from "@/constants/dummyData";
-import { useContext } from "react";
-import { ThemeContext } from "@/context/ThemeContext";
 
-export default function HomeTab() {
-  const { isDarkMode}  = useContext(ThemeContext);
+export default function MyPostsTab() {
   return (
     <View>
       <ScrollView showsVerticalScrollIndicator={false}>
-        <View className={`h-[3px] w-full bg-black/30 ${isDarkMode && "bg-white/30"}`} />
         {postData.map((data) => (
           <View key={data.id} className=" justify-center w-full">
             <Feed
@@ -23,8 +19,9 @@ export default function HomeTab() {
               date={data.date}
               description={data.description}
               images={data.images}
+              parent="myPost"
             />
-            <View className={`h-[3px] w-full bg-black/30 mt-2 ${isDarkMode && "bg-white/30"}`} />
+            <Text className="h-[3px] w-full bg-black/30 mt-2" />
           </View>
         ))}
       </ScrollView>

@@ -8,7 +8,7 @@ import {
 } from "@expo/vector-icons";
 import { router } from "expo-router";
 import { useContext } from "react";
-import { Text, TouchableOpacity, useColorScheme, View } from "react-native";
+import { Text, TouchableOpacity, View } from "react-native";
 
 const options = [
   {
@@ -37,7 +37,6 @@ const options = [
 
 export default function SettingDetails() {
   const { isDarkMode } = useContext(ThemeContext);
-   const colorScheme = useColorScheme();
 
   const handlePress = (label: string) => {
     if(label === "Language") {

@@ -2,8 +2,9 @@ import { useContext, useState } from "react";
 import { Image, KeyboardAvoidingView, Platform, Text, TextInput, TouchableOpacity, View } from "react-native";
 import { Link } from "expo-router";
 import { AuthTypes } from "@/types/common";
-import CommonImagePicker from "@/app/common/ImagePicker";
+// import CommonImagePicker from "@/components/common/ImagePicker";
 import { ThemeContext } from "@/context/ThemeContext";
+import ProfileImage from "./ProfileImage";
 
 export default function Form({ title, onSubmit, errors, isSignIn }: AuthTypes) {
   const [image, setImage] = useState<string | null>(null);
@@ -20,7 +21,7 @@ export default function Form({ title, onSubmit, errors, isSignIn }: AuthTypes) {
         {title}
       </Text>
       <View className={` rounded-lg shadow px-4 py-10 gap-4 ${isDarkMode ? "bg-[#242424]": "bg-white"}`}>
-        {!isSignIn && <CommonImagePicker image={image!} setImage={setImage} />}
+        {!isSignIn && <ProfileImage  />}
 
         <View className="gap-4">
           {!isSignIn && (

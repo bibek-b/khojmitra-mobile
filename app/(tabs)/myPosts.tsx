@@ -1,6 +1,6 @@
-import Feed from "@/components/Feed";
+import Feed from "@/components/feed/Feed";
 import { ScrollView, Text, View } from "react-native";
-import Fab from "../common/Fab";
+import Fab from "../../components/common/Fab";
 import { postData } from "@/constants/dummyData";
 
 export default function MyPostsTab() {

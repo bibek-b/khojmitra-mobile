@@ -6,13 +6,11 @@ import {
   TouchableOpacity,
   View,
 } from "react-native";
-import ImagePicker from "./common/ImagePicker";
 import { useContext, useState } from "react";
 import { router } from "expo-router";
 import { ThemeContext } from "@/context/ThemeContext";
-
+import ProfileImage from "@/components/ProfileImage";
 export default function EditProfile() {
-  const [image, setImage] = useState<string | null>(null);
   const [fullName, setFullName] = useState<string | "">("");
   const { isDarkMode } = useContext(ThemeContext);
   return (
@@ -21,7 +19,7 @@ export default function EditProfile() {
       className={`flex-1 justify-center ${isDarkMode && "bg-[#1a1a1a]"} items-center`}
     >
       <View className={` ${isDarkMode ? "bg-[#242424]": "bg-white"} w-[80%]  px-4 py-6 rounded-lg shadow gap-4`}>
-        <ImagePicker image={image!} setImage={setImage} />
+        <ProfileImage  />
 
         <View className="gap-2">
           <Text className={`${isDarkMode && "text-[#f5f5f5]"}`}>Full Name</Text>

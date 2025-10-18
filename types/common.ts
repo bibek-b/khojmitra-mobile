@@ -1,3 +1,4 @@
+import React from "react";
 import { Animated } from "react-native";
 
 export type AnimatedStyleProp = Animated.AnimatedInterpolation<string | number>;
@@ -57,11 +58,10 @@ export type AuthSubmitFormPropTypes = {
   confirmPassword?: string;
 };
 
-
 export type ImagePickerPropTypes = {
-  image?: string; 
+  image?: string;
   setImage?: (value: string | null) => void;
-} 
+};
 
 export type AddEditReportFormTypes = {
   checkedValue?: string | null;
@@ -70,9 +70,26 @@ export type AddEditReportFormTypes = {
   location?: string;
   date?: Date;
   description?: string;
-}
+};
 
 export type ThemeContextType = {
   isDarkMode: boolean;
+};
 
-}
+export type PickImagesPropsType = {
+  selectionLimit?: number;
+  setSelectedImages?: React.Dispatch<React.SetStateAction<string[]>>;
+  setImage?:  React.Dispatch<React.SetStateAction<string>>;
+  singleImage: boolean;
+
+};
+
+export type ImagePickerModalPropTypes = {
+  visible: boolean;
+  animationType: "none" | "slide" | "fade";
+  onClose: () => void;
+  selectionLimit: number;
+  setSelectedImages?: React.Dispatch<React.SetStateAction<string[]>>;
+  setImage?: React.Dispatch<React.SetStateAction<string>>;
+  singleImage: boolean;
+};

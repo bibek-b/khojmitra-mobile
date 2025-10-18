@@ -1,4 +1,4 @@
-import Feed from "@/components/Feed";
+import Feed from "@/components/feed/Feed";
 import UserProfile from "@/components/UserProfile";
 import { postData } from "@/constants/dummyData";
 import { ThemeContext } from "@/context/ThemeContext";

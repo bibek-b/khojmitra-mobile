@@ -1,7 +1,8 @@
-import { Stack, useLocalSearchParams } from "expo-router";
+import { Stack } from "expo-router";
 import "@/global.css";
 import { ThemeContext, ThemeContextProvider } from "@/context/ThemeContext";
 import { useContext } from "react";
+import { NotificationContextProvider } from "@/context/NotificationContext";
 
 function LayoutWithTheme() {
   const { isDarkMode } = useContext(ThemeContext);
@@ -95,8 +96,10 @@ function LayoutWithTheme() {
 
 export default function RootLayout() {
   return (
-    <ThemeContextProvider>
+    <NotificationContextProvider>
+      <ThemeContextProvider>
       <LayoutWithTheme />
     </ThemeContextProvider>
+    </NotificationContextProvider>
   );
 }

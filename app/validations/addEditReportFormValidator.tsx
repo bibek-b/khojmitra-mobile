@@ -1,6 +1,6 @@
 import { AddEditReportFormTypes } from "@/types/common";
 
-export const AddEditReportFormValidator = ({
+ const AddEditReportFormValidator = ({
   checkedValue,
   title,
   selCategory,
@@ -21,3 +21,5 @@ export const AddEditReportFormValidator = ({
         return { valid: false, message: "Descripton can be up to 200 chars or fewer."}
     }
 };
+
+export default AddEditReportFormValidator;

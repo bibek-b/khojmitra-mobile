@@ -19,7 +19,7 @@ import {
 import ImageViewing from "react-native-image-viewing";
 import { useContext } from "react";
 import { ThemeContext } from "@/context/ThemeContext";
-import ProofForm from './ProofForm';
+import ProofForm from "./ProofForm";
 
 const moreOptions = [
   { id: 1, label: "Edit Post", icon: <Entypo name="edit" size={20} /> },
@@ -97,11 +97,11 @@ export default function Feed({
       </Modal>
 
       <Modal visible={isPostBtnClicked} transparent={true} animationType="fade">
-         <View className="items-center justify-center flex-1 bg-black/20">
-                <TouchableWithoutFeedback>
-                  <ProofForm />
-                </TouchableWithoutFeedback>
-          </View>         
+        <TouchableWithoutFeedback onPress={() => setIsPostBtnClicked(false)}>
+          <View className="flex-1 items-center justify-center  bg-black/20">
+              <ProofForm setIsPostBtnClicked={setIsPostBtnClicked} />
+          </View>
+        </TouchableWithoutFeedback>
       </Modal>
       <ImageViewing
         images={images.map((img) => ({ uri: img }))}
@@ -213,8 +213,10 @@ export default function Feed({
               </TouchableOpacity>
             ))}
           </View>
-          {/* <View className="flex-row justify-between mt-6"> */}
-          <TouchableOpacity onPress={() => setIsPostBtnClicked(true)} className="flex-row items-center gap-3 justify-start pt-6">
+          <TouchableOpacity
+            onPress={() => setIsPostBtnClicked(true)}
+            className="flex-row items-center gap-3 justify-start pt-6"
+          >
             {type === "Lost" ? (
               <FontAwesome5 name="handshake" size={24} color="white" />
             ) : (
@@ -224,8 +226,6 @@ export default function Feed({
               {type === "Lost" ? "I Found This" : "This is Mine"}
             </Text>
           </TouchableOpacity>
-
-          {/* </View> */}
         </View>
       </View>
     </View>

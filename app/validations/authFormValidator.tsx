@@ -1,6 +1,5 @@
 import { AuthSubmitFormPropTypes } from "@/types/common";
-
-export const AuthFormValidator = ({
+ const AuthFormValidator = ({
   fullName,
   email,
   password,
@@ -19,6 +18,7 @@ export const AuthFormValidator = ({
   if (password.trim().length < 8 || confirmPassword.trim().length < 8) {
     return { valid: false, message: "Passwords must be 5 chars or greater!" };
   }
+  
 
   if (password.trim() !== confirmPassword.trim()) {
     return { valid: false, message: "Passwords do not match!" };
@@ -28,3 +28,6 @@ export const AuthFormValidator = ({
     return { valid: false, message:"Invalid email."}
   }
 };
+
+
+export default AuthFormValidator;

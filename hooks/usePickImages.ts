@@ -4,10 +4,13 @@ import { useCallback } from "react";
 
 export default function usePickImages({
   selectionLimit,
-  setSelectedImages,
+  setImages,
   setImage,
+  images,
   singleImage
 }: PickImagesPropsType) {
+
+
   const pickImages = useCallback(
     async (source: "camera" | "gallery") => {
       let result;
@@ -28,7 +31,7 @@ export default function usePickImages({
           if (!result.canceled) {
             if (!singleImage) {
               const newImages = result?.assets.map((asset) => asset.uri);
-              setSelectedImages && setSelectedImages((prev) => [...prev, ...newImages]);
+              setImages  && setImages((prev) => [...prev, ...newImages]);
             } else {
               const newImg = result?.assets[0].uri;
               setImage && setImage(newImg);
@@ -47,13 +50,12 @@ export default function usePickImages({
             allowsEditing: true,
             allowsMultipleSelection: true,
             quality: 1,
-            selectionLimit: selectionLimit,
+            selectionLimit: selectionLimit && (selectionLimit - images.length),
           });
-          console.log(result.assets);
             if (!result.canceled) {
               if (!singleImage) {
                 const newImages = result?.assets.map((asset) => asset.uri);
-                setSelectedImages && setSelectedImages((prev) => [...prev, ...newImages]);
+                setImages  && setImages((prev) => [...prev, ...newImages]);
               } else {
                 const newImg = result?.assets[0].uri;
                 setImage && setImage(newImg);
@@ -62,7 +64,7 @@ export default function usePickImages({
         }
       } catch (error) {}
     },
-    [selectionLimit, setSelectedImages, setImage]
+    [selectionLimit, setImages, setImage, images]
   );
 
   return { pickImages };

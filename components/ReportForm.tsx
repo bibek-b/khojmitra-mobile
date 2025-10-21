@@ -23,8 +23,9 @@ import * as ImagePicker from "expo-image-picker";
 import { router } from "expo-router";
 import { AddEditReportFormTypes } from "@/types/common";
 import { ThemeContext } from "@/context/ThemeContext";
-import usePickImages from "@/hooks/usePickImages";
 import ImagePickerModal from "./common/ImagePickerModal";
+import UploadImgBtn from "./common/UploadImgBtn";
+import DisplayImages from "./common/DisplayImages";
 
 const reportType = [
   { id: 1, sign: "🔴", label: "Lost" },
@@ -37,19 +38,12 @@ export default function ReportForm({ isEditPost }: { isEditPost: string }) {
   const [selCategory, setSelCategory] = useState("");
   const [date, setDate] = useState(new Date());
   const [showDatePicker, setShowDatePicker] = useState(false);
-  const [selectedImages, setSelectedImages] = useState<string[]>([]);
+  const [images, setImages] = useState<string[]>([]);
   const [title, setTitle] = useState("");
   const [location, setLocation] = useState("");
   const [description, setDescription] = useState("");
   const [errors, setErrors] = useState<AddEditReportFormTypes>({});
-  const [isUploadImgClicked, setIsUploadImgClicked] = useState(false);
-
-  // const {pickImages} = usePickImages({})
-
-  const removeSelImages = (img: string) => {
-    const updatedImages = selectedImages.filter((sm) => sm !== img);
-    setSelectedImages(updatedImages);
-  };
+  const [isModalOpen, setIsModalOpen] = useState(false);
 
   const handleSubmit = () => {
     const newErrors: AddEditReportFormTypes = {};
@@ -234,47 +228,14 @@ export default function ReportForm({ isEditPost }: { isEditPost: string }) {
           </View>
 
           <View className="gap-2 w-full">
-            <Text className={`${isDarkMode && "text-[#f5f5f5]"}`}>
-              Image(s)
-            </Text>
-            {selectedImages.map((img, idx) => (
-              <View
-                key={idx}
-                className="flex-row gap-4 bg-[#f5f5f5] rounded shadow"
-              >
-                <Image
-                  source={{ uri: img }}
-                  className=" w-full h-[200px]  my-8  rounded-xl"
-                />
-                <TouchableOpacity
-                  onPress={() => removeSelImages(img)}
-                  className="absolute right-0 -top-2 "
-                >
-                  <MaterialIcons
-                    name="close"
-                    size={28}
-                    className={`${isDarkMode && "mt-2"}`}
-                  />
-                </TouchableOpacity>
-              </View>
-            ))}
-
             <ImagePickerModal
-              visible={isUploadImgClicked}
-              animationType="slide"
+              visible={isModalOpen}
               selectionLimit={4}
-              onClose={() => setIsUploadImgClicked(false)}
-              setSelectedImages = {setSelectedImages}
+              onClose={() => setIsModalOpen(false)}
+              setImages={setImages}
             />
-            <TouchableOpacity
-              className={`${selectedImages.length == 4 ? "bg-[#4a4949]" : "bg-[#1976D2]"} p-2 rounded`}
-              onPress={() => setIsUploadImgClicked(true)}
-              disabled={selectedImages.length == 4}
-            >
-              <Text className="text-xl text-[#f5f5f5] text-center">
-                Upload image(s)
-              </Text>
-            </TouchableOpacity>
+            <DisplayImages images={images} setImages={setImages} />
+            <UploadImgBtn images={images} setIsModalOpen={setIsModalOpen} />
           </View>
 
           <View className="flex-row gap-6">

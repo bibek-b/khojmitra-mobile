@@ -17,13 +17,6 @@ export type AnimateValuePropsType = {
   useNativeDriver: boolean;
 };
 
-export type NotificationType = {
-  username: string;
-  message: string;
-  date: string;
-  type: string;
-};
-
 export type PostType = {
   username: string;
   type: string;
@@ -78,18 +71,46 @@ export type ThemeContextType = {
 
 export type PickImagesPropsType = {
   selectionLimit?: number;
-  setSelectedImages?: React.Dispatch<React.SetStateAction<string[]>>;
-  setImage?:  React.Dispatch<React.SetStateAction<string>>;
-  singleImage: boolean;
-
+  setImages?: React.Dispatch<React.SetStateAction<string[]>>;
+  setImage?: React.Dispatch<React.SetStateAction<string>>;
+  singleImage?: boolean;
+  images: string[];
 };
 
 export type ImagePickerModalPropTypes = {
   visible: boolean;
-  animationType: "none" | "slide" | "fade";
   onClose: () => void;
   selectionLimit: number;
-  setSelectedImages?: React.Dispatch<React.SetStateAction<string[]>>;
+  setImages?: React.Dispatch<React.SetStateAction<string[]>>;
   setImage?: React.Dispatch<React.SetStateAction<string>>;
-  singleImage: boolean;
+  singleImage?: boolean;
+  images: string[];
+};
+
+export type UploadImgBtnProp = {
+  images: string[];
+  setIsModalOpen: React.Dispatch<React.SetStateAction<boolean>>;
+};
+
+export type DisplayImagesProps = {
+  images: string[];
+  setImages: React.Dispatch<React.SetStateAction<string[]>>;
+};
+
+export type NotificationType = {
+  type?: "success" | "error" | "info";
+  message?: string;
+  visible?: boolean;
+};
+
+export type NotificationContextType = {
+  notification?: NotificationType ;
+  setNotification?: React.Dispatch<React.SetStateAction<NotificationType | undefined>>;
+  showNotification?: ({ type, message }: NotificationPayload) => void;
+  // hideNotification?: () => void;
+};
+
+export type NotificationPayload = {
+  type?: "success" | "error" | "info";
+  message?: string;
 };

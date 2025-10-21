@@ -12,17 +12,18 @@ import {
 } from "react-native";
 const ImagePickerModal = ({
   visible,
-  animationType,
   onClose,
-  setSelectedImages,
+  setImages,
   selectionLimit = 1,
   setImage,
+  images,
   singleImage
 }: ImagePickerModalPropTypes) => {
   const { isDarkMode } = useContext(ThemeContext);
   const { pickImages } = usePickImages({
     selectionLimit,
-    setSelectedImages,
+    setImages,
+    images,
     setImage,
     singleImage
   });
@@ -37,7 +38,7 @@ const ImagePickerModal = ({
   };
 
   return (
-    <Modal visible={visible} transparent={true} animationType={animationType}>
+    <Modal visible={visible} transparent={true} animationType="slide">
       <TouchableWithoutFeedback onPress={onClose}>
         <View className="flex-1 bg-black/20">
           <TouchableWithoutFeedback>

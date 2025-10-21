@@ -14,7 +14,6 @@ export default function ProfileImage() {
     <View>
       <ImagePickerModal
         visible={isModalOpen}
-        animationType="slide"
         onClose={() => setIsModalOpen(false)}
         setImage={setImage}
         selectionLimit={1}

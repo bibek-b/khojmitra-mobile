@@ -104,10 +104,12 @@ export type NotificationType = {
 };
 
 export type NotificationContextType = {
-  notification?: NotificationType ;
-  setNotification?: React.Dispatch<React.SetStateAction<NotificationType | undefined>>;
+  notification?: NotificationType;
+  setNotification?: React.Dispatch<
+    React.SetStateAction<NotificationType | undefined>
+  >;
   showNotification?: ({ type, message }: NotificationPayload) => void;
-  // hideNotification?: () => void;
+  hideNotification?: () => void;
 };
 
 export type NotificationPayload = {
@@ -116,9 +118,10 @@ export type NotificationPayload = {
 };
 
 export type ProofFormContextType = {
-  isFormVisible?: boolean ;
+  isFormVisible?: boolean;
   setIsFormVisible?: React.Dispatch<React.SetStateAction<boolean>>;
   showForm?: () => void;
   hideForm?: () => void;
+  proofFormType?: "lost" | "found" | string;
+  setProofFormType?: React.Dispatch<React.SetStateAction< string>>;
 };
-

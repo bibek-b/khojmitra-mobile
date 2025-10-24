@@ -20,7 +20,8 @@ import { ProofFormContext } from "@/context/ProofFormContext";
 
 export default function ProofForm() {
   const { isDarkMode } = useContext(ThemeContext);
-  const { isFormVisible, hideForm } = useContext(ProofFormContext);
+  const { isFormVisible, hideForm, proofFormType } = useContext(ProofFormContext);
+
   const { showNotification } = useContext(NotificationContext);
   const [images, setImages] = useState<string[]>([]);
   const [isModalOpen, setIsModalOpen] = useState(false);
@@ -61,32 +62,27 @@ export default function ProofForm() {
         <View className="w-full h-full absolute top-0 left-0 bg-black/60 justify-center items-center backdrop-blur-3xl">
           <TouchableWithoutFeedback>
             <KeyboardAvoidingView
-              behavior={Platform.OS === "android" ? "padding" : "height"}
-            >
+              behavior={Platform.OS === "android" ? "padding" : "height"}>
               <Animated.View
                 style={{ transform: [{ scale: scaleAnim }] }}
                 className={`w-[330px] min-h-80  max-h-full  rounded-lg ${isDarkMode ? "bg-[#1e1e1e] " : "bg-gray-50"}   p-2`}
               >
                 <ScrollView showsVerticalScrollIndicator={false}>
-                  <View className="flex-row justify-between my-4">
-                    <Text className="dark:text-[#f5f5f5] text-4xl text-center font-bold">
-                      Found Proof Form
+                  <View className="my-4 gap-2">
+                    <Text className="dark:text-[#f5f5f5] text-4xl text-center font-bold capitalize tracking-widest">
+                      {proofFormType} proof form
                     </Text>
-                    <Feather
-                      name="x"
-                      size={28}
-                      color={isDarkMode ? "#e0e0e0" : "gray"}
-                      onPress={() => closeFormWithAnim(hideForm)}
-                    />
+                    <Text className="dark:text-white opacity-60 text-center">You can submit with both or only one fields.</Text>
+                    <View className="h-[2px] w-full bg-[#1976D2]"/>
                   </View>
 
                   <View className="gap-4 my-4">
                     <Text className="dark:text-[#f5f5f5]">
-                      Can you describe what you found?
+                      Can you describe what you {proofFormType}?
                     </Text>
                     <TextInput
                       className={` border ${isDarkMode ? "border-[#f5f5f5]/40 text-[#f5f5f5]  placeholder:text-[#f5f5f5]/50 " : "border-black/40"} p-4  rounded-lg h-40`}
-                      placeholder="Describe what you have found.."
+                      placeholder={`Describe what you have ${proofFormType}..`}
                       textAlignVertical="top"
                       multiline={true}
                       onChangeText={setDescription}
@@ -103,7 +99,7 @@ export default function ProofForm() {
 
                   <View className="gap-4 my-4">
                     <Text className="dark:text-[#f5f5f5]">
-                      Can you upload the image(s) of what you've found?
+                      Can you upload the image(s) of what you've {proofFormType}?
                     </Text>
                     <DisplayImages images={images} setImages={setImages} />
                     <UploadImgBtn

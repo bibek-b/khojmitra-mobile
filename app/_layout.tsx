@@ -2,13 +2,14 @@ import { Stack } from "expo-router";
 import "@/global.css";
 import { ThemeContext, ThemeContextProvider } from "@/context/ThemeContext";
 import { useContext } from "react";
-import { NotificationContextProvider } from "@/context/NotificationContext";
-import { ProofFormContext, ProofFormContextProvider } from "@/context/ProofFormContext";
+import { NotificationContext, NotificationContextProvider } from "@/context/NotificationContext";
+import { ProofFormContextProvider } from "@/context/ProofFormContext";
 import ProofForm from "@/components/feed/ProofForm";
 import PopupNotification from "@/components/common/PopupNotification";
 
 function LayoutWithTheme() {
   const { isDarkMode } = useContext(ThemeContext);
+
 
   return (
     <Stack

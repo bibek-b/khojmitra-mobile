@@ -45,7 +45,7 @@ export default function Feed({
   const [moreOptionOpen, setMoreOptionOpen] = useState(false);
 
   const { isDarkMode } = useContext(ThemeContext);
-  const { showForm } = useContext(ProofFormContext);
+  const { showForm, setProofFormType } = useContext(ProofFormContext);
 
   const handleMorePress = () => {
     setMoreOptionOpen(true);
@@ -209,7 +209,7 @@ export default function Feed({
             ))}
           </View>
           <TouchableOpacity
-            onPress={showForm}
+            onPress={() => (showForm?.(), setProofFormType?.(type.toLowerCase()))}
             className="flex-row items-center gap-3 justify-start pt-6"
           >
             {type === "Lost" ? (

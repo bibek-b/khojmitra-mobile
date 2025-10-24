@@ -20,6 +20,7 @@ import ImageViewing from "react-native-image-viewing";
 import { useContext } from "react";
 import { ThemeContext } from "@/context/ThemeContext";
 import ProofForm from "./ProofForm";
+import { ProofFormContext } from "@/context/ProofFormContext";
 
 const moreOptions = [
   { id: 1, label: "Edit Post", icon: <Entypo name="edit" size={20} /> },
@@ -42,9 +43,9 @@ export default function Feed({
   const [selectedImage, setSelectedImage] = useState<string | null>(null);
   const isLost = type === "Lost";
   const [moreOptionOpen, setMoreOptionOpen] = useState(false);
-  const [isPostBtnClicked, setIsPostBtnClicked] = useState(false);
 
   const { isDarkMode } = useContext(ThemeContext);
+  const { showForm } = useContext(ProofFormContext);
 
   const handleMorePress = () => {
     setMoreOptionOpen(true);
@@ -96,13 +97,7 @@ export default function Feed({
         </TouchableWithoutFeedback>
       </Modal>
 
-      <Modal visible={isPostBtnClicked} transparent={true} animationType="fade">
-        <TouchableWithoutFeedback onPress={() => setIsPostBtnClicked(false)}>
-          <View className="flex-1 items-center justify-center  bg-black/20">
-              <ProofForm setIsPostBtnClicked={setIsPostBtnClicked} />
-          </View>
-        </TouchableWithoutFeedback>
-      </Modal>
+      
       <ImageViewing
         images={images.map((img) => ({ uri: img }))}
         imageIndex={images.findIndex((img) => img === selectedImage)}
@@ -214,7 +209,7 @@ export default function Feed({
             ))}
           </View>
           <TouchableOpacity
-            onPress={() => setIsPostBtnClicked(true)}
+            onPress={showForm}
             className="flex-row items-center gap-3 justify-start pt-6"
           >
             {type === "Lost" ? (

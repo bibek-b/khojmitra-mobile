@@ -1,4 +1,3 @@
-import PopupNotification from "@/components/common/PopupNotification";
 import { NotificationContextType, NotificationPayload, NotificationType } from "@/types/common";
 import React, { createContext, useState } from "react";
 
@@ -25,7 +24,6 @@ export const NotificationContextProvider = ({
   return (
     <NotificationContext.Provider value={{ notification, setNotification, showNotification }}>
       {children}
-      <PopupNotification />
     </NotificationContext.Provider>
   );
 };

@@ -3,6 +3,9 @@ import "@/global.css";
 import { ThemeContext, ThemeContextProvider } from "@/context/ThemeContext";
 import { useContext } from "react";
 import { NotificationContextProvider } from "@/context/NotificationContext";
+import { ProofFormContext, ProofFormContextProvider } from "@/context/ProofFormContext";
+import ProofForm from "@/components/feed/ProofForm";
+import PopupNotification from "@/components/common/PopupNotification";
 
 function LayoutWithTheme() {
   const { isDarkMode } = useContext(ThemeContext);
@@ -96,10 +99,14 @@ function LayoutWithTheme() {
 
 export default function RootLayout() {
   return (
-    <NotificationContextProvider>
+   <ProofFormContextProvider>
+     <NotificationContextProvider>
       <ThemeContextProvider>
       <LayoutWithTheme />
+      <ProofForm />
+      <PopupNotification />
     </ThemeContextProvider>
     </NotificationContextProvider>
+   </ProofFormContextProvider>
   );
 }

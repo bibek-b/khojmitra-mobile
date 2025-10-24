@@ -114,3 +114,11 @@ export type NotificationPayload = {
   type?: "success" | "error" | "info";
   message?: string;
 };
+
+export type ProofFormContextType = {
+  isFormVisible?: boolean ;
+  setIsFormVisible?: React.Dispatch<React.SetStateAction<boolean>>;
+  showForm?: () => void;
+  hideForm?: () => void;
+};
+

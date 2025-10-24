@@ -39,6 +39,8 @@ export default function ProofForm() {
   };
 
   const closeFormWithAnim = (onComplete?: () => void) => {
+    setDescription('');
+    setImages([]);
     Animated.timing(scaleAnim, {
       toValue: 0.1,
       duration: 300,
@@ -108,7 +110,7 @@ export default function ProofForm() {
                     />
                   </View>
 
-                  <View className="flex-row gap-6 my-4">
+                  <View className="flex-row justify-between my-4">
                     <TouchableOpacity
                       className={`border ${isDarkMode ? "border-[#f5f5f5]/40  placeholder:text-[#f5f5f5]/50 text-[#f5f5f5]" : "border-black/40"} rounded p-2 w-32`}
                       onPress={() => closeFormWithAnim(hideForm)}

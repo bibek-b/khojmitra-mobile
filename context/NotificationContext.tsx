@@ -18,7 +18,7 @@ export const NotificationContextProvider = ({
     setNotification({ visible: true, type, message });
   };
   const hideNotification = () => {
-    setNotification(prev => ({...prev, visible: false}))
+    setNotification(undefined)
   }
 
   return (

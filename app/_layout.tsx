@@ -2,14 +2,13 @@ import { Stack } from "expo-router";
 import "@/global.css";
 import { ThemeContext, ThemeContextProvider } from "@/context/ThemeContext";
 import { useContext } from "react";
-import { NotificationContext, NotificationContextProvider } from "@/context/NotificationContext";
+import { NotificationContextProvider } from "@/context/NotificationContext";
 import { ProofFormContextProvider } from "@/context/ProofFormContext";
 import ProofForm from "@/components/feed/ProofForm";
 import PopupNotification from "@/components/common/PopupNotification";
 
 function LayoutWithTheme() {
   const { isDarkMode } = useContext(ThemeContext);
-
 
   return (
     <Stack
@@ -64,18 +63,17 @@ function LayoutWithTheme() {
         options={{
           headerShown: false,
           contentStyle: {
-            backgroundColor: isDarkMode ? "#1a1a1a": "white"
-          }
+            backgroundColor: isDarkMode ? "#1a1a1a" : "white",
+          },
         }}
-
       />
       <Stack.Screen
         name="signInScreen"
         options={{
           headerShown: false,
-           contentStyle: {
-            backgroundColor: isDarkMode ? "#1a1a1a": "white"
-          }
+          contentStyle: {
+            backgroundColor: isDarkMode ? "#1a1a1a" : "white",
+          },
         }}
       />
       <Stack.Screen
@@ -91,7 +89,6 @@ function LayoutWithTheme() {
         options={{
           title: "",
           headerTintColor: isDarkMode ? "white" : "black",
-
         }}
       />
     </Stack>
@@ -100,14 +97,14 @@ function LayoutWithTheme() {
 
 export default function RootLayout() {
   return (
-   <ProofFormContextProvider>
-     <NotificationContextProvider>
-      <ThemeContextProvider>
-      <LayoutWithTheme />
-      <ProofForm />
-      <PopupNotification />
-    </ThemeContextProvider>
-    </NotificationContextProvider>
-   </ProofFormContextProvider>
+    <ProofFormContextProvider>
+      <NotificationContextProvider>
+        <ThemeContextProvider>
+          <LayoutWithTheme />
+          <ProofForm />
+          <PopupNotification />
+        </ThemeContextProvider>
+      </NotificationContextProvider>
+    </ProofFormContextProvider>
   );
 }

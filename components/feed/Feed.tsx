@@ -19,7 +19,6 @@ import {
 import ImageViewing from "react-native-image-viewing";
 import { useContext } from "react";
 import { ThemeContext } from "@/context/ThemeContext";
-import ProofForm from "./ProofForm";
 import { ProofFormContext } from "@/context/ProofFormContext";
 
 const moreOptions = [
@@ -105,6 +104,7 @@ export default function Feed({
         onRequestClose={() => setSelectedImage(null)}
         swipeToCloseEnabled={true}
         doubleTapToZoomEnabled={true}
+        animationType="slide"
         HeaderComponent={({ imageIndex }) => (
           <View
             style={{
@@ -213,9 +213,9 @@ export default function Feed({
             className="flex-row items-center gap-3 justify-start pt-6"
           >
             {type === "Lost" ? (
-              <FontAwesome5 name="handshake" size={24} color="white" />
+              <FontAwesome5 name="handshake" size={24} color={isDarkMode ? "white" : "black"} />
             ) : (
-              <Feather name="user-check" size={24} color="white" />
+              <Feather name="user-check" size={24} color={isDarkMode ? "white" : "black"} />
             )}
             <Text className={`${isDarkMode && "text-[#f5f5f5]"} `}>
               {type === "Lost" ? "I Found This" : "This is Mine"}

@@ -71,7 +71,7 @@ export default function Feed({
                       onPress={() => {
                         opt.label === "Edit Post" &&
                           router.push({
-                            pathname: "/addEditReportScreen",
+                            pathname: "/screens/addEditReportScreen",
                             params: { isEditPost: "true" },
                           });
                         setMoreOptionOpen(false);
@@ -141,7 +141,7 @@ export default function Feed({
         <View className="flex-row items-center gap-2 pt-6 ">
           <TouchableOpacity
             className="flex-row items-center"
-            onPress={() => router.push("/profileScreen")}
+            onPress={() => router.push("/screens/profileScreen")}
           >
             <EvilIcons
               name="user"

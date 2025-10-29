@@ -19,7 +19,7 @@ export default function SettingTab() {
   const handleLogout = () => {
     setIsLogoutClicked(false);
 
-    router.push("/signUpScreen");
+    router.push("/screens/signUpScreen");
   };
 
   return (
@@ -59,7 +59,7 @@ export default function SettingTab() {
       </Modal>
       <TouchableOpacity
         className={`flex-row items-center justify-between ${isDarkMode ? "bg-[#242424]" : "bg-white"}  shadow-lg p-4 rounded-3xl`}
-        onPress={() => router.push("/profileScreen")}
+        onPress={() => router.push("/screens/profileScreen")}
       >
         <View className="flex-row items-center gap-2">
           <Image

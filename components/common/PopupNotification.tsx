@@ -68,7 +68,7 @@ export default function PopupNotification() {
         opacity: fadeAnim,
         transform: [{ translateY: slideAnim }, { scale: scaleAnim }],
       }}
-      className={`${bg} p-4 z-50 gap-4 absolute top-11 left-3  rounded-[10px] shadow elevation-md  w-[95%] min-h-[50px]  justify-center`}
+      className={`${bg} px-2 py-3 z-50 gap-2 absolute top-11 left-3  rounded-[10px] shadow elevation-md  w-[95%] min-h-[50px]  justify-center`}
     >
       <Text className="capitalize text-white text-xl font-bold text-left">
         {notification?.type}

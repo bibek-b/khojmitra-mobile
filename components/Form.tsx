@@ -2,7 +2,6 @@ import { useContext, useState } from "react";
 import { Image, KeyboardAvoidingView, Platform, Text, TextInput, TouchableOpacity, View } from "react-native";
 import { Link } from "expo-router";
 import { AuthTypes } from "@/types/common";
-// import CommonImagePicker from "@/components/common/ImagePicker";
 import { ThemeContext } from "@/context/ThemeContext";
 import ProfileImage from "./ProfileImage";
 
@@ -93,7 +92,7 @@ export default function Form({ title, onSubmit, errors, isSignIn }: AuthTypes) {
         <Text className={`${isDarkMode ? "text-[#f5f5f5]": "text-black"}`}>
           {isSignIn ? "Don't" : "Already"} have an account?{" "}
           <Link
-            href={`/${isSignIn ? "signUpScreen" : "signInScreen"}`}
+            href={`/screens/${isSignIn ? "signUpScreen" : "signInScreen"}`}
             className={`${isDarkMode ? "text-[#1976D2]": "text-[#64b4ff]"} underline`}
           >
             Sign {isSignIn ? "Up" : "In"}

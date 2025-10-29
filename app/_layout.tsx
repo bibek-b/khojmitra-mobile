@@ -20,7 +20,7 @@ function LayoutWithTheme() {
     >
       <Stack.Screen name="(tabs)" options={{ headerShown: false }} />
       <Stack.Screen
-        name="notificationScreen"
+        name="screens/notificationScreen"
         options={{
           title: "Notifications",
           headerTitleStyle: { fontWeight: 700, fontSize: 24 },
@@ -28,14 +28,14 @@ function LayoutWithTheme() {
         }}
       />
       <Stack.Screen
-        name="profileScreen"
+        name="screens/profileScreen"
         options={{
           title: "",
           headerTintColor: isDarkMode ? "#f5f5f5" : "black",
         }}
       />
       <Stack.Screen
-        name="chatScreen"
+        name="screens/chatScreen"
         options={{
           title: "",
           headerTintColor: isDarkMode ? "white" : "black",
@@ -43,7 +43,7 @@ function LayoutWithTheme() {
       />
 
       <Stack.Screen
-        name="languageScreen"
+        name="screens/languageScreen"
         options={{
           title: "Language",
           headerTitleStyle: { fontWeight: 400, fontSize: 20 },
@@ -51,7 +51,7 @@ function LayoutWithTheme() {
         }}
       />
       <Stack.Screen
-        name="aboutScreen"
+        name="screens/aboutScreen"
         options={{
           title: "About",
           headerTitleStyle: { fontWeight: 400, fontSize: 20 },
@@ -59,7 +59,7 @@ function LayoutWithTheme() {
         }}
       />
       <Stack.Screen
-        name="signUpScreen"
+        name="screens/signUpScreen"
         options={{
           headerShown: false,
           contentStyle: {
@@ -68,7 +68,7 @@ function LayoutWithTheme() {
         }}
       />
       <Stack.Screen
-        name="signInScreen"
+        name="screens/signInScreen"
         options={{
           headerShown: false,
           contentStyle: {
@@ -77,7 +77,7 @@ function LayoutWithTheme() {
         }}
       />
       <Stack.Screen
-        name="editProfileScreen"
+        name="screens/editProfileScreen"
         options={{
           title: "Edit Profile",
           headerTintColor: isDarkMode ? "#F5F5F5" : "black",
@@ -85,7 +85,7 @@ function LayoutWithTheme() {
       />
 
       <Stack.Screen
-        name="addEditReportScreen"
+        name="screens/addEditReportScreen"
         options={{
           title: "",
           headerTintColor: isDarkMode ? "white" : "black",

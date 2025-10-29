@@ -23,8 +23,8 @@
       "package": "com.vieek.KhojMitra"
     },
     "web": {
-      "output": "static",
-      "favicon": "./assets/images/favicon.png",
+      "output": "server",
+      "favicon": "https://www.polytechnique-insights.com/wp-content/uploads/2022/11/space-1024x640.jpeg",
       "bundler": "metro"
     },
     "plugins": [

@@ -28,7 +28,7 @@ export default function ProfileScreen() {
 
       {postData.map((data) => (
         <View key={data.id} className=" justify-center w-full">
-          <Feed
+          {/* <Feed
             username={data.username}
             type={data.type}
             createdAt={data.createdAt}
@@ -38,7 +38,7 @@ export default function ProfileScreen() {
             date={data.date}
             description={data.description}
             images={data.images}
-          />
+          /> */}
           <View className={`h-[3px] w-full ${isDarkMode ? "bg-white/30" : "bg-black/30"} mt-2`} />
         </View>
       ))}

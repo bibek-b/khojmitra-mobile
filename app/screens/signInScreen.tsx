@@ -1,10 +1,11 @@
 import Form from "@/components/Form";
+import { authTypes } from "@/types/api/auth.types";
 import { AuthSubmitFormPropTypes } from "@/types/common";
 import { useState } from "react";
 
 export default function SignInScreen() {
   const [errors, setErrors] = useState<AuthSubmitFormPropTypes>({});
-  const handleSubmit = (email: string, password: string) => {
+  const handleSubmit = ({email, password}: authTypes) => {
     const newErrors: AuthSubmitFormPropTypes = {};
     if (!password) newErrors.password = "Password is required.";
 

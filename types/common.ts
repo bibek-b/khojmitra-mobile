@@ -1,5 +1,6 @@
 import React from "react";
 import { Animated } from "react-native";
+import { authTypes } from "./api/auth.types";
 
 export type AnimatedStyleProp = Animated.AnimatedInterpolation<string | number>;
 
@@ -18,27 +19,24 @@ export type AnimateValuePropsType = {
 };
 
 export type PostType = {
-  username: string;
-  type: string;
-  createdAt: string;
-  item: string;
-  category: string;
-  location: string;
-  date: string;
-  description: string;
-  images: string[];
+  post: {
+    fullname: string;
+    title: string;
+    type: string;
+    createdAt: string;
+    item: string;
+    category: string;
+    location: string;
+    date: string;
+    description: string;
+    images: string[];
+  };
   parent?: string;
 };
 
-export type AuthTypes = {
+export type AuthFormTypes = {
   title: string;
-  onSubmit: (
-    email: string,
-    password: string,
-    image?: string,
-    fullName?: string,
-    confirmPassword?: string
-  ) => void;
+  onSubmit: (props: authTypes) => void;
   isSignIn?: boolean;
   errors?: AuthSubmitFormPropTypes;
 };
@@ -123,5 +121,5 @@ export type ProofFormContextType = {
   showForm?: () => void;
   hideForm?: () => void;
   proofFormType?: "lost" | "found" | string;
-  setProofFormType?: React.Dispatch<React.SetStateAction< string>>;
+  setProofFormType?: React.Dispatch<React.SetStateAction<string>>;
 };

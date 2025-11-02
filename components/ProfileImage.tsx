@@ -1,13 +1,17 @@
 import usePickImages from "@/hooks/usePickImages";
 import { Feather } from "@expo/vector-icons";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { Image, View } from "react-native";
 import { TouchableOpacity } from "react-native";
 import ImagePickerModal from "./common/ImagePickerModal";
 
-export default function ProfileImage() {
+export default function ProfileImage({setImg}: any) {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [image, setImage] = useState<string>("");
+
+  useEffect(() => {
+    if(image) setImg(image)
+  },[image])
 
   // const { pickImages} = usePickImages()
   return (

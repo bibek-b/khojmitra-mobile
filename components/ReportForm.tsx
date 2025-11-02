@@ -26,6 +26,9 @@ import { ThemeContext } from "@/context/ThemeContext";
 import ImagePickerModal from "./common/ImagePickerModal";
 import UploadImgBtn from "./common/UploadImgBtn";
 import DisplayImages from "./common/DisplayImages";
+import { NotificationContext } from "@/context/NotificationContext";
+import { postApi } from "@/api/postApi";
+import { addPost } from "@/types/api/post.types";
 
 const reportType = [
   { id: 1, sign: "🔴", label: "Lost" },
@@ -34,6 +37,8 @@ const reportType = [
 
 export default function ReportForm({ isEditPost }: { isEditPost: string }) {
   const { isDarkMode } = useContext(ThemeContext);
+  const { showNotification } = useContext(NotificationContext);
+
   const [checkedValue, setCheckedValue] = useState<string | null>(null);
   const [selCategory, setSelCategory] = useState("");
   const [date, setDate] = useState(new Date());
@@ -44,8 +49,9 @@ export default function ReportForm({ isEditPost }: { isEditPost: string }) {
   const [description, setDescription] = useState("");
   const [errors, setErrors] = useState<AddEditReportFormTypes>({});
   const [isModalOpen, setIsModalOpen] = useState(false);
+  
 
-  const handleSubmit = () => {
+  const handleSubmit = async () => {
     const newErrors: AddEditReportFormTypes = {};
 
     if (!title) newErrors.title = "Please input item title.";
@@ -64,7 +70,30 @@ export default function ReportForm({ isEditPost }: { isEditPost: string }) {
 
     if (Object.keys(newErrors).length > 0) return;
 
-    alert("Form Submitted");
+    const data: addPost = {
+      type: checkedValue!,
+      title,
+      category:selCategory,
+      location,
+      date,
+      description,
+      images
+    }
+
+    try {
+        const res = await postApi.create(data);
+
+        if(res.data.success){
+          showNotification?.({type: "success", message: res.data.message})
+        }
+        showNotification?.({type: "error", message: res.data.message})
+      
+    } catch (error: any) {
+      console.log({error})
+      showNotification?.({type: "error", message: error.response?.data?.message || "Oops! Something went wrong.please try again."})
+    }
+
+    
   };
 
   return (

@@ -1,4 +1,3 @@
-import { PostType } from "@/types/common";
 import {
   Entypo,
   EvilIcons,
@@ -20,6 +19,8 @@ import ImageViewing from "react-native-image-viewing";
 import { useContext } from "react";
 import { ThemeContext } from "@/context/ThemeContext";
 import { ProofFormContext } from "@/context/ProofFormContext";
+import { format} from 'timeago.js';
+import { postType } from "@/types/api/post.types";
 
 const moreOptions = [
   { id: 1, label: "Edit Post", icon: <Entypo name="edit" size={20} /> },
@@ -27,20 +28,11 @@ const moreOptions = [
 ];
 
 export default function Feed({
-  username,
-  type,
-  createdAt,
-  item,
-  category,
-  location,
-  date,
-  description,
-  images,
-  parent,
-}: PostType) {
+post
+}: {post: postType}, parent?: string) {
   const [expanded, setExpanded] = useState(false);
   const [selectedImage, setSelectedImage] = useState<string | null>(null);
-  const isLost = type === "Lost";
+  const isLost = post.type === "Lost";
   const [moreOptionOpen, setMoreOptionOpen] = useState(false);
 
   const { isDarkMode } = useContext(ThemeContext);
@@ -49,6 +41,11 @@ export default function Feed({
   const handleMorePress = () => {
     setMoreOptionOpen(true);
   };
+  
+  const images = post.images!;
+  const type = post.type!;
+  const description = post.description!;
+
   return (
     <View>
       <Modal
@@ -129,7 +126,7 @@ export default function Feed({
 
       <TouchableOpacity
         className="absolute right-3 top-10"
-        onPress={() => parent === "myPost" && handleMorePress()}
+        onPress={() => (parent === "myPost") && handleMorePress()}
       >
         {parent === "myPost" ? (
           <Entypo name="dots-three-horizontal" size={24} color="gray" />
@@ -151,22 +148,22 @@ export default function Feed({
             <Text
               className={`text-xl font-bold ${isDarkMode && "text-[#f5f5f5]"}`}
             >
-              {username}
+              {post?.userId.fullname}
             </Text>
           </TouchableOpacity>
           <Text className={`font-medium ${isDarkMode && "text-[#F5F5F5]"}`}>
             {isLost ? "🔴 Lost" : "🟢 Found"}
           </Text>
           <Text className={`opacity-60 ${isDarkMode && "text-[#f5f5f5]"}`}>
-            {createdAt}
+            {format(new Date(post.createdAt))}
           </Text>
         </View>
         <View className="gap-2">
           {[
-            { key: `${isLost ? "Lost" : "Found"} Item`, value: item },
-            { key: "Category", value: category },
-            { key: `${isLost ? "Lost" : "Found"} Location`, value: location },
-            { key: `${isLost ? "Lost" : "Found"} Date`, value: date },
+            { key: `${isLost ? "Lost" : "Found"} Item`, value: post.title },
+            { key: "Category", value: post.category },
+            { key: `${isLost ? "Lost" : "Found"} Location`, value: post.location },
+            { key: `${isLost ? "Lost" : "Found"} Date`, value: post.date },
           ].map((item) => (
             <View key={item.key} className="flex-row pt-2">
               <Text className={`${isDarkMode && "text-[#f5f5f5]"}`}>
@@ -197,8 +194,8 @@ export default function Feed({
           )}
 
           <View className="flex-row  w-full flex-wrap justify-center gap-2">
-            {images.map((img) => (
-              <TouchableOpacity key={img} onPress={() => setSelectedImage(img)}>
+            {images.map((img,idx) => (
+              <TouchableOpacity key={idx} onPress={() => setSelectedImage(img)}>
                 <Image
                   source={{
                     uri: img,

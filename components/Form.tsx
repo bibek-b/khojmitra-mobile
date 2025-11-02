@@ -1,18 +1,19 @@
 import { useContext, useState } from "react";
 import { Image, KeyboardAvoidingView, Platform, Text, TextInput, TouchableOpacity, View } from "react-native";
 import { Link } from "expo-router";
-import { AuthTypes } from "@/types/common";
+import { AuthFormTypes } from "@/types/common";
 import { ThemeContext } from "@/context/ThemeContext";
 import ProfileImage from "./ProfileImage";
 
-export default function Form({ title, onSubmit, errors, isSignIn }: AuthTypes) {
+export default function Form({ title, onSubmit, errors, isSignIn }: AuthFormTypes) {
+  const { isDarkMode } = useContext(ThemeContext);
+
   const [image, setImage] = useState<string | null>(null);
-  const [fullName, setFullName] = useState<string | "">("");
+  const [fullname, setFullname] = useState<string | "">("");
   const [email, setEmail] = useState<string | "">("");
   const [password, setPassword] = useState<string | "">("");
   const [confirmPassword, setConfirmPassword] = useState<string | "">("");
 
-  const { isDarkMode } = useContext(ThemeContext);
   return (
     <KeyboardAvoidingView
           behavior={Platform.OS === "android" ? "padding" : "height"} className="flex-1 px-5 gap-4 justify-center">
@@ -20,15 +21,15 @@ export default function Form({ title, onSubmit, errors, isSignIn }: AuthTypes) {
         {title}
       </Text>
       <View className={` rounded-lg shadow px-4 py-10 gap-4 ${isDarkMode ? "bg-[#242424]": "bg-white"}`}>
-        {!isSignIn && <ProfileImage  />}
+        {!isSignIn && <ProfileImage setImg={setImage}  />}
 
         <View className="gap-4">
           {!isSignIn && (
             <View className="gap-2">
               <Text className={`${isDarkMode ? "text-[#f5f5f5]": "text-black"}`}>Full Name</Text>
               <TextInput
-                value={fullName}
-                onChangeText={setFullName}
+                value={fullname}
+                onChangeText={setFullname}
                 className={`border border-gray-300 px-2 ${isDarkMode ? "text-[#f5f5f5] placeholder:text-[#f5f5f5]": "text-black"} rounded`}
                 placeholder="Enter your full name.."
               />
@@ -81,9 +82,9 @@ export default function Form({ title, onSubmit, errors, isSignIn }: AuthTypes) {
           className="bg-[#1976D2] rounded"
           onPress={() => {
             if (isSignIn) {
-              onSubmit(email, password);
+              onSubmit({email, password});
             } else {
-              onSubmit(fullName, email, password, confirmPassword, image!);
+              onSubmit({fullname, email, password, confirmPassword, avatar: image!});
             }
           }}
         >

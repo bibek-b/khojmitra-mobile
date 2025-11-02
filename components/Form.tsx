@@ -33,8 +33,8 @@ export default function Form({ title, onSubmit, errors, isSignIn }: AuthFormType
                 className={`border border-gray-300 px-2 ${isDarkMode ? "text-[#f5f5f5] placeholder:text-[#f5f5f5]": "text-black"} rounded`}
                 placeholder="Enter your full name.."
               />
-              {errors?.fullName && (
-                <Text className="text-red-600">{errors?.fullName}</Text>
+              {errors?.fullname && (
+                <Text className="text-red-600">{errors?.fullname}</Text>
               )}
             </View>
           )}

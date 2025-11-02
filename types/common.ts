@@ -45,7 +45,7 @@ export type AuthSubmitFormPropTypes = {
   email?: string;
   password?: string;
   image?: string;
-  fullName?: string;
+  fullname?: string;
   confirmPassword?: string;
 };
 

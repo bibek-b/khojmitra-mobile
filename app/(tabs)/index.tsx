@@ -25,7 +25,6 @@ export default function HomeTab() {
     };
     fetchAllPosts();
   }, []);
-  console.log({allPosts})
   return (
     <View className="relative">
       <ScrollView showsVerticalScrollIndicator={false}>

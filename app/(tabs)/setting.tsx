@@ -19,7 +19,7 @@ export default function SettingTab() {
   const handleLogout = () => {
     setIsLogoutClicked(false);
 
-    router.push("/screens/signUpScreen");
+    router.navigate("/screens/signInScreen");
   };
 
   return (

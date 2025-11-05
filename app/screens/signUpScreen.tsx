@@ -5,10 +5,12 @@ import { authTypes } from "@/types/api/auth.types";
 import { NotificationContext } from "@/context/NotificationContext";
 import { authApi } from "@/api/authApi";
 import { validateSignup } from "../validations/authFormValidator";
+import { useRouter } from "expo-router";
 
 export default function SignUpScreen() {
   const { showNotification } = useContext(NotificationContext);
   const [errors, setErrors] = useState<AuthSubmitFormPropTypes>({});
+  const router = useRouter();
   const handleSubmit = async ({
     fullname,
     email,
@@ -38,12 +40,12 @@ export default function SignUpScreen() {
 
     try {
       const res = await authApi.signUp(fd);
-      console.log(res);
       if (res.data.success) {
         showNotification?.({ type: "success", message: res.data.message });
       } else {
         showNotification?.({ type: "error", message: res.data.message });
       }
+      router.navigate('/screens/signInScreen');
     } catch (error: any) {
       showNotification?.({
         type: "error",

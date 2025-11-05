@@ -18,7 +18,7 @@ export default function HeaderLeft({
     >
       {!showSearchBar && (
         <TouchableOpacity onPress={() => router.push("/")}>
-          <Text className="text-3xl pl-2 text-[#1976D2] font-bold">
+          <Text className="text-3xl pl-2 text-[#1976D2] dark:text-white font-bold">
             KhojMitra
           </Text>
         </TouchableOpacity>

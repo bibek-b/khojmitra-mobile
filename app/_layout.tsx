@@ -1,4 +1,4 @@
-import { Stack } from "expo-router";
+import { Stack, useRouter } from "expo-router";
 import "@/global.css";
 import { ThemeContext, ThemeContextProvider } from "@/context/ThemeContext";
 import { useContext } from "react";
@@ -6,12 +6,14 @@ import { NotificationContextProvider } from "@/context/NotificationContext";
 import { ProofFormContextProvider } from "@/context/ProofFormContext";
 import ProofForm from "@/components/feed/ProofForm";
 import PopupNotification from "@/components/common/PopupNotification";
+import { NavigationContainer } from "@react-navigation/native";
+import { routerRef } from "@/services/NavigationService";
 
 function LayoutWithTheme() {
   const { isDarkMode } = useContext(ThemeContext);
 
   return (
-    <Stack
+     <Stack
       screenOptions={{
         headerStyle: {
           backgroundColor: isDarkMode ? "#1a1a1a" : "white",
@@ -96,7 +98,10 @@ function LayoutWithTheme() {
 }
 
 export default function RootLayout() {
+  const router = useRouter();
+  routerRef.router= router;
   return (
+
     <ProofFormContextProvider>
       <NotificationContextProvider>
         <ThemeContextProvider>

@@ -6,6 +6,7 @@ import { validateSignin } from "../validations/authFormValidator";
 import { NotificationContext } from "@/context/NotificationContext";
 import { authApi } from "@/api/authApi";
 import { useRouter } from "expo-router";
+import { setItem } from "@/utils/AsyncStorage";
 
 export default function SignInScreen() {
   const { showNotification } = useContext(NotificationContext);
@@ -18,7 +19,9 @@ export default function SignInScreen() {
 
     try {
       const res = await authApi.signIn({ email, password });
-      console.log(res);
+      setItem("user", res?.data.user);
+      setItem("access_token", res?.data.user);
+
       showNotification?.({
         type: "success",
         message: "Sign in successful",

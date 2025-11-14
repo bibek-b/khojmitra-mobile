@@ -1,8 +1,9 @@
 import SettingDetails from "@/components/SettingDetails";
 import { ThemeContext } from "@/context/ThemeContext";
+import { getItem } from "@/utils/AsyncStorage";
 import { AntDesign } from "@expo/vector-icons";
 import { router } from "expo-router";
-import { useContext, useState } from "react";
+import { useContext, useEffect, useState } from "react";
 import {
   Image,
   Modal,
@@ -15,6 +16,15 @@ import {
 export default function SettingTab() {
   const [isLogoutClicked, setIsLogoutClicked] = useState(false);
   const { isDarkMode } = useContext(ThemeContext);
+  const [me, setMe] = useState({fullname: ""});
+
+ useEffect(() => {
+  const getMyDetails = async () => {
+    const value = await getItem("user");
+    setMe(value)
+  }
+  getMyDetails()
+ },[])
 
   const handleLogout = () => {
     setIsLogoutClicked(false);
@@ -71,7 +81,7 @@ export default function SettingTab() {
           <Text
             className={`text-2xl ${isDarkMode ? "text-[#f5f5f5]" : "text-black"} font-bold`}
           >
-            Bibek Bishwokarma
+            {me?.fullname}
           </Text>
         </View>
         <AntDesign

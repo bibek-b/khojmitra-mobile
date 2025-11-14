@@ -11,7 +11,6 @@ enum postCategories {
 }
 export type postType = {
     _id: string;
-    fullname: string;
     type: "Lost" | "Found" | "";
     title: string;
     category: postCategories;
@@ -35,4 +34,5 @@ export type addPost = {
   date: Date;
   description: string;
   images: string[];
+  user: string
 }

@@ -29,6 +29,7 @@ import DisplayImages from "./common/DisplayImages";
 import { NotificationContext } from "@/context/NotificationContext";
 import { postApi } from "@/api/postApi";
 import { addPost } from "@/types/api/post.types";
+import { getItem } from "@/utils/AsyncStorage";
 
 const reportType = [
   { id: 1, sign: "🔴", label: "Lost" },
@@ -70,6 +71,8 @@ export default function ReportForm({ isEditPost }: { isEditPost: string }) {
 
     if (Object.keys(newErrors).length > 0) return;
 
+    const user = await getItem("user");
+
     const data: addPost = {
       type: checkedValue!,
       title,
@@ -77,7 +80,8 @@ export default function ReportForm({ isEditPost }: { isEditPost: string }) {
       location,
       date,
       description,
-      images
+      images,
+      user: user?.id
     }
 
     try {
@@ -89,8 +93,13 @@ export default function ReportForm({ isEditPost }: { isEditPost: string }) {
         showNotification?.({type: "error", message: res.data.message})
       
     } catch (error: any) {
-      console.log({error})
-      showNotification?.({type: "error", message: error.response?.data?.message || "Oops! Something went wrong.please try again."})
+
+
+        if(error?.response?.status === 401) {
+          showNotification?.({type: "error", message: "Please login"})
+        } else {
+          showNotification?.({type: "error", message: error.response?.data?.message || "Oops! Something went wrong.please try again."})
+        }
     }
 
     

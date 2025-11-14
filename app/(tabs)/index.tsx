@@ -17,7 +17,7 @@ export default function HomeTab() {
       try {
         const res = await postApi.getAll();
         res && setAllPosts(res.data.data);
-      } catch (error) {
+      } catch (error: any) {
         console.log(error);
         showNotification &&
           showNotification({ type: "error", message: "Cant fetch post" });

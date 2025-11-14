@@ -148,7 +148,7 @@ post
             <Text
               className={`text-xl font-bold ${isDarkMode && "text-[#f5f5f5]"}`}
             >
-              {post?.userId.fullname}
+              {post?.user?.fullname }
             </Text>
           </TouchableOpacity>
           <Text className={`font-medium ${isDarkMode && "text-[#F5F5F5]"}`}>

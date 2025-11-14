@@ -21,7 +21,7 @@ export type postType = {
     description: String;
     createdAt: string;
     updatedAt:string;
-    userId: {
+    user: {
       _id: string;
       fullname: string;
     }

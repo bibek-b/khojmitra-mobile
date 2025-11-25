@@ -2,28 +2,49 @@ import Feed from "@/components/feed/Feed";
 import { ScrollView, Text, View } from "react-native";
 import Fab from "../../components/common/Fab";
 import { postData } from "@/constants/dummyData";
+import { useContext, useEffect, useState } from "react";
+import { NotificationContext } from "@/context/NotificationContext";
+import { useLoaderStore } from "@/store/useLoaderStore";
+import { postType } from "@/types/api/post.types";
+import { postApi } from "@/api/postApi";
+import { getItem } from "@/utils/AsyncStorage";
 
 export default function MyPostsTab() {
+const { showLoading, hideLoading} = useLoaderStore();
+  const { showNotification } = useContext(NotificationContext);
+  const [myPosts, setMyPosts] = useState<postType[]>([]);
+
+  
+  useEffect(() => {
+    (async () => {
+     const user = await getItem('user');
+     try {
+      showLoading("myPosts");
+      const res = await postApi.getUserPosts(user?._id);
+      setMyPosts(res?.data.data);
+      setMyPosts
+    } catch (error: any) {
+          showNotification?.({ type: "error", message: error?.response.data.message });
+      } finally{
+        hideLoading();
+      }
+   })()
+  },[])
+  
   return (
     <View>
       <ScrollView showsVerticalScrollIndicator={false}>
-        {postData.map((data) => (
-          <View key={data.id} className=" justify-center w-full">
-            <Feed
-              username={data.username}
-              type={data.type}
-              createdAt={data.createdAt}
-              item={data.item}
-              category={data.category}
-              location={data.location}
-              date={data.date}
-              description={data.description}
-              images={data.images}
-              parent="myPost"
-            />
-            <Text className="h-[3px] w-full bg-black/30 mt-2" />
-          </View>
-        ))}
+         {myPosts.length > 0 ? myPosts?.map((data) => (
+                  <View key={data._id} className=" justify-center w-full">
+                    <Feed post={data}
+                    />
+                    <View
+                      className={`h-[3px] w-full bg-black/30 mt-2 dark:bg-white/30}`}
+                    />
+                  </View>
+                )): <View className="items-center justify-center h-screen">
+                  <Text className="text-2xl dark:text-white">No data.</Text>
+                  </View>}
       </ScrollView>
       <View className="absolute bottom-4 right-2  text-center items-end w-fit bg-none">
         <Fab />

@@ -4,16 +4,17 @@ import { Link } from "expo-router";
 import { AuthFormTypes } from "@/types/common";
 import { ThemeContext } from "@/context/ThemeContext";
 import ProfileImage from "./ProfileImage";
+import { imageType } from "@/types/api/post.types";
 
 export default function Form({ title, onSubmit, errors, isSignIn }: AuthFormTypes) {
   const { isDarkMode } = useContext(ThemeContext);
 
-  const [image, setImage] = useState<string | null>(null);
+  const [image, setImage] = useState<imageType>({});
   const [fullname, setFullname] = useState<string | "">("");
   const [email, setEmail] = useState<string | "">("");
   const [password, setPassword] = useState<string | "">("");
   const [confirmPassword, setConfirmPassword] = useState<string | "">("");
-
+console.log('form img', image)
   return (
     <KeyboardAvoidingView
           behavior={Platform.OS === "android" ? "padding" : "height"} className="flex-1 px-5 gap-4 justify-center">

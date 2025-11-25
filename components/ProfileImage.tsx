@@ -4,14 +4,16 @@ import { useEffect, useState } from "react";
 import { Image, View } from "react-native";
 import { TouchableOpacity } from "react-native";
 import ImagePickerModal from "./common/ImagePickerModal";
+import { imageType } from "@/types/api/post.types";
 
 export default function ProfileImage({setImg}: any) {
   const [isModalOpen, setIsModalOpen] = useState(false);
-  const [image, setImage] = useState<string>("");
+  const [image, setImage] = useState<imageType>({});
 
   useEffect(() => {
     if(image) setImg(image)
-  },[image])
+    },[image])
+    console.log("profile img: ",image)
 
   // const { pickImages} = usePickImages()
   return (
@@ -36,7 +38,7 @@ export default function ProfileImage({setImg}: any) {
         <Image
           source={{
             uri: image
-              ? image
+              ? image?.uri
               : "https://thumb.ac-illust.com/51/51e1c1fc6f50743937e62fca9b942694_t.jpeg",
           }}
           className="w-32 h-32  object-cover rounded-full -z-10"

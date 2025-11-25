@@ -19,21 +19,6 @@ export type AnimateValuePropsType = {
   useNativeDriver: boolean;
 };
 
-export type PostType = {
-  post: {
-    fullname: string;
-    title: string;
-    type: string;
-    createdAt: string;
-    item: string;
-    category: string;
-    location: string;
-    date: string;
-    description: string;
-    images: string[];
-  };
-  parent?: string;
-};
 
 export type AuthFormTypes = {
   title: string;
@@ -83,7 +68,7 @@ export type ImagePickerModalPropTypes = {
   setImages?: React.Dispatch<React.SetStateAction<imageType[]>>;
   setImage?: React.Dispatch<React.SetStateAction<imageType>>;
   singleImage?: boolean;
-  images: imageType[];
+  images?: imageType[];
 };
 
 export type UploadImgBtnProp = {

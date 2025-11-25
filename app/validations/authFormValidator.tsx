@@ -1,4 +1,4 @@
-import { AuthSubmitFormPropTypes } from "@/types/common";
+import { AuthSubmitFormPropTypes } from "@/types/theme";
 
 export const validateSignup = (
   { fullname, email, password, confirmPassword }: AuthSubmitFormPropTypes,

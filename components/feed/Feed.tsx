@@ -20,7 +20,7 @@ import { useContext } from "react";
 import { ThemeContext } from "@/context/ThemeContext";
 import { ProofFormContext } from "@/context/ProofFormContext";
 import { format} from 'timeago.js';
-import { postType } from "@/types/api/post.types";
+import { postType } from "@/types/post.types";
 
 const moreOptions = [
   { id: 1, label: "Edit Post", icon: <Entypo name="edit" size={20} /> },
@@ -155,7 +155,7 @@ post
             {isLost ? "🔴 Lost" : "🟢 Found"}
           </Text>
           <Text className={`opacity-60 ${isDarkMode && "text-[#f5f5f5]"}`}>
-            {format(new Date(post.createdAt))}
+            {format(new Date(post?.createdAt!))}
           </Text>
         </View>
         <View className="gap-2">

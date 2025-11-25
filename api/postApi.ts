@@ -1,4 +1,4 @@
-import { addPost, postType } from "@/types/api/post.types";
+import {  postType } from "@/types/post.types";
 import api from "./axios";
 
 export const postApi = {

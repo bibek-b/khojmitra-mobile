@@ -1,4 +1,4 @@
-import { AddEditReportFormTypes } from "@/types/common";
+import { AddEditReportFormTypes } from "@/types/theme";
 
  const AddEditReportFormValidator = ({
   checkedValue,

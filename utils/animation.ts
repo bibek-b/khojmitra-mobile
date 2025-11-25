@@ -1,5 +1,5 @@
 import { Animated } from "react-native";
-import { AnimateValueProps } from "../types/common";
+import { AnimateValueProps } from "../types/theme";
 
 export const animateValue = ({
   value,

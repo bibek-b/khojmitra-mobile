@@ -1,12 +1,12 @@
 import { useContext, useState } from "react";
 import { Image, KeyboardAvoidingView, Platform, Text, TextInput, TouchableOpacity, View } from "react-native";
 import { Link } from "expo-router";
-import { AuthFormTypes } from "@/types/common";
 import { ThemeContext } from "@/context/ThemeContext";
 import ProfileImage from "./ProfileImage";
-import { imageType } from "@/types/api/post.types";
+import { AuthSubmitTypes } from "@/types/auth.types";
+import { imageType } from "@/types/image";
 
-export default function Form({ title, onSubmit, errors, isSignIn }: AuthFormTypes) {
+export default function Form({ title, onSubmit, errors, isSignIn }: AuthSubmitTypes) {
   const { isDarkMode } = useContext(ThemeContext);
 
   const [image, setImage] = useState<imageType>({});

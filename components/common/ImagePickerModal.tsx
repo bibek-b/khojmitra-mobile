@@ -1,6 +1,6 @@
 import { ThemeContext } from "@/context/ThemeContext";
 import usePickImages from "@/hooks/usePickImages";
-import { ImagePickerModalPropTypes } from "@/types/common";
+import { ImagePickerTypes } from "@/types/image";
 import { EvilIcons } from "@expo/vector-icons";
 import React, { useContext, useState } from "react";
 import {
@@ -18,7 +18,7 @@ const ImagePickerModal = ({
   setImage,
   images,
   singleImage
-}: ImagePickerModalPropTypes) => {
+}: ImagePickerTypes) => {
   const { isDarkMode } = useContext(ThemeContext);
   const { pickImages } = usePickImages({
     selectionLimit,
@@ -29,12 +29,12 @@ const ImagePickerModal = ({
   });
   const handleCamera = async () => {
     await pickImages("camera");
-    onClose();
+    onClose?.();
   };
 
   const handleGallery = async () => {
     await pickImages("gallery");
-    onClose();
+    onClose?.();
   };
 
   return (

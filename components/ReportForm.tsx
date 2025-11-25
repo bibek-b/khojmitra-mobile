@@ -1,11 +1,7 @@
 import {
-  ActivityIndicator,
-  Image,
-  Modal,
   Text,
   TextInput,
   TouchableOpacity,
-  TouchableWithoutFeedback,
   View,
 } from "react-native";
 import Checkbox from "expo-checkbox";
@@ -14,25 +10,22 @@ import { SelectList } from "react-native-dropdown-select-list";
 import { Category } from "@/constants/categories";
 import DatePicker from "@react-native-community/datetimepicker";
 import {
-  EvilIcons,
   FontAwesome,
   Fontisto,
-  MaterialIcons,
 } from "@expo/vector-icons";
 import { KeyboardAwareScrollView } from "react-native-keyboard-aware-scroll-view";
-import * as ImagePicker from "expo-image-picker";
 import { router } from "expo-router";
-import { AddEditReportFormTypes } from "@/types/common";
 import { ThemeContext } from "@/context/ThemeContext";
 import ImagePickerModal from "./common/ImagePickerModal";
 import UploadImgBtn from "./common/UploadImgBtn";
 import DisplayImages from "./common/DisplayImages";
 import { NotificationContext } from "@/context/NotificationContext";
 import { postApi } from "@/api/postApi";
-import { addPost, displayImageProps, imageType } from "@/types/api/post.types";
 import { getItem } from "@/utils/AsyncStorage";
 import { useLoaderStore } from "@/store/useLoaderStore";
 import { GlobalLoader } from "./common/GlobalLoader";
+import { imageType } from "@/types/image";
+import { AddEditReportFormTypes } from "@/types/reportForm";
 
 const reportType = [
   { id: 1, sign: "🔴", label: "Lost" },

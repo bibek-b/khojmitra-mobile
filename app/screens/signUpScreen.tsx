@@ -1,17 +1,16 @@
 import Form from "@/components/Form";
 import { useContext, useState } from "react";
-import { AuthSubmitFormPropTypes } from "@/types/common";
-import { authTypes } from "@/types/api/auth.types";
 import { NotificationContext } from "@/context/NotificationContext";
 import { authApi } from "@/api/authApi";
 import { validateSignup } from "../validations/authFormValidator";
 import { useRouter } from "expo-router";
 import { useLoaderStore } from "@/store/useLoaderStore";
+import { AuthFormPayloadType } from "@/types/auth.types";
 
 export default function SignUpScreen() {
   const { showNotification } = useContext(NotificationContext);
   const { showLoading, hideLoading } = useLoaderStore();
-  const [errors, setErrors] = useState<AuthSubmitFormPropTypes>({});
+  const [errors, setErrors] = useState<AuthFormPayloadType>({});
   const router = useRouter();
   const handleSubmit = async ({
     fullname,
@@ -19,7 +18,7 @@ export default function SignUpScreen() {
     password,
     confirmPassword,
     avatar,
-  }: authTypes) => {
+  }: AuthFormPayloadType) => {
     const isValid = validateSignup(
       { fullname, email, password, confirmPassword },
       setErrors

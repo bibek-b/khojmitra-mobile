@@ -1,19 +1,18 @@
 import Form from "@/components/Form";
-import { authTypes } from "@/types/api/auth.types";
-import { AuthSubmitFormPropTypes } from "@/types/common";
 import { useContext, useState } from "react";
 import { validateSignin } from "../validations/authFormValidator";
 import { NotificationContext } from "@/context/NotificationContext";
 import { authApi } from "@/api/authApi";
 import { useRouter } from "expo-router";
 import { setItem } from "@/utils/AsyncStorage";
+import { AuthFormPayloadType } from "@/types/auth.types";
 
 export default function SignInScreen() {
   const { showNotification } = useContext(NotificationContext);
-  const [errors, setErrors] = useState<AuthSubmitFormPropTypes>({});
+  const [errors, setErrors] = useState<AuthFormPayloadType>({});
   const router = useRouter();
 
-  const handleSubmit = async ({ email, password }: authTypes) => {
+  const handleSubmit = async ({ email, password }: AuthFormPayloadType) => {
     const isValid = validateSignin({ email, password }, setErrors);
     if (!isValid) return;
 

@@ -1,4 +1,4 @@
-import { authTypes } from "@/types/api/auth.types";
+import { AuthFormPayloadType } from "@/types/auth.types";
 import api from "./axios";
 
 export const authApi = {
@@ -7,6 +7,6 @@ export const authApi = {
             "Content-Type": "multipart/form-data"
         }
     }),
-    signIn: (data: authTypes) => api.post('/auth/signIn', data),
+    signIn: (data: AuthFormPayloadType) => api.post('/auth/signIn', data),
     refreshToken: () => api.get('/auth/refresh')
 }

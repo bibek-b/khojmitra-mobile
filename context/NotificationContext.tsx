@@ -1,8 +1,5 @@
-import {
-  NotificationContextType,
-  NotificationPayload,
-  NotificationType,
-} from "@/types/common";
+
+import { NotificationContextType, NotificationStateType } from "@/types/notification";
 import React, { createContext, useState } from "react";
 
 export const NotificationContext = createContext<NotificationContextType>({});
@@ -12,9 +9,9 @@ export const NotificationContextProvider = ({
 }: {
   children: React.ReactNode;
 }) => {
-  const [notification, setNotification] = useState<NotificationType>();
+  const [notification, setNotification] = useState<NotificationStateType>();
 
-  const showNotification = ({ type, message }: NotificationPayload) => {
+  const showNotification = ({ type, message }: NotificationStateType) => {
     setNotification({ visible: true, type, message });
   };
   const hideNotification = () => {

@@ -1,4 +1,4 @@
-import { displayImageProps, imageType } from "@/types/api/post.types";
+import { displayImageProps, imageType } from "@/types/post.types";
 import { MaterialIcons } from "@expo/vector-icons";
 import { Image, Text, TouchableOpacity, View } from "react-native";
 

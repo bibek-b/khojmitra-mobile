@@ -1,4 +1,4 @@
-import { ThemeContextType } from "@/types/common";
+import { ThemeContextType } from "@/types/theme";
 import { createContext, useEffect, useState } from "react";
 import { useColorScheme } from "react-native";
 

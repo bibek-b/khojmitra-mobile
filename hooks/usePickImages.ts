@@ -1,4 +1,4 @@
-import { PickImagesPropsType } from "@/types/common";
+import { ImagePickerTypes } from "@/types/image";
 import * as ImagePicker from "expo-image-picker";
 import { useCallback } from "react";
 
@@ -7,10 +7,8 @@ export default function usePickImages({
   setImages,
   setImage,
   images,
-  singleImage
-}: PickImagesPropsType) {
-
-
+  singleImage,
+}: ImagePickerTypes) {
   const pickImages = useCallback(
     async (source: "camera" | "gallery") => {
       let result: any;
@@ -29,11 +27,8 @@ export default function usePickImages({
           });
           if (!result.canceled) {
             if (!singleImage) {
-              // const newImages = result?.assets.map((asset) => asset);
-              // const mappedImgs = newImages.map(img => img.assetId)
               setImages?.((prev) => [...prev, ...result?.assets]);
             } else {
-              // const newImg = result?.assets[0];
               setImage?.(result?.assets[0]);
             }
           }
@@ -50,19 +45,16 @@ export default function usePickImages({
             allowsEditing: true,
             allowsMultipleSelection: true,
             quality: 1,
-            selectionLimit: selectionLimit && (selectionLimit - images.length),
+            selectionLimit: selectionLimit && selectionLimit - images!.length,
           });
-            if (!result.canceled) {
-              if (!singleImage) {
-                // const newImages = result?.assets.map((asset) => asset.uri);
-                // setImages  && setImages((prev) => [...prev, ...newImages]);
+          if (!result.canceled) {
+            if (!singleImage) {
               setImages?.((prev) => [...prev, ...result?.assets]);
-
-              } else {
-                const newImg = result?.assets[0].uri;
-                setImage && setImage(newImg);
-              }
+            } else {
+              const newImg = result?.assets[0].uri;
+              setImage && setImage(newImg);
             }
+          }
         }
       } catch (error) {}
     },

@@ -1,4 +1,4 @@
-import { UploadImgBtnProp } from "@/types/common";
+import { UploadImgBtnProp } from "@/types/image";
 import { Text, TouchableOpacity } from "react-native";
 
 export default function UploadImgBtn({images, setIsModalOpen}: UploadImgBtnProp) {

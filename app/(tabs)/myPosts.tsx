@@ -5,7 +5,7 @@ import { postData } from "@/constants/dummyData";
 import { useContext, useEffect, useState } from "react";
 import { NotificationContext } from "@/context/NotificationContext";
 import { useLoaderStore } from "@/store/useLoaderStore";
-import { postType } from "@/types/api/post.types";
+import { postType } from "@/types/post.types";
 import { postApi } from "@/api/postApi";
 import { getItem } from "@/utils/AsyncStorage";
 

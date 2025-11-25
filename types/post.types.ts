@@ -1,4 +1,3 @@
-import React from "react";
 
 enum postCategories {
   "Electronics",
@@ -12,7 +11,7 @@ enum postCategories {
   "Personal Items",
 }
 export type postType = {
-    _id: string;
+    _id?: string;
     type: "Lost" | "Found" | "";
     title: string;
     category: postCategories;
@@ -20,34 +19,17 @@ export type postType = {
     date: string;
     images?: string[];
     description: String;
-    createdAt: string;
-    updatedAt:string;
+    createdAt?: string;
+    updatedAt?:string;
     user: {
       _id: string;
       fullname: string;
     }
 };
 
-export type addPost = {
-  type: string;
-  title: string;
-  category: string;
-  location: string;
-  date: Date;
-  description: string;
-  images?: string[];
-  user: string
-}
 
-export type imageType = {
-  uri?: string,
-  mimeType?: string,
-  fileName?: string
-}
 
-export type displayImageProps = {
-  images: imageType[],
-  setImages: React.Dispatch<React.SetStateAction<imageType[]>>
-}
+
+
 
 

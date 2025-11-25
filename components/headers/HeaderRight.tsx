@@ -1,5 +1,5 @@
 import { ThemeContext } from "@/context/ThemeContext";
-import { HeaderAnimationPropsType } from "@/types/common";
+import { HeaderAnimationPropsType } from "@/types/theme";
 import { Feather, Ionicons } from "@expo/vector-icons";
 import { router } from "expo-router";
 import { useContext } from "react";

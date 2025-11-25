@@ -8,6 +8,8 @@ import ProofForm from "@/components/feed/ProofForm";
 import PopupNotification from "@/components/common/PopupNotification";
 import { NavigationContainer } from "@react-navigation/native";
 import Fab from "@/components/common/Fab";
+import { GlobalLoader } from "@/components/common/GlobalLoader";
+import { useLoaderStore } from "@/store/useLoaderStore";
 
 function LayoutWithTheme() {
   const { isDarkMode } = useContext(ThemeContext);
@@ -100,6 +102,7 @@ function LayoutWithTheme() {
 export default function RootLayout() {
   // const router = useRouter();
   // routerRef.router= router;
+  const { loading } = useLoaderStore();
   return (
 
     <ProofFormContextProvider>
@@ -107,6 +110,7 @@ export default function RootLayout() {
         <ThemeContextProvider>
           <LayoutWithTheme />
           <ProofForm />
+          {loading.boolean && <GlobalLoader loaderText={loading?.parent === "reportSubmit" ? "Uploading..": "Loading.." } />}
           <PopupNotification />
         </ThemeContextProvider>
       </NotificationContextProvider>

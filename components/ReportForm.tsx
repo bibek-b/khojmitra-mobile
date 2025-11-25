@@ -1,4 +1,5 @@
 import {
+  ActivityIndicator,
   Image,
   Modal,
   Text,
@@ -30,6 +31,8 @@ import { NotificationContext } from "@/context/NotificationContext";
 import { postApi } from "@/api/postApi";
 import { addPost, displayImageProps, imageType } from "@/types/api/post.types";
 import { getItem } from "@/utils/AsyncStorage";
+import { useLoaderStore } from "@/store/useLoaderStore";
+import { GlobalLoader } from "./common/GlobalLoader";
 
 const reportType = [
   { id: 1, sign: "🔴", label: "Lost" },
@@ -39,6 +42,7 @@ const reportType = [
 export default function ReportForm({ isEditPost }: { isEditPost: string }) {
   const { isDarkMode } = useContext(ThemeContext);
   const { showNotification } = useContext(NotificationContext);
+  const { showLoading, hideLoading } = useLoaderStore();
 
   const [checkedValue, setCheckedValue] = useState<string | null>(null);
   const [selCategory, setSelCategory] = useState("");
@@ -69,58 +73,33 @@ export default function ReportForm({ isEditPost }: { isEditPost: string }) {
     setErrors(newErrors);
 
     if (Object.keys(newErrors).length > 0) return;
-
     const user = await getItem("user");
-
-    // const data: addPost = {
-    //   type: checkedValue!,
-    //   title,
-    //   category: selCategory,
-    //   location,
-    //   date: "8-7-4-2025",
-    //   description,
-    //   // images,
-    //   user: user?._id,
-    // };
     const fd = new FormData();
 
     fd.append("type", checkedValue!);
     fd.append("title", title!);
     fd.append("category", selCategory!);
     fd.append("location", location!);
+
     const numericDate = `${date.getFullYear()}-${(date.getMonth() + 1).toString().padStart(2, "0")}-${date.getDate().toString().padStart(2, "0")}`;
     fd.append("date", numericDate);
+
     fd.append("description", description!);
     fd.append("user", user?._id);
 
-    // if (images.length > 0) {
-    //   //convert image uri strings to proper image objects
-    //   images.forEach((img, index) => {
-    //     let fileType = img.uri?.split(".").pop()?.toLowerCase();
-    //     if (fileType === "jpg") fileType = "jpeg";
-    //     if (!fileType) fileType = "jpeg";
-
-    //     fd.append("images", {
-    //       uri: img.uri, // local URI from expo-image-picker
-    //       type: `image/${fileType}`, // MIME type
-    //       name:
-    //         img.uri?.split("/").pop() ||
-    //         `image_${Date.now()}_${index}.${fileType}`,
-    //     } as any);
-    //   });
-    // }
     if (images.length > 0) {
       images.forEach((img, index) => {
         fd.append("images", {
           uri: img.uri,
-          type: img.mimeType || "image/jpeg", // expo gives mimeType
+          type: img.mimeType || "image/jpeg",
           name: img.fileName || `image_${Date.now()}_${index}.jpg`,
         } as any);
       });
     }
 
-    console.log('formdata:',fd);
     try {
+      showLoading('reportSubmit');
+
       const res = await postApi.create(fd);
       showNotification?.({ type: "success", message: res.data.message });
       router.push("/");
@@ -133,13 +112,15 @@ export default function ReportForm({ isEditPost }: { isEditPost: string }) {
         type: "error",
         message,
       });
+    } finally {
+      hideLoading();
     }
   };
-console.log({images})
   return (
     <View
       className={`items-center py-10 flex-1 ${isDarkMode && "bg-[#1a1a1a]"}`}
     >
+      <GlobalLoader loaderText={"Uploading"} />
       <KeyboardAwareScrollView
         enableOnAndroid={true}
         extraScrollHeight={110}
@@ -151,7 +132,6 @@ console.log({images})
           <Text className={`text-center ${isDarkMode && "text-[#f5f5f5]"}`}>
             Please provide details so others can help.
           </Text>
-
           <View className="gap-2">
             <View className="flex-row gap-4">
               <Text className={`${isDarkMode && "text-[#f5f5f5]"}`}>Type</Text>
@@ -322,7 +302,7 @@ console.log({images})
 
             <TouchableOpacity
               className="bg-[#1976D2] p-2 rounded w-[120px]"
-              onPress={() => handleSubmit()}
+              onPress={handleSubmit}
             >
               <Text className="text-[#f5f5f5] text-[16px] text-center">
                 {isEditPost ? "Save Changes" : "Submit Report"}

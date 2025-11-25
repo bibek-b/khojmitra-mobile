@@ -7,21 +7,27 @@ import { ThemeContext } from "@/context/ThemeContext";
 import { postType } from "@/types/api/post.types";
 import { postApi } from "@/api/postApi";
 import { NotificationContext } from "@/context/NotificationContext";
+import { useLoaderStore } from "@/store/useLoaderStore";
 
 export default function HomeTab() {
 
   const { isDarkMode } = useContext(ThemeContext);
+  const { showLoading, hideLoading} = useLoaderStore();
+
   const { showNotification } = useContext(NotificationContext);
   const [allPosts, setAllPosts] = useState<postType[]>([]);
 
   useEffect(() => {
     const fetchAllPosts = async () => {
       try {
+        showLoading("fetchPosts")
         const res = await postApi.getAll();
         res && setAllPosts(res.data.data);
       } catch (error: any) {
         showNotification &&
           showNotification({ type: "error", message: "Cant fetch post" });
+      } finally{
+        hideLoading();
       }
     };
     fetchAllPosts();

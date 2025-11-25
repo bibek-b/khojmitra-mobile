@@ -20,21 +20,19 @@ export default function SignInScreen() {
     try {
       const res = await authApi.signIn({ email, password });
       setItem("user", res?.data.user);
-      setItem("access_token", res?.data.user);
+      setItem("access_token", res?.data.accessToken);
 
       showNotification?.({
         type: "success",
         message: "Sign in successful",
       });
-      router.navigate("/screens/signInScreen");
-
       router.navigate("/");
     } catch (error: any) {
-      console.log({ error });
       showNotification?.({
         type: "error",
         message:
           error?.response?.data.message ||
+          error?.data.message ||
           "Something went wrong. please try again",
       });
     }

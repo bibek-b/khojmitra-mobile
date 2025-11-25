@@ -7,7 +7,7 @@ import { ProofFormContextProvider } from "@/context/ProofFormContext";
 import ProofForm from "@/components/feed/ProofForm";
 import PopupNotification from "@/components/common/PopupNotification";
 import { NavigationContainer } from "@react-navigation/native";
-import { routerRef } from "@/services/NavigationService";
+import Fab from "@/components/common/Fab";
 
 function LayoutWithTheme() {
   const { isDarkMode } = useContext(ThemeContext);
@@ -98,8 +98,8 @@ function LayoutWithTheme() {
 }
 
 export default function RootLayout() {
-  const router = useRouter();
-  routerRef.router= router;
+  // const router = useRouter();
+  // routerRef.router= router;
   return (
 
     <ProofFormContextProvider>

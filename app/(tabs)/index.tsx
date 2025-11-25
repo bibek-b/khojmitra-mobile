@@ -9,24 +9,26 @@ import { postApi } from "@/api/postApi";
 import { NotificationContext } from "@/context/NotificationContext";
 
 export default function HomeTab() {
+
   const { isDarkMode } = useContext(ThemeContext);
   const { showNotification } = useContext(NotificationContext);
   const [allPosts, setAllPosts] = useState<postType[]>([]);
+
   useEffect(() => {
     const fetchAllPosts = async () => {
       try {
         const res = await postApi.getAll();
         res && setAllPosts(res.data.data);
       } catch (error: any) {
-        console.log(error);
         showNotification &&
           showNotification({ type: "error", message: "Cant fetch post" });
       }
     };
     fetchAllPosts();
   }, []);
+
   return (
-    <View className="relative">
+    <View className="relative h-full">
       <ScrollView showsVerticalScrollIndicator={false}>
         <View
           className={`h-[3px] w-full bg-black/30 ${isDarkMode && "bg-white/30"}`}
@@ -43,9 +45,9 @@ export default function HomeTab() {
           <Text className="text-2xl dark:text-white">No data.</Text>
           </View>}
       </ScrollView>
-      <View className="absolute bottom-4 right-2  text-center items-end w-fit bg-none">
+      {/* <View className="text-center items-end w-fit bg-none h-full"> */}
         <Fab />
-      </View>
+      {/* </View> */}
     </View>
   );
 }

@@ -5,6 +5,7 @@ import HeaderRight from "@/components/headers/HeaderRight";
 import HeaderLeft from "@/components/headers/HeaderLeft";
 import { useHeaderAnimations } from "../../hooks/useHeaderAnimations";
 import { ThemeContext } from "@/context/ThemeContext";
+import Fab from "@/components/common/Fab";
 
 export default function TabLayout() {
   const [showSearchBar, setShowSearchBar] = useState(false);

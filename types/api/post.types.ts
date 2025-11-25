@@ -1,3 +1,5 @@
+import React from "react";
+
 enum postCategories {
   "Electronics",
   "Clothes & Accessories",
@@ -33,6 +35,19 @@ export type addPost = {
   location: string;
   date: Date;
   description: string;
-  images: string[];
+  images?: string[];
   user: string
 }
+
+export type imageType = {
+  uri?: string,
+  mimeType?: string,
+  fileName?: string
+}
+
+export type displayImageProps = {
+  images: imageType[],
+  setImages: React.Dispatch<React.SetStateAction<imageType[]>>
+}
+
+

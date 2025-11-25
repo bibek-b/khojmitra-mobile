@@ -13,7 +13,7 @@ export default function usePickImages({
 
   const pickImages = useCallback(
     async (source: "camera" | "gallery") => {
-      let result;
+      let result: any;
       try {
         if (source === "camera") {
           const { status } = await ImagePicker.requestCameraPermissionsAsync();
@@ -27,14 +27,14 @@ export default function usePickImages({
             allowsEditing: true,
             quality: 1,
           });
-
           if (!result.canceled) {
             if (!singleImage) {
-              const newImages = result?.assets.map((asset) => asset.uri);
-              setImages  && setImages((prev) => [...prev, ...newImages]);
+              // const newImages = result?.assets.map((asset) => asset);
+              // const mappedImgs = newImages.map(img => img.assetId)
+              setImages?.((prev) => [...prev, ...result?.assets]);
             } else {
-              const newImg = result?.assets[0].uri;
-              setImage && setImage(newImg);
+              // const newImg = result?.assets[0];
+              setImage?.(result?.assets[0]);
             }
           }
         } else {
@@ -54,8 +54,10 @@ export default function usePickImages({
           });
             if (!result.canceled) {
               if (!singleImage) {
-                const newImages = result?.assets.map((asset) => asset.uri);
-                setImages  && setImages((prev) => [...prev, ...newImages]);
+                // const newImages = result?.assets.map((asset) => asset.uri);
+                // setImages  && setImages((prev) => [...prev, ...newImages]);
+              setImages?.((prev) => [...prev, ...result?.assets]);
+
               } else {
                 const newImg = result?.assets[0].uri;
                 setImage && setImage(newImg);

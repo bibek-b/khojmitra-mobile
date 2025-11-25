@@ -1,6 +1,7 @@
 import React from "react";
 import { Animated } from "react-native";
 import { authTypes } from "./api/auth.types";
+import { imageType } from "./api/post.types";
 
 export type AnimatedStyleProp = Animated.AnimatedInterpolation<string | number>;
 
@@ -69,31 +70,27 @@ export type ThemeContextType = {
 
 export type PickImagesPropsType = {
   selectionLimit?: number;
-  setImages?: React.Dispatch<React.SetStateAction<string[]>>;
-  setImage?: React.Dispatch<React.SetStateAction<string>>;
+  setImages?: React.Dispatch<React.SetStateAction<imageType[]>>;
+  setImage?: React.Dispatch<React.SetStateAction<imageType>>;
   singleImage?: boolean;
-  images: string[];
+  images: imageType[];
 };
 
 export type ImagePickerModalPropTypes = {
   visible: boolean;
   onClose: () => void;
   selectionLimit: number;
-  setImages?: React.Dispatch<React.SetStateAction<string[]>>;
-  setImage?: React.Dispatch<React.SetStateAction<string>>;
+  setImages?: React.Dispatch<React.SetStateAction<imageType[]>>;
+  setImage?: React.Dispatch<React.SetStateAction<imageType>>;
   singleImage?: boolean;
-  images: string[];
+  images: imageType[];
 };
 
 export type UploadImgBtnProp = {
-  images: string[];
+  images: imageType[];
   setIsModalOpen: React.Dispatch<React.SetStateAction<boolean>>;
 };
 
-export type DisplayImagesProps = {
-  images: string[];
-  setImages: React.Dispatch<React.SetStateAction<string[]>>;
-};
 
 export type NotificationType = {
   type?: "success" | "error" | "info";

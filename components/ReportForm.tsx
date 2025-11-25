@@ -28,7 +28,7 @@ import UploadImgBtn from "./common/UploadImgBtn";
 import DisplayImages from "./common/DisplayImages";
 import { NotificationContext } from "@/context/NotificationContext";
 import { postApi } from "@/api/postApi";
-import { addPost } from "@/types/api/post.types";
+import { addPost, displayImageProps, imageType } from "@/types/api/post.types";
 import { getItem } from "@/utils/AsyncStorage";
 
 const reportType = [
@@ -44,13 +44,12 @@ export default function ReportForm({ isEditPost }: { isEditPost: string }) {
   const [selCategory, setSelCategory] = useState("");
   const [date, setDate] = useState(new Date());
   const [showDatePicker, setShowDatePicker] = useState(false);
-  const [images, setImages] = useState<string[]>([]);
+  const [images, setImages] = useState<imageType[]>([]);
   const [title, setTitle] = useState("");
   const [location, setLocation] = useState("");
   const [description, setDescription] = useState("");
   const [errors, setErrors] = useState<AddEditReportFormTypes>({});
   const [isModalOpen, setIsModalOpen] = useState(false);
-  
 
   const handleSubmit = async () => {
     const newErrors: AddEditReportFormTypes = {};
@@ -73,38 +72,70 @@ export default function ReportForm({ isEditPost }: { isEditPost: string }) {
 
     const user = await getItem("user");
 
-    const data: addPost = {
-      type: checkedValue!,
-      title,
-      category:selCategory,
-      location,
-      date,
-      description,
-      images,
-      user: user?.id
+    // const data: addPost = {
+    //   type: checkedValue!,
+    //   title,
+    //   category: selCategory,
+    //   location,
+    //   date: "8-7-4-2025",
+    //   description,
+    //   // images,
+    //   user: user?._id,
+    // };
+    const fd = new FormData();
+
+    fd.append("type", checkedValue!);
+    fd.append("title", title!);
+    fd.append("category", selCategory!);
+    fd.append("location", location!);
+    const numericDate = `${date.getFullYear()}-${(date.getMonth() + 1).toString().padStart(2, "0")}-${date.getDate().toString().padStart(2, "0")}`;
+    fd.append("date", numericDate);
+    fd.append("description", description!);
+    fd.append("user", user?._id);
+
+    // if (images.length > 0) {
+    //   //convert image uri strings to proper image objects
+    //   images.forEach((img, index) => {
+    //     let fileType = img.uri?.split(".").pop()?.toLowerCase();
+    //     if (fileType === "jpg") fileType = "jpeg";
+    //     if (!fileType) fileType = "jpeg";
+
+    //     fd.append("images", {
+    //       uri: img.uri, // local URI from expo-image-picker
+    //       type: `image/${fileType}`, // MIME type
+    //       name:
+    //         img.uri?.split("/").pop() ||
+    //         `image_${Date.now()}_${index}.${fileType}`,
+    //     } as any);
+    //   });
+    // }
+    if (images.length > 0) {
+      images.forEach((img, index) => {
+        fd.append("images", {
+          uri: img.uri,
+          type: img.mimeType || "image/jpeg", // expo gives mimeType
+          name: img.fileName || `image_${Date.now()}_${index}.jpg`,
+        } as any);
+      });
     }
 
+    console.log('formdata:',fd);
     try {
-        const res = await postApi.create(data);
-
-        if(res.data.success){
-          showNotification?.({type: "success", message: res.data.message})
-        }
-        showNotification?.({type: "error", message: res.data.message})
-      
+      const res = await postApi.create(fd);
+      showNotification?.({ type: "success", message: res.data.message });
+      router.push("/");
     } catch (error: any) {
-
-
-        if(error?.response?.status === 401) {
-          showNotification?.({type: "error", message: "Please login"})
-        } else {
-          showNotification?.({type: "error", message: error.response?.data?.message || "Oops! Something went wrong.please try again."})
-        }
+      console.log({ error });
+      const message =
+        error?.response?.data?.message ||
+        "Oops! Something went wrong. Please try again";
+      showNotification?.({
+        type: "error",
+        message,
+      });
     }
-
-    
   };
-
+console.log({images})
   return (
     <View
       className={`items-center py-10 flex-1 ${isDarkMode && "bg-[#1a1a1a]"}`}
@@ -271,6 +302,7 @@ export default function ReportForm({ isEditPost }: { isEditPost: string }) {
               selectionLimit={4}
               onClose={() => setIsModalOpen(false)}
               setImages={setImages}
+              images={images}
             />
             <DisplayImages images={images} setImages={setImages} />
             <UploadImgBtn images={images} setIsModalOpen={setIsModalOpen} />

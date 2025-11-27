@@ -22,7 +22,6 @@ const { showLoading, hideLoading} = useLoaderStore();
       showLoading("myPosts");
       const res = await postApi.getUserPosts(user?._id);
       setMyPosts(res?.data.data);
-      setMyPosts
     } catch (error: any) {
           showNotification?.({ type: "error", message: error?.response.data.message });
       } finally{

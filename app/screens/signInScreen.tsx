@@ -1,4 +1,3 @@
-import Form from "@/components/AuthForm";
 import { useContext, useState } from "react";
 import { validateSignin } from "../validations/authFormValidator";
 import { NotificationContext } from "@/context/NotificationContext";
@@ -6,6 +5,7 @@ import { authApi } from "@/api/authApi";
 import { useRouter } from "expo-router";
 import { setItem } from "@/utils/AsyncStorage";
 import { AuthFormPayloadType } from "@/types/auth.types";
+import AuthForm from "@/components/AuthForm";
 
 export default function SignInScreen() {
   const { showNotification } = useContext(NotificationContext);
@@ -27,17 +27,17 @@ export default function SignInScreen() {
       });
       router.navigate("/");
     } catch (error: any) {
+      console.log(error)
       showNotification?.({
         type: "error",
         message:
           error?.response?.data.message ||
-          error?.data.message ||
-          "Something went wrong. please try again",
+          "Oops! Something went wrong. please try again",
       });
     }
   };
   return (
-    <Form
+    <AuthForm
       title="Sign In"
       onSubmit={handleSubmit}
       errors={errors}

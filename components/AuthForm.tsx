@@ -6,7 +6,7 @@ import ProfileImage from "./ProfileImage";
 import { AuthSubmitTypes } from "@/types/auth.types";
 import { imageType } from "@/types/image";
 
-export default function Form({ title, onSubmit, errors, isSignIn }: AuthSubmitTypes) {
+export default function AuthForm({ title, onSubmit, errors, isSignIn }: AuthSubmitTypes) {
   const { isDarkMode } = useContext(ThemeContext);
 
   const [image, setImage] = useState<imageType>({});
@@ -14,7 +14,6 @@ export default function Form({ title, onSubmit, errors, isSignIn }: AuthSubmitTy
   const [email, setEmail] = useState<string | "">("");
   const [password, setPassword] = useState<string | "">("");
   const [confirmPassword, setConfirmPassword] = useState<string | "">("");
-console.log('form img', image)
   return (
     <KeyboardAvoidingView
           behavior={Platform.OS === "android" ? "padding" : "height"} className="flex-1 px-5 gap-4 justify-center">
@@ -31,7 +30,7 @@ console.log('form img', image)
               <TextInput
                 value={fullname}
                 onChangeText={setFullname}
-                className={`border border-gray-300 px-2 ${isDarkMode ? "text-[#f5f5f5] placeholder:text-[#f5f5f5]": "text-black"} rounded`}
+                className={`border border-gray-300 px-4 ${isDarkMode ? "text-[#f5f5f5] placeholder:text-[#f5f5f5]": "text-black"} rounded-3xl`}
                 placeholder="Enter your full name.."
               />
               {errors?.fullname && (
@@ -44,7 +43,7 @@ console.log('form img', image)
             <TextInput
               value={email}
               onChangeText={setEmail}
-              className={`border border-gray-300 px-2 ${isDarkMode ? "text-[#f5f5f5] placeholder:text-[#f5f5f5]": "text-black"} rounded`}
+              className={`border border-gray-300 px-4 ${isDarkMode ? "text-[#f5f5f5] placeholder:text-[#f5f5f5]": "text-black"} rounded-3xl`}
               placeholder="Enter your email.."
             />
             {errors?.email && (
@@ -56,7 +55,7 @@ console.log('form img', image)
             <TextInput
               value={password}
               onChangeText={setPassword}
-              className={`border border-gray-300 px-2 ${isDarkMode ? "text-[#f5f5f5] placeholder:text-[#f5f5f5]": "text-black"} rounded`}
+              className={`border border-gray-300 px-4  ${isDarkMode ? "text-[#f5f5f5] placeholder:text-[#f5f5f5]": "text-black"} rounded-3xl`}
               placeholder="Password.."
             />
             {errors?.password && (
@@ -70,7 +69,7 @@ console.log('form img', image)
               <TextInput
                 value={confirmPassword}
                 onChangeText={setConfirmPassword}
-                className={`border border-gray-300 px-2 ${isDarkMode ? "text-[#f5f5f5] placeholder:text-[#f5f5f5]": "text-black"} rounded`}
+                className={`border border-gray-300 px-4 ${isDarkMode ? "text-[#f5f5f5] placeholder:text-[#f5f5f5]": "text-black"} rounded-3xl`}
                 placeholder="Confirm password.."
               />
             </View>
@@ -80,7 +79,7 @@ console.log('form img', image)
           )}
         </View>
         <TouchableOpacity
-          className="bg-[#1976D2] rounded"
+          className="bg-[#1976D2] rounded-xl"
           onPress={() => {
             if (isSignIn) {
               onSubmit({email, password});

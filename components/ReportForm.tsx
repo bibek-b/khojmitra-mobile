@@ -1,18 +1,10 @@
-import {
-  Text,
-  TextInput,
-  TouchableOpacity,
-  View,
-} from "react-native";
+import { Text, TextInput, TouchableOpacity, View } from "react-native";
 import Checkbox from "expo-checkbox";
 import { useContext, useState } from "react";
 import { SelectList } from "react-native-dropdown-select-list";
 import { Category } from "@/constants/categories";
 import DatePicker from "@react-native-community/datetimepicker";
-import {
-  FontAwesome,
-  Fontisto,
-} from "@expo/vector-icons";
+import { FontAwesome, Fontisto } from "@expo/vector-icons";
 import { KeyboardAwareScrollView } from "react-native-keyboard-aware-scroll-view";
 import { router } from "expo-router";
 import { ThemeContext } from "@/context/ThemeContext";
@@ -82,7 +74,7 @@ export default function ReportForm({ isEditPost }: { isEditPost: string }) {
 
     if (images.length > 0) {
       images.forEach((img, index) => {
-        fd.append("images", {
+        fd.append("postImages", {
           uri: img.uri,
           type: img.mimeType || "image/jpeg",
           name: img.fileName || `image_${Date.now()}_${index}.jpg`,
@@ -91,13 +83,11 @@ export default function ReportForm({ isEditPost }: { isEditPost: string }) {
     }
 
     try {
-      showLoading('reportSubmit');
-
+      showLoading("reportSubmit");
       const res = await postApi.create(fd);
       showNotification?.({ type: "success", message: res.data.message });
       router.push("/");
     } catch (error: any) {
-      console.log({ error });
       const message =
         error?.response?.data?.message ||
         "Oops! Something went wrong. Please try again";
@@ -130,18 +120,22 @@ export default function ReportForm({ isEditPost }: { isEditPost: string }) {
               <Text className={`${isDarkMode && "text-[#f5f5f5]"}`}>Type</Text>
 
               {reportType.map((r) => (
-                <View className="flex-row gap-2  items-center" key={r.id}>
-                  <Checkbox
-                    style={{ width: 15, height: 15 }}
-                    value={checkedValue === r.label}
-                    onValueChange={() =>
+                <View className="  items-center" key={r.id}>
+                  <TouchableOpacity
+                    className="flex-row gap-2"
+                    onPress={() =>
                       setCheckedValue(checkedValue === r.label ? null : r.label)
                     }
-                    color={isDarkMode ? "#bbb" : "black"}
-                  />
-                  <Text className={`${isDarkMode && "text-[#f5f5f5]"}`}>
-                    {r.sign} {r.label}
-                  </Text>
+                  >
+                    <Checkbox
+                      style={{ width: 18, height: 18 }}
+                      value={checkedValue === r.label}
+                      color={isDarkMode ? "#bbb" : "black"}
+                    />
+                    <Text className={`${isDarkMode && "text-[#f5f5f5]"}`}>
+                      {r.sign} {r.label}
+                    </Text>
+                  </TouchableOpacity>
                 </View>
               ))}
             </View>
@@ -154,7 +148,7 @@ export default function ReportForm({ isEditPost }: { isEditPost: string }) {
             <Text className={`${isDarkMode && "text-[#f5f5f5]"}`}>Title</Text>
             <TextInput
               placeholder="Item title.."
-              className={`border ${isDarkMode ? "border-[#f5f5f5]/40 text-[#f5f5f5]  placeholder:text-[#f5f5f5]/50 " : "border-black/40"}  rounded-xl px-2`}
+              className={`border ${isDarkMode ? "border-[#f5f5f5]/40 text-[#f5f5f5]  placeholder:text-[#f5f5f5]/50 " : "border-black/40"}  rounded-3xl px-4`}
               value={title}
               onChangeText={setTitle}
             />
@@ -172,6 +166,9 @@ export default function ReportForm({ isEditPost }: { isEditPost: string }) {
               save="value"
               notFoundText="Not found"
               placeholder="Select Category"
+              boxStyles={{
+                borderRadius: 24,
+              }}
               arrowicon={
                 <FontAwesome
                   name="chevron-down"
@@ -211,7 +208,7 @@ export default function ReportForm({ isEditPost }: { isEditPost: string }) {
             </Text>
             <TextInput
               placeholder={`Item ${checkedValue ? checkedValue.toLowerCase() + " location" : "location"}`}
-              className={`border ${isDarkMode ? "border-[#f5f5f5]/40  placeholder:text-[#f5f5f5]/50 text-[#f5f5f5]" : "border-black/40"}  rounded-xl px-2`}
+              className={`border ${isDarkMode ? "border-[#f5f5f5]/40  placeholder:text-[#f5f5f5]/50 text-[#f5f5f5]" : "border-black/40"}  rounded-3xl px-4`}
               value={location}
               onChangeText={setLocation}
             />
@@ -224,7 +221,7 @@ export default function ReportForm({ isEditPost }: { isEditPost: string }) {
               {checkedValue} Date
             </Text>
             <View
-              className={`border ${isDarkMode ? "border-[#f5f5f5]/40  placeholder:text-[#f5f5f5]/50 text-[#f5f5f5]" : "border-black/40"}  rounded-xl px-2`}
+              className={`border ${isDarkMode ? "border-[#f5f5f5]/40  placeholder:text-[#f5f5f5]/50 text-[#f5f5f5]" : "border-black/40"}  rounded-3xl px-4`}
             >
               <TextInput
                 className={`w-[80%] ${isDarkMode && "text-[#f5f5f5]"}`}
@@ -258,7 +255,7 @@ export default function ReportForm({ isEditPost }: { isEditPost: string }) {
             </Text>
             <TextInput
               placeholder="Description.."
-              className={`border ${isDarkMode ? "border-[#f5f5f5]/40  placeholder:text-[#f5f5f5]/50 text-[#f5f5f5]" : "border-black/40"} rounded-xl px-2  min-h-[100px]`}
+              className={`border ${isDarkMode ? "border-[#f5f5f5]/40  placeholder:text-[#f5f5f5]/50 text-[#f5f5f5]" : "border-black/40"} rounded-3xl px-4  min-h-[100px]`}
               multiline={true}
               textAlignVertical="top"
               value={description}

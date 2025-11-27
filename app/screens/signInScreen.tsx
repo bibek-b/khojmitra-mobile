@@ -1,4 +1,4 @@
-import Form from "@/components/Form";
+import Form from "@/components/AuthForm";
 import { useContext, useState } from "react";
 import { validateSignin } from "../validations/authFormValidator";
 import { NotificationContext } from "@/context/NotificationContext";

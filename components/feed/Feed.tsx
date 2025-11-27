@@ -45,7 +45,6 @@ post
   const images = post.images!;
   const type = post.type!;
   const description = post.description!;
-
   return (
     <View>
       <Modal

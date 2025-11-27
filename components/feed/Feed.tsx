@@ -21,6 +21,7 @@ import { ThemeContext } from "@/context/ThemeContext";
 import { ProofFormContext } from "@/context/ProofFormContext";
 import { format} from 'timeago.js';
 import { postType } from "@/types/post.types";
+import { getItem } from "@/utils/AsyncStorage";
 
 const moreOptions = [
   { id: 1, label: "Edit Post", icon: <Entypo name="edit" size={20} /> },
@@ -29,7 +30,7 @@ const moreOptions = [
 
 export default function Feed({
 post
-}: {post: postType}, parent?: string) {
+}: {post: postType}) {
   const [expanded, setExpanded] = useState(false);
   const [selectedImage, setSelectedImage] = useState<string | null>(null);
   const isLost = post.type === "Lost";
@@ -38,13 +39,19 @@ post
   const { isDarkMode } = useContext(ThemeContext);
   const { showForm, setProofFormType } = useContext(ProofFormContext);
 
-  const handleMorePress = () => {
+
+
+  const handleMorePress = async () => {
     setMoreOptionOpen(true);
+   
   };
   
   const images = post.images!;
   const type = post.type!;
   const description = post.description!;
+
+  const parent = "myPost";
+  console.log(post)
   return (
     <View>
       <Modal
@@ -117,14 +124,14 @@ post
               onPress={() => setSelectedImage(null)}
               className="absolute right-0 p-4"
             >
-              <Feather name="x" size={28} color="[#f5f5f5]" />
+              <Feather name="x" size={28} color="#f5f5f5" />
             </TouchableOpacity>
           </View>
         )}
       />
 
       <TouchableOpacity
-        className="absolute right-3 top-10"
+        className="absolute right-3 top-2"
         onPress={() => (parent === "myPost") && handleMorePress()}
       >
         {parent === "myPost" ? (
@@ -135,24 +142,25 @@ post
       </TouchableOpacity>
       
       <View className="px-4 ">
-        <View className="flex-row items-center gap-4 pb-2  ">
-         <View className=" relative">
+        <View className="flex-row gap-4 py-2  ">
+         <View className=" relative ">
            <TouchableOpacity
-            className="flex-row items-center"
+            className="flex-row items- gap-2"
             onPress={() => router.push("/screens/profileScreen")}
           >
-            <EvilIcons
+            {/* <EvilIcons
               name="user"
               size={50}
               color={isDarkMode ? "#f5f5f5" : "black"}
-            />
+            /> */}
+            <Image source={{uri: post?.user?.avatar ?? "https://thumb.ac-illust.com/51/51e1c1fc6f50743937e62fca9b942694_t.jpeg" }} className="w-12 h-12 object-cover rounded-full " />
             <Text
               className={`text-xl font-bold ${isDarkMode && "text-[#f5f5f5]"}`}
             >
               {post?.user?.fullname }
             </Text>
           </TouchableOpacity>
-           <Text className={`opacity-60 ${isDarkMode && "text-[#f5f5f5]"} absolute -bottom-1 left-14 text-sm`}>
+           <Text className={`opacity-60 ${isDarkMode && "text-[#f5f5f5]"} absolute bottom-1 left-14 text-sm`}>
             {format(new Date(post?.createdAt!))}
           </Text>
          </View>

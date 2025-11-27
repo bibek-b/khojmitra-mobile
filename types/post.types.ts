@@ -24,6 +24,7 @@ export type postType = {
     user: {
       _id: string;
       fullname: string;
+      avatar?:string;
     }
 };
 

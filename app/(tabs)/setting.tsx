@@ -16,7 +16,7 @@ import {
 export default function SettingTab() {
   const [isLogoutClicked, setIsLogoutClicked] = useState(false);
   const { isDarkMode } = useContext(ThemeContext);
-  const [me, setMe] = useState({fullname: ""});
+  const [me, setMe] = useState({fullname: "", avatar: ""});
 
  useEffect(() => {
   const getMyDetails = async () => {
@@ -74,7 +74,7 @@ export default function SettingTab() {
         <View className="flex-row items-center gap-2">
           <Image
             source={{
-              uri: "https://i.pinimg.com/736x/79/e5/2f/79e52ff7ce03e1e30ab4a1dd63e68730.jpg",
+              uri: me?.avatar ?? "https://i.pinimg.com/736x/79/e5/2f/79e52ff7ce03e1e30ab4a1dd63e68730.jpg",
             }}
             className="w-16 h-16 object-cover rounded-full"
           />

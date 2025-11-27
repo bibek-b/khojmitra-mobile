@@ -1,7 +1,6 @@
 import Feed from "@/components/feed/Feed";
 import { ScrollView, Text, View } from "react-native";
 import Fab from "../../components/common/Fab";
-import { postData } from "@/constants/dummyData";
 import { useContext, useEffect, useState } from "react";
 import { NotificationContext } from "@/context/NotificationContext";
 import { useLoaderStore } from "@/store/useLoaderStore";

@@ -1,4 +1,3 @@
-import usePickImages from "@/hooks/usePickImages";
 import { Feather } from "@expo/vector-icons";
 import { useEffect, useState } from "react";
 import { Image, View } from "react-native";
@@ -13,7 +12,6 @@ export default function ProfileImage({setImg}: any) {
   useEffect(() => {
     if(image) setImg(image)
     },[image])
-    console.log("profile img: ",image)
 
   // const { pickImages} = usePickImages()
   return (

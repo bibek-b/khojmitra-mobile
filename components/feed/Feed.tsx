@@ -133,9 +133,11 @@ post
           <Feather name="x" size={28} color={isDarkMode ? "#e0e0e0" : "gray"} />
         )}
       </TouchableOpacity>
+      
       <View className="px-4 ">
-        <View className="flex-row items-center gap-2 pt-6 ">
-          <TouchableOpacity
+        <View className="flex-row items-center gap-4 pb-2  ">
+         <View className=" relative">
+           <TouchableOpacity
             className="flex-row items-center"
             onPress={() => router.push("/screens/profileScreen")}
           >
@@ -150,12 +152,14 @@ post
               {post?.user?.fullname }
             </Text>
           </TouchableOpacity>
+           <Text className={`opacity-60 ${isDarkMode && "text-[#f5f5f5]"} absolute -bottom-1 left-14 text-sm`}>
+            {format(new Date(post?.createdAt!))}
+          </Text>
+         </View>
           <Text className={`font-medium ${isDarkMode && "text-[#F5F5F5]"}`}>
             {isLost ? "🔴 Lost" : "🟢 Found"}
           </Text>
-          <Text className={`opacity-60 ${isDarkMode && "text-[#f5f5f5]"}`}>
-            {format(new Date(post?.createdAt!))}
-          </Text>
+         
         </View>
         <View className="gap-2">
           {[

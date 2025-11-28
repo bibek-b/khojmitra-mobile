@@ -10,6 +10,7 @@ import { NavigationContainer } from "@react-navigation/native";
 import Fab from "@/components/common/Fab";
 import { GlobalLoader } from "@/components/common/GlobalLoader";
 import { useLoaderStore } from "@/store/useLoaderStore";
+import GlobalConfirmModal from "@/components/common/GlobalConfirmModal";
 
 function LayoutWithTheme() {
   const { isDarkMode } = useContext(ThemeContext);
@@ -110,7 +111,9 @@ export default function RootLayout() {
         <ThemeContextProvider>
           <LayoutWithTheme />
           <ProofForm />
+
           {loading.boolean && <GlobalLoader loaderText={loading?.parent === "reportSubmit" ? "Uploading..": "Loading.." } />}
+          <GlobalConfirmModal />
           <PopupNotification />
         </ThemeContextProvider>
       </NotificationContextProvider>

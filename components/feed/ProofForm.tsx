@@ -61,7 +61,7 @@ export default function ProofForm() {
   return (
     isFormVisible && (
       <TouchableWithoutFeedback onPress={() => closeFormWithAnim(hideForm)}>
-        <View className="w-full h-full absolute top-0 left-0 bg-black/60 justify-center items-center backdrop-blur-3xl">
+        <View className="w-full h-full absolute top-0 left-0 bg-black/60 justify-center items-center ">
           <TouchableWithoutFeedback>
             <KeyboardAvoidingView
               behavior={Platform.OS === "android" ? "padding" : "height"}>

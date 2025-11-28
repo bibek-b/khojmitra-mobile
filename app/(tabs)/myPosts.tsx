@@ -34,7 +34,7 @@ const { showLoading, hideLoading} = useLoaderStore();
       showLoading("Feed");
       
       await postApi.delete(id);
-      setMyPosts(prev => prev.filter(p => p._id === id));
+      setMyPosts(prev => prev.filter(p => p._id !== id));
           showNotification?.({
             type: "success",
             message: "Post deleted successfully",

@@ -6,7 +6,7 @@ import {
   FontAwesome5,
 } from "@expo/vector-icons";
 import { router } from "expo-router";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import {
   Image,
   Modal,
@@ -19,39 +19,52 @@ import ImageViewing from "react-native-image-viewing";
 import { useContext } from "react";
 import { ThemeContext } from "@/context/ThemeContext";
 import { ProofFormContext } from "@/context/ProofFormContext";
-import { format} from 'timeago.js';
+import { format } from "timeago.js";
 import { postType } from "@/types/post.types";
 import { getItem } from "@/utils/AsyncStorage";
+import { NotificationContext } from "@/context/NotificationContext";
+import { useLoaderStore } from "@/store/useLoaderStore";
+import { postApi } from "@/api/postApi";
+import { FeedProps } from "@/types/feed";
 
 const moreOptions = [
   { id: 1, label: "Edit Post", icon: <Entypo name="edit" size={20} /> },
   { id: 2, label: "Delete Post", icon: <FontAwesome name="trash" size={20} /> },
 ];
 
-export default function Feed({
-post
-}: {post: postType}) {
+export default function Feed({ post, onDeletePost }: FeedProps) {
   const [expanded, setExpanded] = useState(false);
   const [selectedImage, setSelectedImage] = useState<string | null>(null);
   const isLost = post.type === "Lost";
   const [moreOptionOpen, setMoreOptionOpen] = useState(false);
+  const [myId, setMyId] = useState("");
+  const { showNotification } = useContext(NotificationContext);
+  const { showLoading, hideLoading } = useLoaderStore();
+
+  useEffect(() => {
+    (async () => {
+      const user = await getItem("user");
+      setMyId(user._id);
+    })();
+  }, []);
 
   const { isDarkMode } = useContext(ThemeContext);
   const { showForm, setProofFormType } = useContext(ProofFormContext);
 
-
-
   const handleMorePress = async () => {
     setMoreOptionOpen(true);
+  };
+
+  const handleDelete = async (id: string) => {
    
   };
-  
+
   const images = post.images!;
   const type = post.type!;
   const description = post.description!;
 
   const parent = "myPost";
-  console.log(post)
+
   return (
     <View>
       <Modal
@@ -72,12 +85,13 @@ post
                       key={opt.id}
                       className="flex-row items-center gap-4"
                       onPress={() => {
-                        opt.label === "Edit Post" &&
-                          router.push({
-                            pathname: "/screens/addEditReportScreen",
-                            params: { isEditPost: "true" },
-                          });
-                        setMoreOptionOpen(false);
+                        (opt.label === "Edit Post"
+                          ? router.push({
+                              pathname: "/screens/addEditReportScreen",
+                              params: { isEditPost: "true" },
+                            })
+                          : onDeletePost(post._id!),
+                          setMoreOptionOpen(false));
                       }}
                     >
                       <Text
@@ -99,7 +113,6 @@ post
         </TouchableWithoutFeedback>
       </Modal>
 
-      
       <ImageViewing
         images={images.map((img) => ({ uri: img }))}
         imageIndex={images.findIndex((img) => img === selectedImage)}
@@ -130,50 +143,54 @@ post
         )}
       />
 
-      <TouchableOpacity
-        className="absolute right-3 top-2"
-        onPress={() => (parent === "myPost") && handleMorePress()}
-      >
-        {parent === "myPost" ? (
+      {post.user._id === myId && (
+        <TouchableOpacity
+          className="absolute right-3 top-2"
+          onPress={() => parent === "myPost" && handleMorePress()}
+        >
           <Entypo name="dots-three-horizontal" size={24} color="gray" />
-        ) : (
-          <Feather name="x" size={28} color={isDarkMode ? "#e0e0e0" : "gray"} />
-        )}
-      </TouchableOpacity>
-      
+        </TouchableOpacity>
+      )}
+
       <View className="px-4 ">
         <View className="flex-row gap-4 py-2  ">
-         <View className=" relative ">
-           <TouchableOpacity
-            className="flex-row items- gap-2"
-            onPress={() => router.push("/screens/profileScreen")}
-          >
-            {/* <EvilIcons
-              name="user"
-              size={50}
-              color={isDarkMode ? "#f5f5f5" : "black"}
-            /> */}
-            <Image source={{uri: post?.user?.avatar ?? "https://thumb.ac-illust.com/51/51e1c1fc6f50743937e62fca9b942694_t.jpeg" }} className="w-12 h-12 object-cover rounded-full " />
-            <Text
-              className={`text-xl font-bold ${isDarkMode && "text-[#f5f5f5]"}`}
+          <View className=" relative ">
+            <TouchableOpacity
+              className="flex-row items- gap-2"
+              onPress={() => router.push("/screens/profileScreen")}
             >
-              {post?.user?.fullname }
+              <Image
+                source={{
+                  uri:
+                    post?.user?.avatar ??
+                    "https://thumb.ac-illust.com/51/51e1c1fc6f50743937e62fca9b942694_t.jpeg",
+                }}
+                className="w-12 h-12 object-cover rounded-full "
+              />
+              <Text
+                className={`text-xl font-bold ${isDarkMode && "text-[#f5f5f5]"}`}
+              >
+                {post?.user?.fullname}
+              </Text>
+            </TouchableOpacity>
+            <Text
+              className={`opacity-60 ${isDarkMode && "text-[#f5f5f5]"} absolute bottom-1 left-14 text-sm`}
+            >
+              {format(new Date(post?.createdAt!))}
             </Text>
-          </TouchableOpacity>
-           <Text className={`opacity-60 ${isDarkMode && "text-[#f5f5f5]"} absolute bottom-1 left-14 text-sm`}>
-            {format(new Date(post?.createdAt!))}
-          </Text>
-         </View>
+          </View>
           <Text className={`font-medium ${isDarkMode && "text-[#F5F5F5]"}`}>
             {isLost ? "🔴 Lost" : "🟢 Found"}
           </Text>
-         
         </View>
         <View className="gap-2">
           {[
             { key: `${isLost ? "Lost" : "Found"} Item`, value: post.title },
             { key: "Category", value: post.category },
-            { key: `${isLost ? "Lost" : "Found"} Location`, value: post.location },
+            {
+              key: `${isLost ? "Lost" : "Found"} Location`,
+              value: post.location,
+            },
             { key: `${isLost ? "Lost" : "Found"} Date`, value: post.date },
           ].map((item) => (
             <View key={item.key} className="flex-row pt-2">
@@ -205,7 +222,7 @@ post
           )}
 
           <View className="flex-row  w-full flex-wrap justify-center gap-2">
-            {images.map((img,idx) => (
+            {images.map((img, idx) => (
               <TouchableOpacity key={idx} onPress={() => setSelectedImage(img)}>
                 <Image
                   source={{
@@ -217,13 +234,24 @@ post
             ))}
           </View>
           <TouchableOpacity
-            onPress={() => (showForm?.(), setProofFormType?.(type.toLowerCase()))}
+            onPress={() => (
+              showForm?.(),
+              setProofFormType?.(type.toLowerCase())
+            )}
             className="flex-row items-center gap-3 justify-start pt-6"
           >
             {type === "Lost" ? (
-              <FontAwesome5 name="handshake" size={24} color={isDarkMode ? "white" : "black"} />
+              <FontAwesome5
+                name="handshake"
+                size={24}
+                color={isDarkMode ? "white" : "black"}
+              />
             ) : (
-              <Feather name="user-check" size={24} color={isDarkMode ? "white" : "black"} />
+              <Feather
+                name="user-check"
+                size={24}
+                color={isDarkMode ? "white" : "black"}
+              />
             )}
             <Text className={`${isDarkMode && "text-[#f5f5f5]"} `}>
               {type === "Lost" ? "I Found This" : "This is Mine"}

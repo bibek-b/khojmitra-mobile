@@ -29,12 +29,35 @@ const { showLoading, hideLoading} = useLoaderStore();
    })()
   },[])
   
+  const handleDeletePost = async (id: string) => {
+    try {
+      showLoading("Feed");
+      
+      await postApi.delete(id);
+      setMyPosts(prev => prev.filter(p => p._id === id));
+          showNotification?.({
+            type: "success",
+            message: "Post deleted successfully",
+          });
+        } catch (error: any) {
+          const message =
+            error?.response?.data?.message ||
+            "Oops! Something went wrong. Please try again";
+          showNotification?.({
+            type: "error",
+            message,
+          });
+        } finally {
+          hideLoading();
+        }
+  }
   return (
     <View>
       <ScrollView showsVerticalScrollIndicator={false}>
          {myPosts.length > 0 ? myPosts?.map((data) => (
                   <View key={data._id} className=" justify-center w-full">
                     <Feed post={data}
+                    onDeletePost={handleDeletePost}
                     />
                     <View
                       className={`h-[3px] w-full bg-black/30 mt-2 dark:bg-white/30}`}

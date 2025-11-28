@@ -1,4 +1,4 @@
-import { useEffect, useRef } from "react";
+import {  useRef } from "react";
 import { Animated } from "react-native";
 import { animateValue } from "../utils/animation";
 

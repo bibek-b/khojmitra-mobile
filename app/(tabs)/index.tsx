@@ -1,10 +1,8 @@
 import Feed from "@/components/feed/Feed";
 import { ScrollView, Text, View } from "react-native";
 import Fab from "../../components/common/Fab";
-import { postData } from "@/constants/dummyData";
-import { useContext, useEffect, useState } from "react";
+import { useContext, useEffect } from "react";
 import { ThemeContext } from "@/context/ThemeContext";
-import { postType } from "@/types/post.types";
 import { postApi } from "@/api/postApi";
 import { NotificationContext } from "@/context/NotificationContext";
 import { useLoaderStore } from "@/store/useLoaderStore";
@@ -52,9 +50,7 @@ export default function HomeTab() {
           <Text className="text-2xl dark:text-white">No data.</Text>
           </View>}
       </ScrollView>
-      {/* <View className="text-center items-end w-fit bg-none h-full"> */}
-        <Fab />
-      {/* </View> */}
+    
     </View>
   );
 }

@@ -1,11 +1,12 @@
 import { router, Tabs } from "expo-router";
-import { Entypo, Ionicons, Feather } from "@expo/vector-icons";
+import { Entypo, Ionicons, Feather, AntDesign } from "@expo/vector-icons";
 import { useContext, useEffect, useState } from "react";
 import HeaderRight from "@/components/headers/HeaderRight";
 import HeaderLeft from "@/components/headers/HeaderLeft";
 import { useHeaderAnimations } from "../../hooks/useHeaderAnimations";
 import { ThemeContext } from "@/context/ThemeContext";
 import Fab from "@/components/common/Fab";
+import { TouchableOpacity } from "react-native";
 
 export default function TabLayout() {
   const [showSearchBar, setShowSearchBar] = useState(false);
@@ -69,7 +70,13 @@ export default function TabLayout() {
           headerShadowVisible: false,
         }}
       />
-
+      <Tabs.Screen name="addEdit" options={{ title: "", tabBarIcon: () => (
+        // <Fab />
+         <TouchableOpacity className="absolute shadow-white bottom-2 w-16 h-16 rounded-full p-2 bg-[#1976D2] mx-2  items-center flex-row justify-center gap-2 " onPress={() => router.push('/screens/addEditReportScreen')}>
+      <AntDesign name="plus" size={24} color="white" />
+      {/* <Text className="text-white text-center text-xl">Add Report</Text> */}
+    </TouchableOpacity>
+      )}} />
       <Tabs.Screen
         name="chat"
         options={{

@@ -65,9 +65,6 @@ export default function MyPostsTab() {
           </View>
         )}
       </ScrollView>
-      <View className="absolute bottom-4 right-2  text-center items-end w-fit bg-none">
-        <Fab />
-      </View>
     </View>
   );
 }

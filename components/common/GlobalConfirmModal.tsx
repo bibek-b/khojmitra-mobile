@@ -1,14 +1,16 @@
 import { useConfirmModal } from "@/store/useConfirmModal";
-import { Text, TouchableOpacity, View } from "react-native";
+import { Modal, Text, TouchableOpacity, TouchableWithoutFeedback, View } from "react-native";
 
 export default function GlobalConfirmModal() {
   const { confirmModal, modalContent, onConfirm, hideConfirmModal } =
     useConfirmModal();
   const acceptBtnBg = modalContent?.acceptBtnBg;
-  if (!confirmModal) return;
   return (
-    <View className=" absolute top-0 bg-black/60 h-full w-full  items-center justify-center ">
-      <View className="bg-[#1e1e1e] w-80 px-2 py-6 rounded-xl shadow-lg dark:shadow-white gap-4">
+   <Modal visible={confirmModal} transparent={true} animationType="fade">
+   <TouchableWithoutFeedback onPress={hideConfirmModal}>
+      <View className=" flex-1 bg-black/60">
+     <TouchableWithoutFeedback>
+       <View className="absolute top-72 left-12 bg-[#1e1e1e] w-80 px-2 py-6 rounded-xl shadow-lg dark:shadow-white gap-4">
         <Text className="dark:text-white text-3xl text-center font-bold">
           {modalContent?.title}
         </Text>
@@ -34,6 +36,9 @@ export default function GlobalConfirmModal() {
           </TouchableOpacity>
         </View>
       </View>
+     </TouchableWithoutFeedback>
     </View>
+   </TouchableWithoutFeedback>
+   </Modal>
   );
 }

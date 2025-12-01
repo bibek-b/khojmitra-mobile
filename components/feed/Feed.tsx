@@ -53,7 +53,7 @@ export default function Feed({ post, onDeletePost }: FeedProps) {
       });
 
       setOnConfirm(() => {
-        onDeletePost(idToDelete);
+        onDeletePost?.(idToDelete);
       })
     
     } else {

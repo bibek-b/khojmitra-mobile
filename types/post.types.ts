@@ -28,6 +28,11 @@ export type postType = {
     }
 };
 
+export interface postStore {
+  allPosts: postType[],
+  setAllPosts: (data: postType[]) => void;
+}
+
 
 
 

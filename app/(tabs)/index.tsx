@@ -8,6 +8,7 @@ import { postType } from "@/types/post.types";
 import { postApi } from "@/api/postApi";
 import { NotificationContext } from "@/context/NotificationContext";
 import { useLoaderStore } from "@/store/useLoaderStore";
+import { usePostStore } from "@/store/usePostStore";
 
 export default function HomeTab() {
 
@@ -15,14 +16,14 @@ export default function HomeTab() {
   const { showLoading, hideLoading} = useLoaderStore();
 
   const { showNotification } = useContext(NotificationContext);
-  const [allPosts, setAllPosts] = useState<postType[]>([]);
+  const {allPosts, setAllPosts} = usePostStore();
 
   useEffect(() => {
     const fetchAllPosts = async () => {
       try {
         showLoading("fetchPosts")
         const res = await postApi.getAll();
-        res && setAllPosts(res.data.data);
+         setAllPosts(res?.data.data);
       } catch (error: any) {
         showNotification &&
           showNotification({ type: "error", message: "Cant fetch post" });
@@ -39,7 +40,7 @@ export default function HomeTab() {
         <View
           className={`h-[3px] w-full bg-black/30 ${isDarkMode && "bg-white/30"}`}
         />
-        {allPosts.length > 0 ? allPosts?.map((data) => (
+        {allPosts?.length > 0 ? allPosts.map((data) => (
           <View key={data._id} className=" justify-center w-full">
             <Feed post={data}
             />

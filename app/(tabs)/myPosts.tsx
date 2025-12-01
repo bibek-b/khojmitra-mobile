@@ -40,6 +40,7 @@ const { showLoading, hideLoading} = useLoaderStore();
             message: "Post deleted successfully",
           });
         } catch (error: any) {
+          console.log(error)
           const message =
             error?.response?.data?.message ||
             "Oops! Something went wrong. Please try again";

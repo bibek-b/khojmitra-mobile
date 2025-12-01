@@ -1,10 +1,4 @@
-import {
-  Entypo,
-  EvilIcons,
-  Feather,
-  FontAwesome,
-  FontAwesome5,
-} from "@expo/vector-icons";
+import { Entypo, Feather, FontAwesome, FontAwesome5 } from "@expo/vector-icons";
 import { router } from "expo-router";
 import { useEffect, useState } from "react";
 import {
@@ -20,12 +14,9 @@ import { useContext } from "react";
 import { ThemeContext } from "@/context/ThemeContext";
 import { ProofFormContext } from "@/context/ProofFormContext";
 import { format } from "timeago.js";
-import { postType } from "@/types/post.types";
 import { getItem } from "@/utils/AsyncStorage";
-import { NotificationContext } from "@/context/NotificationContext";
-import { useLoaderStore } from "@/store/useLoaderStore";
-import { postApi } from "@/api/postApi";
 import { FeedProps } from "@/types/feed";
+import { useConfirmModal } from "@/store/useConfirmModal";
 
 const moreOptions = [
   { id: 1, label: "Edit Post", icon: <Entypo name="edit" size={20} /> },
@@ -38,8 +29,9 @@ export default function Feed({ post, onDeletePost }: FeedProps) {
   const isLost = post.type === "Lost";
   const [moreOptionOpen, setMoreOptionOpen] = useState(false);
   const [myId, setMyId] = useState("");
-  const { showNotification } = useContext(NotificationContext);
-  const { showLoading, hideLoading } = useLoaderStore();
+  const [idToDelete, setIdToDelete] = useState("");
+  const { showConfirmModal, confirmModal, setModalContent, setOnConfirm } =
+    useConfirmModal();
 
   useEffect(() => {
     (async () => {
@@ -48,15 +40,38 @@ export default function Feed({ post, onDeletePost }: FeedProps) {
     })();
   }, []);
 
+  console.log(idToDelete)
+
+  useEffect(() => {
+    if (confirmModal) {
+      setModalContent({
+        title: "Delete post",
+        detailInfo: "Are you sure you want to delete this post?",
+        acceptText: "Yes, Delete",
+        denyText: "Cancel",
+        acceptBtnBg: "bg-red-500",
+      });
+
+      setOnConfirm(() => {
+        onDeletePost(idToDelete);
+      })
+    
+    } else {
+      setModalContent({
+        title: "",
+        detailInfo: "",
+        acceptText: "",
+        denyText: "",
+        acceptBtnBg: "",
+      });
+    }
+  }, [confirmModal]);
+
   const { isDarkMode } = useContext(ThemeContext);
   const { showForm, setProofFormType } = useContext(ProofFormContext);
 
   const handleMorePress = async () => {
     setMoreOptionOpen(true);
-  };
-
-  const handleDelete = async (id: string) => {
-   
   };
 
   const images = post.images!;
@@ -90,7 +105,8 @@ export default function Feed({ post, onDeletePost }: FeedProps) {
                               pathname: "/screens/addEditReportScreen",
                               params: { isEditPost: "true" },
                             })
-                          : onDeletePost(post._id!),
+                          : showConfirmModal(),
+                          setIdToDelete(post?._id!),
                           setMoreOptionOpen(false));
                       }}
                     >

@@ -36,11 +36,10 @@ export default function Feed({ post, onDeletePost }: FeedProps) {
   useEffect(() => {
     (async () => {
       const user = await getItem("user");
-      setMyId(user._id);
+      setMyId(user?._id);
     })();
   }, []);
 
-  console.log(idToDelete)
 
   useEffect(() => {
     if (confirmModal) {

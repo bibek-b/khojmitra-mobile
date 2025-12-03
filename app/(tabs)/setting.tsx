@@ -98,7 +98,7 @@ export default function SettingTab() {
         <SettingDetails />
       </View>
       <TouchableOpacity
-        className={` ${isDarkMode ? "bg-[#242424]": "bg-gray-200"} py-3 rounded-lg mt-[250px]`}
+        className={` ${isDarkMode ? "bg-[#242424]": "bg-gray-200"} py-3 rounded-lg mt-[240px]`}
         onPress={() => setIsLogoutClicked(true)}
       >
         <Text className={`font-medium text-[16px] text-center ${isDarkMode ? "text-white": "text-black"}`}>Log Out</Text>

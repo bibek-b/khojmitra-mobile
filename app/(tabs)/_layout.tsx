@@ -70,9 +70,9 @@ export default function TabLayout() {
           headerShadowVisible: false,
         }}
       />
-      <Tabs.Screen name="addEdit" options={{ title: "", tabBarIcon: () => (
+      <Tabs.Screen name="addEdit" options={{ title: "", tabBarButton: () => (
         // <Fab />
-         <TouchableOpacity className="absolute shadow-white bottom-2 w-16 h-16 rounded-full p-2 bg-[#1976D2] mx-2  items-center flex-row justify-center gap-2 " onPress={() => router.push('/screens/addEditReportScreen')}>
+         <TouchableOpacity  className="absolute shadow-white bottom-4 w-16 h-16 rounded-full p-2 bg-[#1976D2] mx-2  items-center flex-row justify-center gap-2 shadow-lg dark:shadow-white  elevation-10 " onPress={() => router.push('/screens/addEditReportScreen')}>
       <AntDesign name="plus" size={24} color="white" />
       {/* <Text className="text-white text-center text-xl">Add Report</Text> */}
     </TouchableOpacity>

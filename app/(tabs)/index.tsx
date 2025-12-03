@@ -7,50 +7,74 @@ import { postApi } from "@/api/postApi";
 import { NotificationContext } from "@/context/NotificationContext";
 import { useLoaderStore } from "@/store/useLoaderStore";
 import { usePostStore } from "@/store/usePostStore";
+import { useSearchFeedStore } from "@/store/useSearchFeedStore";
 
 export default function HomeTab() {
-
   const { isDarkMode } = useContext(ThemeContext);
-  const { showLoading, hideLoading} = useLoaderStore();
+  const { showLoading, hideLoading } = useLoaderStore();
 
   const { showNotification } = useContext(NotificationContext);
-  const {allPosts, setAllPosts} = usePostStore();
+  const { allPosts, setAllPosts } = usePostStore();
+  const { searchInput } = useSearchFeedStore();
 
   useEffect(() => {
     const fetchAllPosts = async () => {
       try {
-        showLoading("fetchPosts")
+        showLoading("fetchPosts");
         const res = await postApi.getAll();
-         setAllPosts(res?.data.data);
+        setAllPosts(res?.data.data);
       } catch (error: any) {
         showNotification &&
           showNotification({ type: "error", message: "Cant fetch post" });
-      } finally{
+      } finally {
         hideLoading();
       }
     };
     fetchAllPosts();
   }, []);
 
+  const filteredPost = allPosts.filter(
+    (p) =>
+      p.title
+        ?.trim()
+        .toLowerCase()
+        .includes(searchInput.trim().toLowerCase()) ||
+      p.type?.trim().toLowerCase().includes(searchInput.trim().toLowerCase()) ||
+      String(p.category)
+        ?.trim()
+        .toLowerCase()
+        .includes(searchInput.trim().toLowerCase()) ||
+      p.location
+        ?.trim()
+        .toLowerCase()
+        .includes(searchInput.trim().toLowerCase()) ||
+      p.date?.trim().toLowerCase().includes(searchInput.trim().toLowerCase()) ||
+      p.description
+        ?.trim()
+        .toLowerCase()
+        .includes(searchInput.trim().toLowerCase())
+  );
   return (
     <View className="relative h-full">
       <ScrollView showsVerticalScrollIndicator={false}>
         <View
           className={`h-[3px] w-full bg-black/30 ${isDarkMode && "bg-white/30"}`}
         />
-        {allPosts?.length > 0 ? allPosts.map((data) => (
-          <View key={data._id} className=" justify-center w-full">
-            <Feed post={data}
-            />
-            <View
-              className={`h-[3px] w-full bg-black/30 mt-2 ${isDarkMode && "bg-white/30"}`}
-            />
+        {(allPosts?.length > 0 && filteredPost?.length > 0) ? (
+          filteredPost.map((data) => (
+            <View key={data._id} className=" justify-center w-full">
+              <Feed post={data} />
+              <View
+                className={`h-[3px] w-full bg-black/30 mt-2 ${isDarkMode && "bg-white/30"}`}
+              />
+            </View>
+          ))
+        ) : (
+          <View className="items-center justify-center h-screen">
+            <Text className="text-2xl dark:text-white">No data found.</Text>
           </View>
-        )): <View className="items-center justify-center h-screen">
-          <Text className="text-2xl dark:text-white">No data.</Text>
-          </View>}
+        )}
       </ScrollView>
-    
     </View>
   );
 }

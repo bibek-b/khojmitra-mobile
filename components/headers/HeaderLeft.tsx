@@ -1,4 +1,4 @@
-import { HeaderAnimationPropsType } from "@/types/theme";
+import { HeaderAnimationPropsType } from "@/types/animation";
 import { router } from "expo-router";
 import { Animated, Text, TouchableOpacity } from "react-native";
 

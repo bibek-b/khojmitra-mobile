@@ -1,5 +1,6 @@
 import { ThemeContext } from "@/context/ThemeContext";
-import { HeaderAnimationPropsType } from "@/types/theme";
+import { useSearchFeedStore } from "@/store/useSearchFeedStore";
+import { HeaderAnimationPropsType } from "@/types/animation";
 import { Feather, Ionicons } from "@expo/vector-icons";
 import { router } from "expo-router";
 import { useContext } from "react";
@@ -18,6 +19,8 @@ export default function HeaderRight({
   searchWidth,
 }: HeaderAnimationPropsType) {
   const { isDarkMode } = useContext(ThemeContext);
+  const { searchInput, setSearchInput} = useSearchFeedStore();
+
   return (
     <View className="flex-row pr-2 gap-4 ">
       <Animated.View
@@ -34,8 +37,10 @@ export default function HeaderRight({
               className={`flex-1 px-4 text-base ${isDarkMode ? "text-[#e0e0e0] placeholder:text-white": "text-black"}`}
               placeholder="Search"
               autoFocus={showSearchBar}
+              value={searchInput}
+              onChangeText={setSearchInput}
             />
-            <TouchableOpacity onPress={() => setShowSearchBar?.(false)}>
+            <TouchableOpacity onPress={() => (setShowSearchBar?.(false), setSearchInput(''))}>
               <Feather
                 name="x"
                 size={22}
@@ -54,7 +59,7 @@ export default function HeaderRight({
           >
             <Feather name="search" size={28} color={isDarkMode ? "#E0E0E0": "black"} />
           </TouchableOpacity>
-          <TouchableOpacity className="p-2 relative" onPress={() => router.push('/notificationScreen')}>
+          <TouchableOpacity className="p-2 relative" onPress={() => router.push('/screens/notificationScreen')}>
             <Ionicons name="notifications-outline" size={28} color={isDarkMode ? "#E0E0E0": "black"}/>
             <Text className="h-5 w-5 text-center right-1 top-1 rounded-full bg-red-500 text-sm absolute text-white">
               1

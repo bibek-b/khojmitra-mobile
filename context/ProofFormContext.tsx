@@ -1,4 +1,4 @@
-import { ProofFormContextType } from "@/types/theme";
+import { ProofFormContextType } from "@/types/proofForm";
 import { createContext, useState } from "react";
 
 export const ProofFormContext = createContext<ProofFormContextType>({});

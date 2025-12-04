@@ -78,7 +78,7 @@ export default function Feed({ post, onDeletePost }: FeedProps) {
   const description = post.description!;
 
   const parent = "myPost";
-
+console.log({type})
   return (
     <View>
       <Modal

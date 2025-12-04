@@ -17,18 +17,41 @@ import DisplayImages from "../common/DisplayImages";
 import { Feather } from "@expo/vector-icons";
 import { NotificationContext } from "@/context/NotificationContext";
 import { ProofFormContext } from "@/context/ProofFormContext";
+import { imageType } from "@/types/image";
+import { useLoaderStore } from "@/store/useLoaderStore";
+import { proofApi } from "@/api/proofApi";
+import { proofTypeEnum } from "@/types/proof";
 
 export default function ProofForm() {
   const { isDarkMode } = useContext(ThemeContext);
-  const { isFormVisible, hideForm, proofFormType } = useContext(ProofFormContext);
+  const { isFormVisible, hideForm, proofFormType } =
+    useContext(ProofFormContext);
+  const { showLoading, hideLoading } = useLoaderStore();
 
   const { showNotification } = useContext(NotificationContext);
-  const [images, setImages] = useState<string[]>([]);
+  const [images, setImages] = useState<imageType[]>([]);
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [description, setDescription] = useState("");
+  const [proofType, setProofType] = useState<"found" | "owner" | "">("");
   const scaleAnim = useRef(new Animated.Value(0.1)).current;
 
-  const handleSubmit = () => {
+  console.log({ proofFormType });
+    useEffect(() => {
+    if (!isFormVisible) return;
+
+    Animated.timing(scaleAnim, {
+      toValue: 1,
+      duration: 300,
+      useNativeDriver: true,
+    }).start();
+    if (proofFormType === "lost") {
+      setProofType("owner");
+    } else {
+      setProofType("found");
+    }
+  }, [isFormVisible]);
+
+  const handleSubmit = async () => {
     if (images.length === 0 && description.trim().length === 0) {
       showNotification &&
         showNotification({
@@ -36,10 +59,24 @@ export default function ProofForm() {
           message: "Please fill description or upload an image.",
         });
     }
+
+    const data = {
+      description,
+      images,
+    };
+    try {
+      showLoading("ProofModal");
+      const res = await proofApi.addProof({ data, type: proofType });
+      showNotification?.({type: "success", message: res.data.data.message || "Proof form submitted successfully"});
+    } catch (error: any) {
+        showNotification?.({ type: "error", message: error?.response.data.message });
+    } finally {
+      hideLoading();
+    }
   };
 
   const closeFormWithAnim = (onComplete?: () => void) => {
-    setDescription('');
+    setDescription("");
     setImages([]);
     Animated.timing(scaleAnim, {
       toValue: 0.1,
@@ -49,22 +86,17 @@ export default function ProofForm() {
       onComplete?.();
     });
   };
-  useEffect(() => {
-    if (!isFormVisible) return;
 
-    Animated.timing(scaleAnim, {
-      toValue: 1,
-      duration: 300,
-      useNativeDriver: true,
-    }).start();
-  }, [isFormVisible]);
+  const isFound = proofFormType === "lost" ? "Found": "Lost";
+
   return (
     isFormVisible && (
       <TouchableWithoutFeedback onPress={() => closeFormWithAnim(hideForm)}>
         <View className="w-full h-full absolute top-0 left-0 bg-black/60 justify-center items-center ">
           <TouchableWithoutFeedback>
             <KeyboardAvoidingView
-              behavior={Platform.OS === "android" ? "padding" : "height"}>
+              behavior={Platform.OS === "android" ? "padding" : "height"}
+            >
               <Animated.View
                 style={{ transform: [{ scale: scaleAnim }] }}
                 className={`w-[330px] min-h-80  max-h-full  rounded-lg ${isDarkMode ? "bg-[#1e1e1e] " : "bg-gray-50"}   p-2`}
@@ -72,19 +104,21 @@ export default function ProofForm() {
                 <ScrollView showsVerticalScrollIndicator={false}>
                   <View className="my-4 gap-2">
                     <Text className="dark:text-[#f5f5f5] text-4xl text-center font-bold capitalize tracking-widest">
-                      {proofFormType} proof form
+                      {isFound} proof form
                     </Text>
-                    <Text className="dark:text-white opacity-60 text-center">You can submit with both or only one fields.</Text>
-                    <View className="h-[2px] w-full bg-[#1976D2]"/>
+                    <Text className="dark:text-white opacity-60 text-center">
+                      You can submit with both or only one fields.
+                    </Text>
+                    <View className="h-[2px] w-full bg-[#1976D2]" />
                   </View>
 
                   <View className="gap-4 my-4">
                     <Text className="dark:text-[#f5f5f5]">
-                      Can you describe what you {proofFormType}?
+                      Can you describe what you {isFound}?
                     </Text>
                     <TextInput
                       className={` border ${isDarkMode ? "border-[#f5f5f5]/40 text-[#f5f5f5]  placeholder:text-[#f5f5f5]/50 " : "border-black/40"} p-4  rounded-lg h-40`}
-                      placeholder={`Describe what you have ${proofFormType}..`}
+                      placeholder={`Describe what you have ${isFound}..`}
                       textAlignVertical="top"
                       multiline={true}
                       onChangeText={setDescription}
@@ -101,7 +135,8 @@ export default function ProofForm() {
 
                   <View className="gap-4 my-4">
                     <Text className="dark:text-[#f5f5f5]">
-                      Can you upload the image(s) of what you've {proofFormType}?
+                      Can you upload the image(s) of what you've {isFound}
+                      ?
                     </Text>
                     <DisplayImages images={images} setImages={setImages} />
                     <UploadImgBtn

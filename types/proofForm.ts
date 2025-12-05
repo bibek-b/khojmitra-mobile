@@ -1,9 +1,28 @@
+import { imageType } from "./image";
 
 export type ProofFormContextType = {
   isFormVisible?: boolean;
   setIsFormVisible?: React.Dispatch<React.SetStateAction<boolean>>;
   showForm?: () => void;
   hideForm?: () => void;
-  proofFormType?: "lost" | "found" | string;
-  setProofFormType?: React.Dispatch<React.SetStateAction<string>>;
+  proofFormType?: ProofFormTypeState;
+  setProofFormType?: (data: ProofFormTypeState) => void;
 };
+
+export interface proofsType {
+    description?: string,
+    images?: imageType[],
+    postId: string,
+    claimerId: string;
+
+}
+
+export interface addProofPropsType {
+    data: FormData,
+    type: "found" | "owner" | ""
+}
+
+export interface ProofFormTypeState {
+    type: "lost" | "found" | "",
+    postId: ""
+}

@@ -78,7 +78,7 @@ export default function Feed({ post, onDeletePost }: FeedProps) {
   const description = post.description!;
 
   const parent = "myPost";
-console.log({type})
+  
   return (
     <View>
       <Modal
@@ -251,7 +251,7 @@ console.log({type})
           <TouchableOpacity
             onPress={() => (
               showForm?.(),
-              setProofFormType?.(type.toLowerCase())
+              setProofFormType?.({type: type.toLowerCase(), postId:post?._id})
             )}
             className="flex-row items-center gap-3 justify-start pt-6"
           >

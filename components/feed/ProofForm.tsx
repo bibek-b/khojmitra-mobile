@@ -14,20 +14,20 @@ import {
 import UploadImgBtn from "../common/UploadImgBtn";
 import ImagePickerModal from "../common/ImagePickerModal";
 import DisplayImages from "../common/DisplayImages";
-import { Feather } from "@expo/vector-icons";
 import { NotificationContext } from "@/context/NotificationContext";
 import { ProofFormContext } from "@/context/ProofFormContext";
 import { imageType } from "@/types/image";
 import { useLoaderStore } from "@/store/useLoaderStore";
 import { proofApi } from "@/api/proofApi";
-import { proofTypeEnum } from "@/types/proof";
+import { proofsType } from "@/types/proofForm";
+import { getItem } from "@/utils/AsyncStorage";
 
 export default function ProofForm() {
   const { isDarkMode } = useContext(ThemeContext);
   const { isFormVisible, hideForm, proofFormType } =
     useContext(ProofFormContext);
-  const { showLoading, hideLoading } = useLoaderStore();
 
+  const { showLoading, hideLoading } = useLoaderStore();
   const { showNotification } = useContext(NotificationContext);
   const [images, setImages] = useState<imageType[]>([]);
   const [isModalOpen, setIsModalOpen] = useState(false);
@@ -35,8 +35,7 @@ export default function ProofForm() {
   const [proofType, setProofType] = useState<"found" | "owner" | "">("");
   const scaleAnim = useRef(new Animated.Value(0.1)).current;
 
-  console.log({ proofFormType });
-    useEffect(() => {
+  useEffect(() => {
     if (!isFormVisible) return;
 
     Animated.timing(scaleAnim, {
@@ -44,13 +43,12 @@ export default function ProofForm() {
       duration: 300,
       useNativeDriver: true,
     }).start();
-    if (proofFormType === "lost") {
+    if (proofFormType?.type === "lost") {
       setProofType("owner");
     } else {
       setProofType("found");
     }
   }, [isFormVisible]);
-
   const handleSubmit = async () => {
     if (images.length === 0 && description.trim().length === 0) {
       showNotification &&
@@ -60,18 +58,40 @@ export default function ProofForm() {
         });
     }
 
-    const data = {
-      description,
-      images,
-    };
+    const user = await getItem("user");
+
+    const fd = new FormData();
+    fd.append("claimerId", user?._id);
+    fd.append("postId", proofFormType?.postId!);
+    fd.append("description", description);
+    if (images.length > 0) {
+      images.forEach((img, index) => {
+        fd.append("proofImages", {
+          uri: img?.uri,
+          type: img.mimeType || "image/jpeg",
+          name: img.fileName || `image_${Date.now()}_${index}.jpg`,
+        } as any);
+      });
+    }
+    
+    console.log(fd);
     try {
       showLoading("ProofModal");
-      const res = await proofApi.addProof({ data, type: proofType });
-      showNotification?.({type: "success", message: res.data.data.message || "Proof form submitted successfully"});
+      const res = await proofApi.addProof({ data: fd, type: proofType });
+      showNotification?.({
+        type: "success",
+        message: res?.data.data.message || "Proof form submitted successfully",
+      });
+      
     } catch (error: any) {
-        showNotification?.({ type: "error", message: error?.response.data.message });
+      console.log(error);
+      showNotification?.({
+        type: "error",
+        message: error.message,
+      });
     } finally {
       hideLoading();
+      hideForm?.();
     }
   };
 
@@ -87,8 +107,7 @@ export default function ProofForm() {
     });
   };
 
-  const isFound = proofFormType === "lost" ? "Found": "Lost";
-
+  const isFound = proofFormType?.type === "lost" ? "Found" : "Lost";
   return (
     isFormVisible && (
       <TouchableWithoutFeedback onPress={() => closeFormWithAnim(hideForm)}>
@@ -135,8 +154,7 @@ export default function ProofForm() {
 
                   <View className="gap-4 my-4">
                     <Text className="dark:text-[#f5f5f5]">
-                      Can you upload the image(s) of what you've {isFound}
-                      ?
+                      Can you upload the image(s) of what you've {isFound}?
                     </Text>
                     <DisplayImages images={images} setImages={setImages} />
                     <UploadImgBtn

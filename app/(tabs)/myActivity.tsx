@@ -1,5 +1,5 @@
 import Feed from "@/components/feed/Feed";
-import { ScrollView, Text, View } from "react-native";
+import { ScrollView, Text, TouchableOpacity, View } from "react-native";
 import Fab from "../../components/common/Fab";
 import { useContext, useEffect, useState } from "react";
 import { NotificationContext } from "@/context/NotificationContext";
@@ -8,13 +8,19 @@ import { postType } from "@/types/post.types";
 import { postApi } from "@/api/postApi";
 import { getItem } from "@/utils/AsyncStorage";
 import { usePostStore } from "@/store/usePostStore";
+import { Entypo } from "@expo/vector-icons";
+import { ThemeContext } from "@/context/ThemeContext";
+import { useActiveReportNav } from "@/store/useActiveReportNav";
+import { navItems } from "@/constants/myActivity";
+import { activeReportNavEnum } from "@/types/myActivity";
 
 export default function MyPostsTab() {
   const { showLoading, hideLoading } = useLoaderStore();
   const { showNotification } = useContext(NotificationContext);
   const [myPosts, setMyPosts] = useState<postType[]>([]);
   const { allPosts, setAllPosts } = usePostStore();
-
+  const { isDarkMode } = useContext(ThemeContext);
+  const { activeReportNav, setActiveReportNav }  = useActiveReportNav();
   useEffect(() => {
     (async () => {
       const user = await getItem("user");
@@ -50,7 +56,16 @@ export default function MyPostsTab() {
   return (
     <View>
       <ScrollView showsVerticalScrollIndicator={false}>
-        {myPosts.length > 0 ? (
+       <View className="flex-row gap-4 px-2 py-8">
+        {navItems.map(nav => (
+           <TouchableOpacity onPress={() => setActiveReportNav(nav.accessor as activeReportNavEnum)} key={nav.id}  className={`flex-row items-center  rounded-full px-2 w-30 ${nav.accessor === activeReportNav ? "bg-[#1976D2]": "border dark:border-white/50"}`}>
+          <Text className="dark:text-white font-medium">{nav.label}</Text>
+          <Entypo name="chevron-small-down" size={30} color={isDarkMode ? "white": "black"} />
+        </TouchableOpacity>
+        ))}
+         
+       </View>
+        {activeReportNav === "myPosts"? myPosts.length > 0 ? (
           myPosts?.map((data) => (
             <View key={data._id} className=" justify-center w-full">
               <Feed post={data} onDeletePost={handleDeletePost} />
@@ -63,7 +78,7 @@ export default function MyPostsTab() {
           <View className="items-center justify-center h-screen">
             <Text className="text-2xl dark:text-white">No data.</Text>
           </View>
-        )}
+        ): <View><Text className="text-2xl dark:text-white">Your Reports</Text></View>}
       </ScrollView>
     </View>
   );

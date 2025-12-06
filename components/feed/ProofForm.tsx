@@ -19,7 +19,6 @@ import { ProofFormContext } from "@/context/ProofFormContext";
 import { imageType } from "@/types/image";
 import { useLoaderStore } from "@/store/useLoaderStore";
 import { proofApi } from "@/api/proofApi";
-import { proofsType } from "@/types/proofForm";
 import { getItem } from "@/utils/AsyncStorage";
 
 export default function ProofForm() {
@@ -49,6 +48,7 @@ export default function ProofForm() {
       setProofType("found");
     }
   }, [isFormVisible]);
+
   const handleSubmit = async () => {
     if (images.length === 0 && description.trim().length === 0) {
       showNotification &&
@@ -74,7 +74,6 @@ export default function ProofForm() {
       });
     }
     
-    console.log(fd);
     try {
       showLoading("ProofModal");
       const res = await proofApi.addProof({ data: fd, type: proofType });
@@ -84,7 +83,6 @@ export default function ProofForm() {
       });
       
     } catch (error: any) {
-      console.log(error);
       showNotification?.({
         type: "error",
         message: error.message,
@@ -97,6 +95,7 @@ export default function ProofForm() {
 
   const closeFormWithAnim = (onComplete?: () => void) => {
     setDescription("");
+    setImages([]);
     setImages([]);
     Animated.timing(scaleAnim, {
       toValue: 0.1,

@@ -9,5 +9,6 @@ export const proofApi = {
         }
     }),
     getAllProofs: () => api.get('/proofs'),
-    getProof: (id: string) => api.get(`/proofs/${id}`)
+    getProof: (id: string) => api.get(`/proofs/${id}`),
+    getUserProofs: (userId: string) => api.get(`/proofs/mines/${userId}`),
 }

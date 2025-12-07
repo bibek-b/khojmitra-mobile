@@ -17,7 +17,7 @@ import { getItem } from "@/utils/AsyncStorage";
 import { useLoaderStore } from "@/store/useLoaderStore";
 import { GlobalLoader } from "./common/GlobalLoader";
 import { imageType } from "@/types/image";
-import { AddEditReportFormTypes } from "@/types/reportForm";
+import { AddEditReportFormTypes } from "@/types/report";
 
 const reportType = [
   { id: 1, sign: "🔴", label: "Lost" },

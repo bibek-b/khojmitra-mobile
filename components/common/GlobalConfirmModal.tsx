@@ -1,9 +1,9 @@
-import { useConfirmModal } from "@/store/useConfirmModal";
+import { useConfirmModalStore } from "@/store/useConfirmModalStore";
 import { Modal, Text, TouchableOpacity, TouchableWithoutFeedback, View } from "react-native";
 
 export default function GlobalConfirmModal() {
   const { confirmModal, modalContent, onConfirm, hideConfirmModal } =
-    useConfirmModal();
+    useConfirmModalStore();
   const acceptBtnBg = modalContent?.acceptBtnBg;
   return (
    <Modal visible={confirmModal} transparent={true} animationType="fade">

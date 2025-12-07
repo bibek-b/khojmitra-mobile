@@ -10,9 +10,12 @@ import { getItem } from "@/utils/AsyncStorage";
 import { usePostStore } from "@/store/usePostStore";
 import { Entypo } from "@expo/vector-icons";
 import { ThemeContext } from "@/context/ThemeContext";
-import { useActiveReportNav } from "@/store/useActiveReportNav";
+import { useActiveReportNavStore } from "@/store/useActiveReportNavStore";
 import { navItems } from "@/constants/myActivity";
 import { activeReportNavEnum } from "@/types/myActivity";
+import { useReportStore } from "@/store/useReportStore";
+import { proofApi } from "@/api/proofApi";
+import MyReports from "@/components/myActivity/MyReports";
 
 export default function MyPostsTab() {
   const { showLoading, hideLoading } = useLoaderStore();
@@ -20,7 +23,8 @@ export default function MyPostsTab() {
   const [myPosts, setMyPosts] = useState<postType[]>([]);
   const { allPosts, setAllPosts } = usePostStore();
   const { isDarkMode } = useContext(ThemeContext);
-  const { activeReportNav, setActiveReportNav }  = useActiveReportNav();
+  const { activeReportNav, setActiveReportNav }  = useActiveReportNavStore();
+  const { reports, setReports} = useReportStore();
   useEffect(() => {
     (async () => {
       const user = await getItem("user");
@@ -30,6 +34,26 @@ export default function MyPostsTab() {
       hideLoading();
     })();
   }, [allPosts]);
+
+  useEffect(() => {
+    (async () => {
+      const user = await getItem("user");
+      try {
+        const res = await proofApi.getUserProofs(user?._id);
+        setReports(res?.data.data);
+      } catch (error: any) {
+        const message =
+        error?.response?.data?.message ||
+        "Oops! Something went wrong. Please try again";
+      showNotification?.({
+        type: "error",
+        message,
+      });
+    } finally {
+      hideLoading();
+    }
+    })()
+  },[activeReportNav])
 
   const handleDeletePost = async (id: string) => {
     try {
@@ -68,6 +92,7 @@ export default function MyPostsTab() {
         {activeReportNav === "myPosts"? myPosts.length > 0 ? (
           myPosts?.map((data) => (
             <View key={data._id} className=" justify-center w-full">
+              
               <Feed post={data} onDeletePost={handleDeletePost} />
               <View
                 className={`h-[3px] w-full bg-black/30 mt-2 dark:bg-white/30}`}
@@ -78,7 +103,16 @@ export default function MyPostsTab() {
           <View className="items-center justify-center h-screen">
             <Text className="text-2xl dark:text-white">No data.</Text>
           </View>
-        ): <View><Text className="text-2xl dark:text-white">Your Reports</Text></View>}
+        ): <View>
+          {reports.length > 0 ? reports?.map((data) => (
+            <View key={data?._id} className=" justify-center w-full">
+              
+              <MyReports report={data}/>
+              <View
+                className={`h-[3px] w-full bg-black/30 mt-2 dark:bg-white/30}`}
+              />
+            </View>
+          )): <View><Text>No Report found</Text></View>}</View>}
       </ScrollView>
     </View>
   );

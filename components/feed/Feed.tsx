@@ -16,7 +16,7 @@ import { ProofFormContext } from "@/context/ProofFormContext";
 import { format } from "timeago.js";
 import { getItem } from "@/utils/AsyncStorage";
 import { FeedProps } from "@/types/feed";
-import { useConfirmModal } from "@/store/useConfirmModal";
+import { useConfirmModalStore } from "@/store/useConfirmModalStore";
 
 const moreOptions = [
   { id: 1, label: "Edit Post", icon: <Entypo name="edit" size={20} /> },
@@ -31,7 +31,7 @@ export default function Feed({ post, onDeletePost }: FeedProps) {
   const [myId, setMyId] = useState("");
   const [idToDelete, setIdToDelete] = useState("");
   const { showConfirmModal, confirmModal, setModalContent, setOnConfirm } =
-    useConfirmModal();
+    useConfirmModalStore();
 
   useEffect(() => {
     (async () => {

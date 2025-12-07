@@ -1,7 +1,7 @@
 import { ConfirmModalType, modalContentType } from "@/types/ConfirmModal";
 import { create } from "zustand";
 
-export const useConfirmModal = create<ConfirmModalType>((set) => ({
+export const useConfirmModalStore = create<ConfirmModalType>((set) => ({
   confirmModal: false,
   showConfirmModal: () => set({ confirmModal: true }),
   hideConfirmModal: () => set({ confirmModal: false }),

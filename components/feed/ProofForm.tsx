@@ -62,7 +62,7 @@ export default function ProofForm() {
 
     const fd = new FormData();
     fd.append("claimerId", user?._id);
-    fd.append("postId", proofFormType?.postId!);
+    fd.append("post", proofFormType?.postId!);
     fd.append("description", description);
     if (images.length > 0) {
       images.forEach((img, index) => {
@@ -73,7 +73,6 @@ export default function ProofForm() {
         } as any);
       });
     }
-    
     try {
       showLoading("ProofModal");
       const res = await proofApi.addProof({ data: fd, type: proofType });
@@ -85,7 +84,7 @@ export default function ProofForm() {
     } catch (error: any) {
       showNotification?.({
         type: "error",
-        message: error.message,
+        message: error?.response.data.message,
       });
     } finally {
       hideLoading();

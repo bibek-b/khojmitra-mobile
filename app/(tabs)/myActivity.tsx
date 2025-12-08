@@ -112,7 +112,7 @@ export default function MyPostsTab() {
                 className={`h-[3px] w-full bg-black/30 mt-2 dark:bg-white/30}`}
               />
             </View>
-          )): <View><Text>No Report found</Text></View>}</View>}
+          )): <View className="items-center mt-44 "><Text className="text-lg dark:text-white">No Report found</Text></View>}</View>}
       </ScrollView>
     </View>
   );

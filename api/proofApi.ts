@@ -4,8 +4,8 @@ import api from "./axios";
 export const proofApi = {
     addProof : ({data, type}: addProofPropsType) => api.post(`/proofs/${type}`, data, {
         headers: {
+            "Accept": "application/json",
             "Content-Type": "multipart/form-data",
-            "Accept": "application/json"
         }
     }),
     getAllProofs: () => api.get('/proofs'),

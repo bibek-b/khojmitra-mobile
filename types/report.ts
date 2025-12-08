@@ -14,7 +14,7 @@ export type AddEditReportFormTypes = {
 export interface ReportType {
   _id: string,
   claimType: "Owner" | "Founder",
-  postDetail: postType,
+  post: postType,
   description?: string,
   images: string[],
   status: string,

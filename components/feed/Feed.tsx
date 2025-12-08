@@ -251,7 +251,7 @@ export default function Feed({ post, onDeletePost }: FeedProps) {
           <TouchableOpacity
             onPress={() => (
               showForm?.(),
-              setProofFormType?.({type: type.toLowerCase(), postId:post?._id})
+              setProofFormType?.({type: type.toLowerCase() as "lost" | "found", postId:post?._id! })
             )}
             className="flex-row items-center gap-3 justify-start pt-6"
           >

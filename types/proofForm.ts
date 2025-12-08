@@ -24,5 +24,5 @@ export interface addProofPropsType {
 
 export interface ProofFormTypeState {
     type: "lost" | "found" | "",
-    postId: ""
+    postId: string
 }

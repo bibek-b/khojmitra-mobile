@@ -51,11 +51,12 @@ export default function ProofForm() {
 
   const handleSubmit = async () => {
     if (images.length === 0 && description.trim().length === 0) {
-      showNotification &&
-        showNotification({
+
+        showNotification?.({
           type: "error",
           message: "Please fill description or upload an image.",
         });
+        return;
     }
 
     const user = await getItem("user");
@@ -63,7 +64,9 @@ export default function ProofForm() {
     const fd = new FormData();
     fd.append("claimerId", user?._id);
     fd.append("post", proofFormType?.postId!);
-    fd.append("description", description);
+    if(description.trim().length > 0) {
+      fd.append("description", description);
+    }
     if (images.length > 0) {
       images.forEach((img, index) => {
         fd.append("proofImages", {
@@ -73,6 +76,7 @@ export default function ProofForm() {
         } as any);
       });
     }
+    console.log(fd)
     try {
       showLoading("ProofModal");
       const res = await proofApi.addProof({ data: fd, type: proofType });
@@ -81,6 +85,7 @@ export default function ProofForm() {
         message: res?.data.data.message || "Proof form submitted successfully",
       });
       
+      hideForm?.();
     } catch (error: any) {
       showNotification?.({
         type: "error",
@@ -88,7 +93,8 @@ export default function ProofForm() {
       });
     } finally {
       hideLoading();
-      hideForm?.();
+      setDescription('');
+      setImages([]);
     }
   };
 

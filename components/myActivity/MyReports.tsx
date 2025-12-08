@@ -7,7 +7,7 @@ import ImageViewing from "react-native-image-viewing";
 export default function MyReports({ report }: { report: ReportType }) {
   const images = report?.images;
   const [selectedImage, setSelectedImage] = useState(null);
-  console.log(report);
+  console.log(report)
   return (
     <View className="p-5 gap-4">
       <View className="flex-row items-center">
@@ -29,18 +29,18 @@ export default function MyReports({ report }: { report: ReportType }) {
       </View>
 
       <View>
-        {report?.Description ? (
+        {report?.description ? (
           <View>
             <Text className="dark:text-white text-lg ">
               Description 
             </Text>
             <Text className="dark:text-white text-lg font-semibold">
-              {report?.Description}
+              {report?.description}
             </Text>
           </View>
         ) : (
           <ImageViewing
-            images={images.map((img) => ({ uri: img?.uri }))}
+            images={images.map((img) => ({ uri: img}))}
             imageIndex={images.findIndex((img) => img === selectedImage)}
             visible={!!selectedImage}
             onRequestClose={() => setSelectedImage(null)}

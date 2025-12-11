@@ -5,7 +5,6 @@ import HeaderRight from "@/components/headers/HeaderRight";
 import HeaderLeft from "@/components/headers/HeaderLeft";
 import { useHeaderAnimations } from "../../hooks/useHeaderAnimations";
 import { ThemeContext } from "@/context/ThemeContext";
-import Fab from "@/components/common/Fab";
 import { TouchableOpacity } from "react-native";
 
 export default function TabLayout() {
@@ -37,7 +36,7 @@ export default function TabLayout() {
           headerStyle: {
             backgroundColor: isDarkMode ? "#1a1a1a" : "white",
           },
-          tabBarIcon: ({ color }) => (
+          tabBarIcon: ({ color }: { color: string }) => (
             <Entypo name="home" size={24} color={color} />
           ),
           headerLeft: () => (
@@ -64,7 +63,7 @@ export default function TabLayout() {
             fontSize: 24,
             color: isDarkMode ? "#f5f5f5" : "black",
           },
-          tabBarIcon: ({ color }) => (
+          tabBarIcon: ({ color }: { color: string }) => (
             <Feather name="file-text" size={24} color={color} />
           ),
           headerShadowVisible: false,
@@ -96,7 +95,7 @@ export default function TabLayout() {
             fontSize: 24,
             color: isDarkMode ? "#f5f5f5" : "black",
           },
-          tabBarIcon: ({ color }) => (
+          tabBarIcon: ({ color }: { color: string }) => (
             <Ionicons name="chatbubble" size={24} color={color} />
           ),
           headerShadowVisible: false,
@@ -116,7 +115,7 @@ export default function TabLayout() {
             color: isDarkMode ? "white" : "black",
           },
 
-          tabBarIcon: ({ color }) => (
+          tabBarIcon: ({ color }: { color: string }) => (
             <Ionicons name="settings" size={24} color={color} />
           ),
         }}

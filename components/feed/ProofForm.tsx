@@ -138,8 +138,9 @@ export default function ProofForm() {
                       Can you describe what you {isFound}?
                     </Text>
                     <TextInput
-                      className={` border ${isDarkMode ? "border-[#f5f5f5]/40 text-[#f5f5f5]  placeholder:text-[#f5f5f5]/50 " : "border-black/40"} p-4  rounded-lg h-40`}
+                      className={` border ${isDarkMode ? "border-[#f5f5f5]/40 text-[#f5f5f5]" : "border-black/40"} p-4  rounded-lg h-40`}
                       placeholder={`Describe what you have ${isFound}..`}
+                      placeholderTextColor={isDarkMode ? "#f5f5f580" : "#6b7280"}
                       textAlignVertical="top"
                       multiline={true}
                       onChangeText={setDescription}
@@ -167,7 +168,7 @@ export default function ProofForm() {
 
                   <View className="flex-row justify-between my-4">
                     <TouchableOpacity
-                      className={`border ${isDarkMode ? "border-[#f5f5f5]/40  placeholder:text-[#f5f5f5]/50 text-[#f5f5f5]" : "border-black/40"} rounded p-2 w-32`}
+                      className={`border ${isDarkMode ? "border-[#f5f5f5]/40 text-[#f5f5f5]" : "border-black/40"} rounded p-2 w-32`}
                       onPress={() => closeFormWithAnim(hideForm)}
                     >
                       <Text

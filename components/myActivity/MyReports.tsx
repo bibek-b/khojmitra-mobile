@@ -1,8 +1,7 @@
 import { ReportType } from "@/types/report";
 import { Feather } from "@expo/vector-icons";
 import { useState } from "react";
-import { Image, Text, TouchableOpacity, View } from "react-native";
-import ImageViewing from "react-native-image-viewing";
+import { Image, Modal, Text, TouchableOpacity, View } from "react-native";
 
 export default function MyReports({ report }: { report: ReportType }) {
   const images = report?.images;
@@ -28,35 +27,28 @@ export default function MyReports({ report }: { report: ReportType }) {
         </TouchableOpacity>
       </View>
 
-      <ImageViewing
-        images={images.map((img) => ({ uri: img }))}
-        imageIndex={images.findIndex((img) => img === selectedImage)}
-        visible={!!selectedImage}
-        onRequestClose={() => setSelectedImage("")}
-        swipeToCloseEnabled={true}
-        doubleTapToZoomEnabled={true}
-        animationType="slide"
-        HeaderComponent={({ imageIndex }) => (
-          <View
-            style={{
-              paddingTop: 50,
-              alignItems: "center",
-              flexDirection: "row",
-              justifyContent: "center",
-            }}
-          >
-            <Text className="text-[#f5f5f5] text-xl">
-              {imageIndex + 1} / {images.length}
-            </Text>
+      {!!selectedImage && (
+        <Modal
+          visible={true}
+          animationType="fade"
+          transparent={true}
+          onRequestClose={() => setSelectedImage("")}
+        >
+          <View className="flex-1 bg-black justify-center items-center">
             <TouchableOpacity
+              className="absolute top-12 right-6 z-10"
               onPress={() => setSelectedImage("")}
-              className="absolute right-0 p-4"
             >
-              <Feather name="x" size={28} color="#f5f5f5" />
+              <Feather name="x" size={32} color="#f5f5f5" />
             </TouchableOpacity>
+            <Image
+              source={{ uri: selectedImage }}
+              className="w-full h-full"
+              resizeMode="contain"
+            />
           </View>
-        )}
-      />
+        </Modal>
+      )}
       <View>
         {images.length > 0 ? (
           <View className="flex-row  w-full flex-wrap justify-center gap-2">

@@ -9,7 +9,7 @@ import {
   TouchableWithoutFeedback,
   View,
 } from "react-native";
-import ImageViewing from "react-native-image-viewing";
+// dynamically loaded on client to avoid server bundling of native-only files
 import { useContext } from "react";
 import { ThemeContext } from "@/context/ThemeContext";
 import { ProofFormContext } from "@/context/ProofFormContext";
@@ -128,35 +128,28 @@ export default function Feed({ post, onDeletePost }: FeedProps) {
         </TouchableWithoutFeedback>
       </Modal>
 
-      <ImageViewing
-        images={images.map((img) => ({ uri: img }))}
-        imageIndex={images.findIndex((img) => img === selectedImage)}
-        visible={!!selectedImage}
-        onRequestClose={() => setSelectedImage(null)}
-        swipeToCloseEnabled={true}
-        doubleTapToZoomEnabled={true}
-        animationType="slide"
-        HeaderComponent={({ imageIndex }) => (
-          <View
-            style={{
-              paddingTop: 50,
-              alignItems: "center",
-              flexDirection: "row",
-              justifyContent: "center",
-            }}
-          >
-            <Text className="text-[#f5f5f5] text-xl">
-              {imageIndex + 1} / {images.length}
-            </Text>
+      {!!selectedImage && (
+        <Modal
+          visible={true}
+          animationType="fade"
+          transparent={true}
+          onRequestClose={() => setSelectedImage(null)}
+        >
+          <View className="flex-1 bg-black justify-center items-center">
             <TouchableOpacity
+              className="absolute top-12 right-6 z-10"
               onPress={() => setSelectedImage(null)}
-              className="absolute right-0 p-4"
             >
-              <Feather name="x" size={28} color="#f5f5f5" />
+              <Feather name="x" size={32} color="#f5f5f5" />
             </TouchableOpacity>
+            <Image
+              source={{ uri: selectedImage }}
+              className="w-full h-full"
+              resizeMode="contain"
+            />
           </View>
-        )}
-      />
+        </Modal>
+      )}
 
       {post.user._id === myId && (
         <TouchableOpacity

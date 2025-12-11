@@ -7,7 +7,7 @@
     "icon": "./assets/images/icon.png",
     "scheme": "khojmitra",
     "userInterfaceStyle": "automatic",
-    "newArchEnabled": true,
+    "newArchEnabled": false,
     "ios": {
       "supportsTablet": true
     },
@@ -21,7 +21,8 @@
       },
       "edgeToEdgeEnabled": true,
       "predictiveBackGestureEnabled": false,
-      "package": "com.vieek.KhojMitra"
+      "package": "com.vieek.KhojMitra",
+      "versionCode": 1
     },
     "web": {
       "output": "server",
@@ -46,6 +47,12 @@
     "experiments": {
       "typedRoutes": true,
       "reactCompiler": true
+    },
+    "extra": {
+      "router": {},
+      "eas": {
+        "projectId": "e4fb7a32-dc45-419e-9c15-853fe296f6a7"
+      }
     }
   }
 }

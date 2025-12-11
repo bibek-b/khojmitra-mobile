@@ -42,6 +42,7 @@ export default function MyPostsTab() {
         const res = await proofApi.getUserProofs(user?._id);
         setReports(res?.data.data);
       } catch (error: any) {
+        console.log(error)
         const message =
         error?.response?.data?.message ||
         "Oops! Something went wrong. Please try again";

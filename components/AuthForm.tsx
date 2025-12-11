@@ -21,7 +21,8 @@ export default function AuthForm({ title, onSubmit, errors, isSignIn }: AuthSubm
         {title}
       </Text>
       <View className={` rounded-lg shadow px-4 py-10 gap-4 ${isDarkMode ? "bg-[#242424]": "bg-white"}`}>
-        {!isSignIn && <ProfileImage setImg={setImage}  />}
+        {!isSignIn && <TouchableOpacity className="w-10 fixed left-[45%]">
+          <ProfileImage isSignup={!isSignIn} setImg={setImage}  /></TouchableOpacity>}
 
         <View className="gap-4">
           {!isSignIn && (

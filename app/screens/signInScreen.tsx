@@ -31,7 +31,7 @@ export default function SignInScreen() {
       showNotification?.({
         type: "error",
         message:
-          error?.response?.data.message ||
+          error?.response?.data.mesage ||
           "Oops! Something went wrong. please try again",
       });
     }

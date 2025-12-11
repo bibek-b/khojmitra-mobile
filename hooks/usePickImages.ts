@@ -8,10 +8,12 @@ export default function usePickImages({
   setImage,
   images,
   singleImage,
+  isSignUp
 }: ImagePickerTypes) {
   const pickImages = useCallback(
     async (source: "camera" | "gallery") => {
       let result: any;
+      console.log(source)
       try {
         if (source === "camera") {
           const { status } = await ImagePicker.requestCameraPermissionsAsync();
@@ -27,7 +29,7 @@ export default function usePickImages({
           });
           if (!result.canceled) {
             if (!singleImage) {
-              setImages?.((prev) => [...prev, ...result?.assets]);
+            setImages?.((prev) => [...prev, ...result?.assets]);
             } else {
               setImage?.(result?.assets[0]);
             }
@@ -45,14 +47,15 @@ export default function usePickImages({
             allowsEditing: true,
             allowsMultipleSelection: true,
             quality: 1,
-            selectionLimit: selectionLimit && selectionLimit - images!.length,
+            selectionLimit: isSignUp ? 1 : selectionLimit && selectionLimit - images!.length,
           });
           if (!result.canceled) {
             if (!singleImage) {
               setImages?.((prev) => [...prev, ...result?.assets]);
             } else {
-              const newImg = result?.assets[0].uri;
+              const newImg = result?.assets[0];
               setImage && setImage(newImg);
+              console.log(newImg)
             }
           }
         }

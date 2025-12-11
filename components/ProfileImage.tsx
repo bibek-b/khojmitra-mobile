@@ -5,7 +5,7 @@ import { TouchableOpacity } from "react-native";
 import ImagePickerModal from "./common/ImagePickerModal";
 import { imageType } from "@/types/image";
 
-export default function ProfileImage({setImg}: any) {
+export default function ProfileImage({setImg, isSignup}: any) {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [image, setImage] = useState<imageType>({});
 
@@ -13,7 +13,6 @@ export default function ProfileImage({setImg}: any) {
     if(image) setImg(image)
     },[image])
 
-  // const { pickImages} = usePickImages()
   return (
     <View>
       <ImagePickerModal
@@ -22,6 +21,7 @@ export default function ProfileImage({setImg}: any) {
         setImage={setImage}
         selectionLimit={1}
         singleImage = {true}
+        isSignUp={isSignup}
       />
       <TouchableOpacity
         onPress={() => setIsModalOpen(true)}

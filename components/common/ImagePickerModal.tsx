@@ -17,7 +17,8 @@ const ImagePickerModal = ({
   selectionLimit = 1,
   setImage,
   images,
-  singleImage
+  singleImage,
+  isSignUp
 }: ImagePickerTypes) => {
   const { isDarkMode } = useContext(ThemeContext);
   const { pickImages } = usePickImages({
@@ -25,7 +26,8 @@ const ImagePickerModal = ({
     setImages,
     images,
     setImage,
-    singleImage
+    singleImage,
+    isSignUp
   });
   const handleCamera = async () => {
     await pickImages("camera");

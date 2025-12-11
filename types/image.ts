@@ -19,6 +19,7 @@ export type ImagePickerTypes = {
   setImage?: React.Dispatch<React.SetStateAction<imageType>>;
   singleImage?: boolean;
   images?: imageType[];
+  isSignUp?: boolean;
 };
 
 export type UploadImgBtnProp = {

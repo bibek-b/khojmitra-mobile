@@ -1,3 +1,4 @@
+import { serverUrl } from "@/env/serverUrl";
 import { ReportType } from "@/types/report";
 import { Feather } from "@expo/vector-icons";
 import { useState } from "react";
@@ -56,7 +57,7 @@ export default function MyReports({ report }: { report: ReportType }) {
               <TouchableOpacity key={idx} onPress={() => setSelectedImage(img)}>
                 <Image
                   source={{
-                    uri: img,
+                    uri: serverUrl+img,
                   }}
                   className="w-[160px] h-[160px] rounded-md shadow-md"
                 />

@@ -3,9 +3,10 @@ import { getItem, removeItem, setItem } from "@/utils/AsyncStorage";
 import axios from "axios";
 import { authApi } from "./authApi";
 import { router } from "expo-router";
+import { serverUrl } from "@/env/serverUrl";
 
 const api = axios.create({
-  baseURL: process.env.EXPO_PUBLIC_SERVER_URL,
+  baseURL:serverUrl+"/api",
   // withCredentials: true,
 });
 

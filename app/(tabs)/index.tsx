@@ -8,6 +8,7 @@ import { NotificationContext } from "@/context/NotificationContext";
 import { useLoaderStore } from "@/store/useLoaderStore";
 import { usePostStore } from "@/store/usePostStore";
 import { useSearchFeedStore } from "@/store/useSearchFeedStore";
+import { serverUrl } from "@/env/serverUrl";
 
 export default function HomeTab() {
   const { isDarkMode } = useContext(ThemeContext);
@@ -16,6 +17,7 @@ export default function HomeTab() {
   const { showNotification } = useContext(NotificationContext);
   const { allPosts, setAllPosts } = usePostStore();
   const { searchInput } = useSearchFeedStore();
+
 
   useEffect(() => {
     const fetchAllPosts = async () => {

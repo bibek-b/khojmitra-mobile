@@ -4,6 +4,7 @@ import { Image, View } from "react-native";
 import { TouchableOpacity } from "react-native";
 import ImagePickerModal from "./common/ImagePickerModal";
 import { imageType } from "@/types/image";
+import { serverUrl } from "@/env/serverUrl";
 
 export default function ProfileImage({setImg, isSignup}: any) {
   const [isModalOpen, setIsModalOpen] = useState(false);

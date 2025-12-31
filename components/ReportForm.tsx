@@ -36,8 +36,8 @@ export default function ReportForm({
   const { allPosts } = usePostStore();
 
   const [checkedValue, setCheckedValue] = useState<string | null>(null);
-  const [selCategory, setSelCategory] = useState<postCategories | null>(null);
-  const [date, setDate] = useState<Date | string>(new Date());
+  const [selCategory, setSelCategory] = useState<postCategories | string>("");
+  const [date, setDate] = useState<Date>(new Date());
   const [showDatePicker, setShowDatePicker] = useState(false);
   const [images, setImages] = useState<imageType[]>([]);
   const [title, setTitle] = useState("");
@@ -53,7 +53,7 @@ export default function ReportForm({
       setTitle(post?.title!);
       setSelCategory(post?.category!);
       setLocation(post?.location!);
-      setDate(post?.date!);
+      setDate(new Date(post?.date!));
       setDescription(post?.description!);
       setImages(post?.images!);
     }
@@ -123,6 +123,7 @@ export default function ReportForm({
       hideLoading();
     }
   };
+
   return (
     <View
       className={`items-center py-10 flex-1 ${isDarkMode && "bg-[#1a1a1a]"}`}

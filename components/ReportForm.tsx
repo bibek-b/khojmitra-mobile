@@ -1,6 +1,6 @@
 import { Text, TextInput, TouchableOpacity, View } from "react-native";
 import Checkbox from "expo-checkbox";
-import { useContext, useState } from "react";
+import { useContext, useEffect, useState } from "react";
 import { SelectList } from "react-native-dropdown-select-list";
 import { Category } from "@/constants/categories";
 import DatePicker from "@react-native-community/datetimepicker";
@@ -17,21 +17,27 @@ import { getItem } from "@/utils/AsyncStorage";
 import { useLoaderStore } from "@/store/useLoaderStore";
 import { GlobalLoader } from "./common/GlobalLoader";
 import { imageType } from "@/types/image";
-import { AddEditReportFormTypes } from "@/types/report";
+import { AddEditReportFormTypes, ReportFormProps } from "@/types/report";
+import { usePostStore } from "@/store/usePostStore";
+import { postCategories } from "@/types/post.types";
 
 const reportType = [
   { id: 1, sign: "🔴", label: "Lost" },
   { id: 2, sign: "🟢", label: "Found" },
 ];
 
-export default function ReportForm({ isEditPost }: { isEditPost: string }) {
+export default function ReportForm({
+  isEditPost,
+  idToUpdate,
+}: ReportFormProps) {
   const { isDarkMode } = useContext(ThemeContext);
   const { showNotification } = useContext(NotificationContext);
   const { showLoading, hideLoading } = useLoaderStore();
+  const { allPosts } = usePostStore();
 
   const [checkedValue, setCheckedValue] = useState<string | null>(null);
-  const [selCategory, setSelCategory] = useState("");
-  const [date, setDate] = useState(new Date());
+  const [selCategory, setSelCategory] = useState<postCategories | null>(null);
+  const [date, setDate] = useState<Date | string>(new Date());
   const [showDatePicker, setShowDatePicker] = useState(false);
   const [images, setImages] = useState<imageType[]>([]);
   const [title, setTitle] = useState("");
@@ -39,6 +45,19 @@ export default function ReportForm({ isEditPost }: { isEditPost: string }) {
   const [description, setDescription] = useState("");
   const [errors, setErrors] = useState<AddEditReportFormTypes>({});
   const [isModalOpen, setIsModalOpen] = useState(false);
+
+  useEffect(() => {
+    if (idToUpdate) {
+      const post = allPosts.find((p) => p._id === idToUpdate);
+      setCheckedValue(post?.type!);
+      setTitle(post?.title!);
+      setSelCategory(post?.category!);
+      setLocation(post?.location!);
+      setDate(post?.date!);
+      setDescription(post?.description!);
+      setImages(post?.images!);
+    }
+  }, [isEditPost]);
 
   const handleSubmit = async () => {
     const newErrors: AddEditReportFormTypes = {};
@@ -82,9 +101,14 @@ export default function ReportForm({ isEditPost }: { isEditPost: string }) {
       });
     }
 
+    let res;
     try {
       showLoading("reportSubmit");
-      const res = await postApi.create(fd);
+      if (isEditPost) {
+        res = await postApi.update(idToUpdate!, fd);
+      } else {
+        res = await postApi.create(fd);
+      }
       showNotification?.({ type: "success", message: res.data.message });
       router.push("/");
     } catch (error: any) {

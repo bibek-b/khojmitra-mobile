@@ -27,3 +27,8 @@ export interface ReportStoreType {
   reports: ReportType[],
   setReports: (value: ReportType[]) => void;
 }
+
+export interface ReportFormProps {
+  isEditPost?: string;
+  idToUpdate?: string;
+}

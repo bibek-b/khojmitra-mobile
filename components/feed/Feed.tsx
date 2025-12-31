@@ -103,7 +103,7 @@ export default function Feed({ post, onDeletePost }: FeedProps) {
                         (opt.label === "Edit Post"
                           ? router.push({
                               pathname: "/screens/addEditReportScreen",
-                              params: { isEditPost: "true" },
+                              params: { isEditPost: "true", idToUpdate: post?._id },
                             })
                           : showConfirmModal(),
                           setIdToDelete(post?._id!),

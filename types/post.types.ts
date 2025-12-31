@@ -1,5 +1,6 @@
+import { imageType } from "./image";
 
-enum postCategories {
+export enum postCategories {
   "Electronics",
   "Clothes & Accessories",
   "Bags",
@@ -17,8 +18,8 @@ export type postType = {
     category: postCategories;
     location: string;
     date: string;
-    images?: string[];
-    description: String;
+    images?: imageType[];
+    description: string;
     createdAt?: string;
     updatedAt?:string;
     user: {

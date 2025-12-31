@@ -11,6 +11,6 @@ export const postApi = {
   getAll: () => api.get("posts/getAll"),
   getPost: (id: string) => api.get(`/posts/${id}`),
   getUserPosts: (id: string) => api.get(`/posts/user/${id}`),
-  update: (id: string, data: postType) => api.put(`/posts/${id}`,data),
+  update: (id: string, data: FormData) => api.put(`/posts/${id}`,data),
   delete: (id: string) => api.delete(`/posts/${id}`),
 };

@@ -18,6 +18,7 @@ import { getItem } from "@/utils/AsyncStorage";
 import { FeedProps } from "@/types/feed";
 import { useConfirmModalStore } from "@/store/useConfirmModalStore";
 import { serverUrl } from "@/env/serverUrl";
+import { imageType } from "@/types/image";
 
 const moreOptions = [
   { id: 1, label: "Edit Post", icon: <Entypo name="edit" size={20} /> },
@@ -26,7 +27,7 @@ const moreOptions = [
 
 export default function Feed({ post, onDeletePost }: FeedProps) {
   const [expanded, setExpanded] = useState(false);
-  const [selectedImage, setSelectedImage] = useState<string | null>(null);
+  const [selectedImage, setSelectedImage] = useState<imageType | null>(null);
   const isLost = post.type === "Lost";
   const [moreOptionOpen, setMoreOptionOpen] = useState(false);
   const [myId, setMyId] = useState("");
@@ -79,6 +80,7 @@ export default function Feed({ post, onDeletePost }: FeedProps) {
   const description = post.description!;
 
   const parent = "myPost";
+
   
   return (
     <View>
@@ -144,7 +146,7 @@ export default function Feed({ post, onDeletePost }: FeedProps) {
               <Feather name="x" size={32} color="#f5f5f5" />
             </TouchableOpacity>
             <Image
-              source={{ uri: selectedImage }}
+              source={{ uri: serverUrl! + selectedImage }}
               className="w-full h-full"
               resizeMode="contain"
             />
@@ -235,7 +237,7 @@ export default function Feed({ post, onDeletePost }: FeedProps) {
               <TouchableOpacity key={idx} onPress={() => setSelectedImage(img)}>
                 <Image
                   source={{
-                    uri: serverUrl+img,
+                    uri: serverUrl!+img,
                   }}
                   className="w-[160px] h-[160px] rounded-md shadow-md"
                 />

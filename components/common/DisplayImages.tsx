@@ -1,6 +1,7 @@
-import { displayImageProps, imageType } from "@/types/post.types";
+import { displayImageProps, imageType } from "@/types/image";
 import { MaterialIcons } from "@expo/vector-icons";
 import { Image, Text, TouchableOpacity, View } from "react-native";
+import { serverUrl } from "@/env/serverUrl";
 
 export default function DisplayImages({
   images,
@@ -18,7 +19,7 @@ export default function DisplayImages({
       {images.map((img: imageType, idx: number) => (
         <View key={idx} className="flex-row gap-4 bg-[#f5f5f5] rounded shadow">
           <Image
-            source={{ uri: img.uri }}
+            source={{ uri: serverUrl! + img }}
             className=" w-full h-[200px]  my-8  rounded-xl"
           />
           <TouchableOpacity

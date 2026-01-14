@@ -188,6 +188,10 @@ export default function ReportForm({
             <SelectList
               setSelected={(val: string) => setSelCategory(val)}
               data={Category}
+              defaultOption={{
+                key: selCategory,
+                value: selCategory,
+              }}
               save="value"
               notFoundText="Not found"
               placeholder="Select Category"

@@ -27,7 +27,6 @@ export default function SignInScreen() {
       });
       router.navigate("/");
     } catch (error: any) {
-      console.log(error)
       showNotification?.({
         type: "error",
         message:

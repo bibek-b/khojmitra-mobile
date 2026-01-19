@@ -19,6 +19,7 @@ import { FeedProps } from "@/types/feed";
 import { useConfirmModalStore } from "@/store/useConfirmModalStore";
 import { serverUrl } from "@/env/serverUrl";
 import { imageType } from "@/types/image";
+import { usePostStore } from "@/store/usePostStore";
 
 const moreOptions = [
   { id: 1, label: "Edit Post", icon: <Entypo name="edit" size={20} /> },
@@ -34,6 +35,7 @@ export default function Feed({ post, onDeletePost }: FeedProps) {
   const [idToDelete, setIdToDelete] = useState("");
   const { showConfirmModal, confirmModal, setModalContent, setOnConfirm } =
     useConfirmModalStore();
+    const { TrueEditPost } = usePostStore();
 
   useEffect(() => {
     (async () => {
@@ -103,10 +105,10 @@ export default function Feed({ post, onDeletePost }: FeedProps) {
                       className="flex-row items-center gap-4"
                       onPress={() => {
                         (opt.label === "Edit Post"
-                          ? router.push({
+                          ? (router.push({
                               pathname: "/screens/addEditReportScreen",
-                              params: { isEditPost: "true", idToUpdate: post?._id },
-                            })
+                              params: { idToUpdate: post?._id },
+                            }), TrueEditPost())
                           : showConfirmModal(),
                           setIdToDelete(post?._id!),
                           setMoreOptionOpen(false));
@@ -233,7 +235,7 @@ export default function Feed({ post, onDeletePost }: FeedProps) {
           )}
 
           <View className="flex-row  w-full flex-wrap justify-center gap-2">
-            {images.map((img, idx) => (
+            {images.map((img: imageType, idx: number) => (
               <TouchableOpacity key={idx} onPress={() => setSelectedImage(img)}>
                 <Image
                   source={{

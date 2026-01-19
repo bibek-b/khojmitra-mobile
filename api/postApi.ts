@@ -1,4 +1,3 @@
-import {  postType } from "@/types/post.types";
 import api from "./axios";
 
 export const postApi = {
@@ -11,6 +10,11 @@ export const postApi = {
   getAll: () => api.get("posts/getAll"),
   getPost: (id: string) => api.get(`/posts/${id}`),
   getUserPosts: (id: string) => api.get(`/posts/user/${id}`),
-  update: (id: string, data: FormData) => api.put(`/posts/${id}`,data),
+  update: (id: string, data: FormData) => api.put(`/posts/${id}`,data, {
+    headers: {
+      "Accept": "application/json",
+      "Content-Type": "multipart/form-data"
+    }
+  }),
   delete: (id: string) => api.delete(`/posts/${id}`),
 };

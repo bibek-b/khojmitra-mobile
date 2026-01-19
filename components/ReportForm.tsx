@@ -17,23 +17,21 @@ import { getItem } from "@/utils/AsyncStorage";
 import { useLoaderStore } from "@/store/useLoaderStore";
 import { GlobalLoader } from "./common/GlobalLoader";
 import { imageType } from "@/types/image";
-import { AddEditReportFormTypes, ReportFormProps } from "@/types/report";
+import { AddEditReportFormTypes } from "@/types/report";
 import { usePostStore } from "@/store/usePostStore";
 import { postCategories } from "@/types/post.types";
+import { getImageUri } from "@/utils/getImageUri";
 
 const reportType = [
   { id: 1, sign: "🔴", label: "Lost" },
   { id: 2, sign: "🟢", label: "Found" },
 ];
 
-export default function ReportForm({
-  isEditPost,
-  idToUpdate,
-}: ReportFormProps) {
+export default function ReportForm({ idToUpdate }: { idToUpdate?: string }) {
   const { isDarkMode } = useContext(ThemeContext);
   const { showNotification } = useContext(NotificationContext);
   const { showLoading, hideLoading } = useLoaderStore();
-  const { allPosts } = usePostStore();
+  const { allPosts, isEditPost } = usePostStore();
 
   const [checkedValue, setCheckedValue] = useState<string | null>(null);
   const [selCategory, setSelCategory] = useState<postCategories | string>("");
@@ -58,7 +56,6 @@ export default function ReportForm({
       setImages(post?.images!);
     }
   }, [isEditPost]);
-
   const handleSubmit = async () => {
     const newErrors: AddEditReportFormTypes = {};
 
@@ -77,6 +74,7 @@ export default function ReportForm({
     setErrors(newErrors);
 
     if (Object.keys(newErrors).length > 0) return;
+
     const user = await getItem("user");
     const fd = new FormData();
 
@@ -92,16 +90,29 @@ export default function ReportForm({
     fd.append("user", user?._id);
 
     if (images.length > 0) {
-      images.forEach((img, index) => {
+      const newImages = images.filter(
+        (img) => typeof img === "object" && img.uri,
+      );
+      const oldImages = images.filter((img) => typeof img === "string");
+      newImages.forEach((img, index) => {
         fd.append("postImages", {
-          uri: img.uri,
-          type: img.mimeType || "image/jpeg",
-          name: img.fileName || `image_${Date.now()}_${index}.jpg`,
+          uri: typeof img === "object" && img.uri ? img.uri : img,
+          type:
+            typeof img === "object" && img.mimeType
+              ? img.mimeType
+              : "image/jpeg",
+          name:
+            typeof img === "object" && img.fileName
+              ? img.fileName
+              : `image_${Date.now()}_${index}.jpg`,
         } as any);
       });
+
+      fd.append("existingImages", JSON.stringify(oldImages));
     }
 
     let res;
+
     try {
       showLoading("reportSubmit");
       if (isEditPost) {

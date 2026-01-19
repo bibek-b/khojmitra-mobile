@@ -4,7 +4,6 @@ import Fab from "../../components/common/Fab";
 import { useContext, useEffect, useState } from "react";
 import { NotificationContext } from "@/context/NotificationContext";
 import { useLoaderStore } from "@/store/useLoaderStore";
-import { postType } from "@/types/post.types";
 import { postApi } from "@/api/postApi";
 import { getItem } from "@/utils/AsyncStorage";
 import { usePostStore } from "@/store/usePostStore";
@@ -16,11 +15,12 @@ import { activeReportNavEnum } from "@/types/myActivity";
 import { useReportStore } from "@/store/useReportStore";
 import { proofApi } from "@/api/proofApi";
 import MyReports from "@/components/myActivity/MyReports";
+import { PostType } from "@/types/post.types";
 
 export default function MyPostsTab() {
   const { showLoading, hideLoading } = useLoaderStore();
   const { showNotification } = useContext(NotificationContext);
-  const [myPosts, setMyPosts] = useState<postType[]>([]);
+  const [myPosts, setMyPosts] = useState<PostType[]>([]);
   const { allPosts, setAllPosts } = usePostStore();
   const { isDarkMode } = useContext(ThemeContext);
   const { activeReportNav, setActiveReportNav }  = useActiveReportNavStore();

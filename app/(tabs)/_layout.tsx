@@ -6,11 +6,13 @@ import HeaderLeft from "@/components/headers/HeaderLeft";
 import { useHeaderAnimations } from "../../hooks/useHeaderAnimations";
 import { ThemeContext } from "@/context/ThemeContext";
 import { TouchableOpacity } from "react-native";
+import { usePostStore } from "@/store/usePostStore";
 
 export default function TabLayout() {
   const [showSearchBar, setShowSearchBar] = useState(false);
 
   const { searchWidth, logoAnim, animateHeader } = useHeaderAnimations();
+  const { FalseEditPost } = usePostStore();
 
   const { isDarkMode } = useContext(ThemeContext);
 
@@ -76,7 +78,10 @@ export default function TabLayout() {
           tabBarButton: () => (
             <TouchableOpacity
               className="absolute shadow-white bottom-4 w-16 h-16 rounded-full p-2 bg-[#1976D2] mx-2  items-center flex-row justify-center gap-2 shadow-lg dark:shadow-white  elevation-10 "
-              onPress={() => router.push("/screens/addEditReportScreen")}
+              onPress={() => (
+                FalseEditPost(),
+                router.push("/screens/addEditReportScreen")
+              )}
             >
               <AntDesign name="plus" size={24} color="white" />
             </TouchableOpacity>

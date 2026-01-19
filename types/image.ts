@@ -1,15 +1,15 @@
-
-export type imageType = {
-  uri?: string,
-  mimeType?: string,
-  fileName?: string
-}
+export type imageType =
+  | string
+  | {
+      uri?: string;
+      mimeType?: string;
+      fileName?: string;
+    };
 
 export type ImagePickerPropTypes = {
   image?: string;
   setImage?: (value: string | null) => void;
 };
-
 
 export type ImagePickerTypes = {
   visible?: boolean;
@@ -28,6 +28,6 @@ export type UploadImgBtnProp = {
 };
 
 export type displayImageProps = {
-  images: imageType[],
-  setImages: React.Dispatch<React.SetStateAction<imageType[]>>
-}
+  images: imageType[];
+  setImages: React.Dispatch<React.SetStateAction<imageType[]>>;
+};

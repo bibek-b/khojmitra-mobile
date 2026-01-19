@@ -1,3 +1,4 @@
+import React, { SetStateAction } from "react";
 import { imageType } from "./image";
 
 export enum postCategories {
@@ -11,7 +12,7 @@ export enum postCategories {
   "Household Items",
   "Personal Items",
 }
-export type postType = {
+export interface PostType  {
     _id?: string;
     type: "Lost" | "Found" | "";
     title: string;
@@ -29,9 +30,13 @@ export type postType = {
     }
 };
 
-export interface postStore {
-  allPosts: postType[],
-  setAllPosts: (data: postType[]) => void;
+export interface PostStoreType {
+  allPosts: PostType[];
+  setAllPosts: (data: PostType[]) => void;
+  isEditPost: boolean,
+  TrueEditPost(): void;
+  FalseEditPost(): void;
+
 }
 
 

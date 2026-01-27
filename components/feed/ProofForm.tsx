@@ -63,15 +63,17 @@ export default function ProofForm() {
     const fd = new FormData();
     fd.append("claimerId", user?._id);
     fd.append("post", proofFormType?.postId!);
+
     if (description.trim().length > 0) {
       fd.append("description", description);
     }
     if (images.length > 0) {
       images.forEach((img, index) => {
+        const isObject = typeof img === "object";
         fd.append("proofImages", {
-          uri: img?.uri,
-          type: img.mimeType || "image/jpeg",
-          name: img.fileName || `image_${Date.now()}_${index}.jpg`,
+          uri: isObject && img?.uri,
+          type: isObject && img.mimeType || "image/jpeg",
+          name: isObject && img.fileName || `image_${Date.now()}_${index}.jpg`,
         } as any);
       });
     }
@@ -135,7 +137,7 @@ export default function ProofForm() {
 
                   <View className="gap-4 my-4">
                     <Text className="dark:text-[#f5f5f5]">
-                      Can you describe what you {isFound}?
+                      Can you describe the {isFound} item?
                     </Text>
                     <TextInput
                       className={` border ${isDarkMode ? "border-[#f5f5f5]/40 text-[#f5f5f5]" : "border-black/40"} p-4  rounded-lg h-40`}
@@ -157,7 +159,7 @@ export default function ProofForm() {
 
                   <View className="gap-4 my-4">
                     <Text className="dark:text-[#f5f5f5]">
-                      Can you upload the image(s) of what you've {isFound}?
+                      Can you upload the image(s) {isFound} item?
                     </Text>
                     <DisplayImages images={images} setImages={setImages} />
                     <UploadImgBtn

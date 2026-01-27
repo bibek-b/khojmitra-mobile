@@ -1,4 +1,4 @@
-import { Entypo, Feather, FontAwesome, FontAwesome5 } from "@expo/vector-icons";
+import { AntDesign, Entypo, Feather, FontAwesome, FontAwesome5 } from "@expo/vector-icons";
 import { router } from "expo-router";
 import { useEffect, useState } from "react";
 import {
@@ -242,7 +242,21 @@ export default function Feed({ post, onDeletePost }: FeedProps) {
               </TouchableOpacity>
             ))}
           </View>
-          <TouchableOpacity
+          
+          {(post.user._id === myId) ? <TouchableOpacity
+           
+            className="flex-row items-center gap-3 justify-start pt-6"
+          >
+             
+              <AntDesign
+                name="check-circle"
+                size={24}
+                color={isDarkMode ? "white" : "black"}
+              />
+            <Text className={`${isDarkMode && "text-[#f5f5f5]"} `}>
+              Resolve
+            </Text>
+          </TouchableOpacity> : <TouchableOpacity
             onPress={() => (
               showForm?.(),
               setProofFormType?.({
@@ -268,7 +282,7 @@ export default function Feed({ post, onDeletePost }: FeedProps) {
             <Text className={`${isDarkMode && "text-[#f5f5f5]"} `}>
               {type === "Lost" ? "I Found This" : "This is Mine"}
             </Text>
-          </TouchableOpacity>
+          </TouchableOpacity>}
         </View>
       </View>
     </View>

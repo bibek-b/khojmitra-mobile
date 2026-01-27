@@ -13,7 +13,6 @@ export default function usePickImages({
   const pickImages = useCallback(
     async (source: "camera" | "gallery") => {
       let result: any;
-      console.log(source)
       try {
         if (source === "camera") {
           const { status } = await ImagePicker.requestCameraPermissionsAsync();

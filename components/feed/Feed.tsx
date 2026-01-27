@@ -35,7 +35,7 @@ export default function Feed({ post, onDeletePost }: FeedProps) {
   const [idToDelete, setIdToDelete] = useState("");
   const { showConfirmModal, confirmModal, setModalContent, setOnConfirm } =
     useConfirmModalStore();
-    const { TrueEditPost } = usePostStore();
+  const { TrueEditPost } = usePostStore();
 
   useEffect(() => {
     (async () => {
@@ -43,7 +43,6 @@ export default function Feed({ post, onDeletePost }: FeedProps) {
       setMyId(user?._id);
     })();
   }, []);
-
 
   useEffect(() => {
     if (confirmModal) {
@@ -57,8 +56,7 @@ export default function Feed({ post, onDeletePost }: FeedProps) {
 
       setOnConfirm(() => {
         onDeletePost?.(idToDelete);
-      })
-    
+      });
     } else {
       setModalContent({
         title: "",
@@ -83,7 +81,6 @@ export default function Feed({ post, onDeletePost }: FeedProps) {
 
   const parent = "myPost";
 
-  
   return (
     <View>
       <Modal
@@ -108,7 +105,8 @@ export default function Feed({ post, onDeletePost }: FeedProps) {
                           ? (router.push({
                               pathname: "/screens/addEditReportScreen",
                               params: { idToUpdate: post?._id },
-                            }), TrueEditPost())
+                            }),
+                            TrueEditPost())
                           : showConfirmModal(),
                           setIdToDelete(post?._id!),
                           setMoreOptionOpen(false));
@@ -148,7 +146,7 @@ export default function Feed({ post, onDeletePost }: FeedProps) {
               <Feather name="x" size={32} color="#f5f5f5" />
             </TouchableOpacity>
             <Image
-              source={{ uri: serverUrl! + selectedImage }}
+              source={{ uri:  String(selectedImage) }}
               className="w-full h-full"
               resizeMode="contain"
             />
@@ -175,7 +173,7 @@ export default function Feed({ post, onDeletePost }: FeedProps) {
               <Image
                 source={{
                   uri:
-                    post?.user?.avatar ? serverUrl + post.user.avatar:
+                    post?.user?.avatar ||
                     "https://thumb.ac-illust.com/51/51e1c1fc6f50743937e62fca9b942694_t.jpeg",
                 }}
                 className="w-12 h-12 object-cover rounded-full "
@@ -238,9 +236,7 @@ export default function Feed({ post, onDeletePost }: FeedProps) {
             {images.map((img: imageType, idx: number) => (
               <TouchableOpacity key={idx} onPress={() => setSelectedImage(img)}>
                 <Image
-                  source={{
-                    uri: serverUrl!+img,
-                  }}
+                source={{uri: String(img)}}
                   className="w-[160px] h-[160px] rounded-md shadow-md"
                 />
               </TouchableOpacity>
@@ -249,7 +245,10 @@ export default function Feed({ post, onDeletePost }: FeedProps) {
           <TouchableOpacity
             onPress={() => (
               showForm?.(),
-              setProofFormType?.({type: type.toLowerCase() as "lost" | "found", postId:post?._id! })
+              setProofFormType?.({
+                type: type.toLowerCase() as "lost" | "found",
+                postId: post?._id!,
+              })
             )}
             className="flex-row items-center gap-3 justify-start pt-6"
           >

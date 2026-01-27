@@ -7,6 +7,7 @@ import { Image, Modal, Text, TouchableOpacity, View } from "react-native";
 export default function MyReports({ report }: { report: ReportType }) {
   const images = report?.images;
   const [selectedImage, setSelectedImage] = useState("");
+  console.log(images)
 
   return (
     <View className="p-5 gap-4 ">
@@ -53,16 +54,18 @@ export default function MyReports({ report }: { report: ReportType }) {
       <View>
         {images.length > 0 ? (
           <View className="flex-row  w-full flex-wrap justify-center gap-2">
-            {images.map((img, idx) => (
+            {images.map((img, idx) => {
+              return (
               <TouchableOpacity key={idx} onPress={() => setSelectedImage(img)}>
                 <Image
                   source={{
-                    uri: serverUrl+img,
+                    uri: img,
                   }}
                   className="w-[160px] h-[160px] rounded-md shadow-md"
                 />
               </TouchableOpacity>
-            ))}
+            )
+            })}
           </View>
         ) : (
           <View>

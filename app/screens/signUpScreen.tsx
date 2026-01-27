@@ -6,12 +6,14 @@ import { useRouter } from "expo-router";
 import { useLoaderStore } from "@/store/useLoaderStore";
 import { AuthFormPayloadType } from "@/types/auth.types";
 import AuthForm from "@/components/AuthForm";
+import { setItem } from "@/utils/AsyncStorage";
 
 export default function SignUpScreen() {
   const { showNotification } = useContext(NotificationContext);
   const { showLoading, hideLoading } = useLoaderStore();
   const [errors, setErrors] = useState<AuthFormPayloadType>({});
   const router = useRouter();
+
   const handleSubmit = async ({
     fullname,
     email,
@@ -24,14 +26,15 @@ export default function SignUpScreen() {
       setErrors
     );
 
+    console.log(avatar)
     if (!isValid) return;
-
     const fd = new FormData();
     if (avatar) {
+      const isObject = typeof avatar === "object";
       fd.append("userAvatarImages", {
-        uri: avatar.uri,
-        type: avatar.mimeType || "image/jpeg",
-        name: avatar.fileName || "avatar.jpg",
+        uri: isObject && avatar.uri,
+        type: isObject && avatar.mimeType || "image/jpeg",
+        name: isObject && avatar.fileName || "avatar.jpg",
       } as any);
     }
     fd.append("fullname", fullname || "");
@@ -41,8 +44,10 @@ export default function SignUpScreen() {
     try {
       showLoading('SignUp');
       const res = await authApi.signUp(fd);
+        setItem("user", res?.data.user);
+            setItem("access_token", res?.data.accessToken);
       showNotification?.({ type: "success", message: res.data.message });
-      router.navigate('/screens/signInScreen');
+      router.navigate('/');
     } catch (error: any) {
       console.log({error})
       showNotification?.({

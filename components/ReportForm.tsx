@@ -78,6 +78,7 @@ export default function ReportForm({ idToUpdate }: { idToUpdate?: string }) {
     const user = await getItem("user");
     const fd = new FormData();
 
+    console.log(user)
     fd.append("type", checkedValue!);
     fd.append("title", title!);
     fd.append("category", selCategory!);

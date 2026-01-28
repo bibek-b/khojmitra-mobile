@@ -10,6 +10,9 @@ export interface NotificationPropType {
 }
 
 export interface ReceiveNotificationPropType {
+    _id: string;
     senderId: string;
+    senderName: string;
+    createdAt: string;
     postId: string;
 }

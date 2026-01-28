@@ -1,7 +1,7 @@
-import { postType } from "./post.types";
+import { PostType } from "./post.types";
 
 export interface FeedProps {
-    post: postType,
+    post: PostType,
     onDeletePost?: (value: string) => void;
 }
 

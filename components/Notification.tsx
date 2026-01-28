@@ -1,10 +1,9 @@
-import socket from "@/app/lib/socket";
 import { ThemeContext } from "@/context/ThemeContext";
-import { userNotificationStore } from "@/store/useNotificationStore";
-import { NotificationPropType, ReceiveNotificationPropType } from "@/types/notification";
+import { NotificationPropType } from "@/types/notification";
 import { FontAwesome } from "@expo/vector-icons";
-import { useContext, useEffect } from "react";
+import { useContext } from "react";
 import { Text, TouchableOpacity, View } from "react-native";
+import { format } from "timeago.js";
 
 
 export default function Notification({username, message, date}: NotificationPropType) {
@@ -21,7 +20,7 @@ export default function Notification({username, message, date}: NotificationProp
         <Text className={`font-semibold `}>{username}: </Text>
         {message}
       </Text>
-      <Text className={`opacity-60 ${isDarkMode ? "text-white": "text-black"}`}>{date}</Text>
+      <Text className={`opacity-60 ${isDarkMode ? "text-white": "text-black"}`}>{format(date)}</Text>
       </View>
     </TouchableOpacity>
   );

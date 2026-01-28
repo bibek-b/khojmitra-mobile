@@ -9,7 +9,7 @@ export const ProofFormContextProvider = ({
   children: React.ReactNode;
 }) => {
   const [isFormVisible, setIsFormVisible] = useState(false);
-  const [proofFormType, setProofFormType] = useState<ProofFormTypeState>({type: "", postId: ""});
+  const [proofForm, setProofForm] = useState<ProofFormTypeState>({type: "", postId: "", postOwnerId: ""});
 
   const showForm = () => setIsFormVisible(true);
   const hideForm = () => setIsFormVisible(false);
@@ -19,8 +19,8 @@ export const ProofFormContextProvider = ({
         isFormVisible,
         showForm,
         hideForm,
-        proofFormType,
-        setProofFormType,
+        proofForm,
+        setProofForm,
       }}
     >
       {children}

@@ -1,5 +1,5 @@
 
-import { NotificationContextType, NotificationStateType } from "@/types/notification";
+import { NotificationContextType, NotificationStateType } from "@/types/popupNotification";
 import React, { createContext, useState } from "react";
 
 export const NotificationContext = createContext<NotificationContextType>({});

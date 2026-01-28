@@ -17,7 +17,6 @@ import { format } from "timeago.js";
 import { getItem } from "@/utils/AsyncStorage";
 import { FeedProps } from "@/types/feed";
 import { useConfirmModalStore } from "@/store/useConfirmModalStore";
-import { serverUrl } from "@/env/serverUrl";
 import { imageType } from "@/types/image";
 import { usePostStore } from "@/store/usePostStore";
 
@@ -27,6 +26,7 @@ const moreOptions = [
 ];
 
 export default function Feed({ post, onDeletePost }: FeedProps) {
+
   const [expanded, setExpanded] = useState(false);
   const [selectedImage, setSelectedImage] = useState<imageType | null>(null);
   const isLost = post.type === "Lost";
@@ -69,7 +69,7 @@ export default function Feed({ post, onDeletePost }: FeedProps) {
   }, [confirmModal]);
 
   const { isDarkMode } = useContext(ThemeContext);
-  const { showForm, setProofFormType } = useContext(ProofFormContext);
+  const { showForm, setProofForm } = useContext(ProofFormContext);
 
   const handleMorePress = async () => {
     setMoreOptionOpen(true);
@@ -259,9 +259,10 @@ export default function Feed({ post, onDeletePost }: FeedProps) {
           </TouchableOpacity> : <TouchableOpacity
             onPress={() => (
               showForm?.(),
-              setProofFormType?.({
+              setProofForm?.({
                 type: type.toLowerCase() as "lost" | "found",
                 postId: post?._id!,
+                postOwnerId: post?.user?._id
               })
             )}
             className="flex-row items-center gap-3 justify-start pt-6"

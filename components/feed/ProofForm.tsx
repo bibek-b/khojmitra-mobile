@@ -20,11 +20,11 @@ import { imageType } from "@/types/image";
 import { useLoaderStore } from "@/store/useLoaderStore";
 import { proofApi } from "@/api/proofApi";
 import { getItem } from "@/utils/AsyncStorage";
+import socket from "@/app/lib/socket";
 
 export default function ProofForm() {
   const { isDarkMode } = useContext(ThemeContext);
-  const { isFormVisible, hideForm, proofFormType } =
-    useContext(ProofFormContext);
+  const { isFormVisible, hideForm, proofForm } = useContext(ProofFormContext);
 
   const { showLoading, hideLoading } = useLoaderStore();
   const { showNotification } = useContext(NotificationContext);
@@ -42,7 +42,7 @@ export default function ProofForm() {
       duration: 300,
       useNativeDriver: true,
     }).start();
-    if (proofFormType?.type === "lost") {
+    if (proofForm?.type === "lost") {
       setProofType("owner");
     } else {
       setProofType("found");
@@ -62,7 +62,7 @@ export default function ProofForm() {
 
     const fd = new FormData();
     fd.append("claimerId", user?._id);
-    fd.append("post", proofFormType?.postId!);
+    fd.append("post", proofForm?.postId!);
 
     if (description.trim().length > 0) {
       fd.append("description", description);
@@ -72,14 +72,21 @@ export default function ProofForm() {
         const isObject = typeof img === "object";
         fd.append("proofImages", {
           uri: isObject && img?.uri,
-          type: isObject && img.mimeType || "image/jpeg",
-          name: isObject && img.fileName || `image_${Date.now()}_${index}.jpg`,
+          type: (isObject && img.mimeType) || "image/jpeg",
+          name:
+            (isObject && img.fileName) || `image_${Date.now()}_${index}.jpg`,
         } as any);
       });
     }
     try {
       showLoading("ProofModal");
       const res = await proofApi.addProof({ data: fd, type: proofType });
+
+      socket.emit("sendReport", {
+        senderId: user?._id,
+        receiverId: proofForm?.postOwnerId,
+        postId: proofForm?.postId
+      });
       showNotification?.({
         type: "success",
         message: res?.data.data.message || "Proof form submitted successfully",
@@ -111,7 +118,7 @@ export default function ProofForm() {
     });
   };
 
-  const isFound = proofFormType?.type === "lost" ? "Found" : "Lost";
+  const isFound = proofForm?.type === "lost" ? "Found" : "Lost";
   return (
     isFormVisible && (
       <TouchableWithoutFeedback onPress={() => closeFormWithAnim(hideForm)}>
@@ -142,7 +149,9 @@ export default function ProofForm() {
                     <TextInput
                       className={` border ${isDarkMode ? "border-[#f5f5f5]/40 text-[#f5f5f5]" : "border-black/40"} p-4  rounded-lg h-40`}
                       placeholder={`Describe what you have ${isFound}..`}
-                      placeholderTextColor={isDarkMode ? "#f5f5f580" : "#6b7280"}
+                      placeholderTextColor={
+                        isDarkMode ? "#f5f5f580" : "#6b7280"
+                      }
                       textAlignVertical="top"
                       multiline={true}
                       onChangeText={setDescription}

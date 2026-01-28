@@ -1,26 +1,15 @@
-
-type notificationType = "error" | "success" 
-
-
-export type NotificationStateType = {
-  type?: notificationType ;
-  message?: string;
-  visible?: boolean;
-};
+export interface NotificationStoreType  {
+    notifications : ReceiveNotificationPropType[];
+    setNotifications: (value: ReceiveNotificationPropType) => void;
+}
 
 export interface NotificationPropType {
     username: string,
     message: string,
     date: string,
-    type: notificationType
 }
 
-export type NotificationContextType = {
-  notification?: NotificationStateType;
-  setNotification?: React.Dispatch<
-    React.SetStateAction<NotificationPropType | undefined>
-  >;
-  showNotification?: ({ type, message }: NotificationStateType) => void;
-  hideNotification?: () => void;
-};
-
+export interface ReceiveNotificationPropType {
+    senderId: string;
+    postId: string;
+}

@@ -5,8 +5,8 @@ export type ProofFormContextType = {
   setIsFormVisible?: React.Dispatch<React.SetStateAction<boolean>>;
   showForm?: () => void;
   hideForm?: () => void;
-  proofFormType?: ProofFormTypeState;
-  setProofFormType?: (data: ProofFormTypeState) => void;
+  proofForm?: ProofFormTypeState;
+  setProofForm?: (data: ProofFormTypeState) => void;
 };
 
 export interface proofsType {
@@ -24,5 +24,6 @@ export interface addProofPropsType {
 
 export interface ProofFormTypeState {
     type: "lost" | "found" | "",
-    postId: string
+    postId: string,
+    postOwnerId: string;
 }

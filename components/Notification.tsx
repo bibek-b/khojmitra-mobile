@@ -1,12 +1,15 @@
+import socket from "@/app/lib/socket";
 import { ThemeContext } from "@/context/ThemeContext";
-import { NotificationPropType } from "@/types/notification";
+import { userNotificationStore } from "@/store/useNotificationStore";
+import { NotificationPropType, ReceiveNotificationPropType } from "@/types/notification";
 import { FontAwesome } from "@expo/vector-icons";
-import { useContext } from "react";
+import { useContext, useEffect } from "react";
 import { Text, TouchableOpacity, View } from "react-native";
 
 
-export default function Notification({username, message, date, type}: NotificationPropType) {
+export default function Notification({username, message, date}: NotificationPropType) {
   const { isDarkMode } = useContext(ThemeContext);
+
   return (
     <TouchableOpacity className="p-5 flex-1 flex-row gap-2 ">
       <View className="relative">

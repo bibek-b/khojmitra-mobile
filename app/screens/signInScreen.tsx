@@ -27,10 +27,12 @@ export default function SignInScreen() {
       });
       router.navigate("/");
     } catch (error: any) {
+      console.log(error);
+      
       showNotification?.({
         type: "error",
         message:
-          error?.response?.data.mesage ||
+          error?.response?.data.message ||
           "Oops! Something went wrong. please try again",
       });
     }

@@ -5,7 +5,6 @@ import { authApi } from "./authApi";
 import { router } from "expo-router";
 import { serverUrl } from "@/env/serverUrl";
 
-console.log({serverUrl})
 const api = axios.create({
   baseURL:serverUrl+"/api",
   // withCredentials: true,

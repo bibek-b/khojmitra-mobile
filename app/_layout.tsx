@@ -1,7 +1,7 @@
 import { Stack } from "expo-router";
 import "@/global.css";
 import { ThemeContext, ThemeContextProvider } from "@/context/ThemeContext";
-import { useContext } from "react";
+import { useContext, useEffect } from "react";
 import { NotificationContextProvider } from "@/context/NotificationContext";
 import { ProofFormContextProvider } from "@/context/ProofFormContext";
 import ProofForm from "@/components/feed/ProofForm";
@@ -9,12 +9,15 @@ import PopupNotification from "@/components/common/PopupNotification";
 import { GlobalLoader } from "@/components/common/GlobalLoader";
 import { useLoaderStore } from "@/store/useLoaderStore";
 import GlobalConfirmModal from "@/components/common/GlobalConfirmModal";
+import socket from "./lib/socket";
+import { getItem } from "@/utils/AsyncStorage";
+import { registerNotificationEvent } from "./lib/socketEvents";
 
 function LayoutWithTheme() {
   const { isDarkMode } = useContext(ThemeContext);
 
   return (
-     <Stack
+    <Stack
       screenOptions={{
         headerStyle: {
           backgroundColor: isDarkMode ? "#1a1a1a" : "white",
@@ -99,17 +102,37 @@ function LayoutWithTheme() {
 }
 
 export default function RootLayout() {
-
   const { loading } = useLoaderStore();
-  return (
 
+  
+
+  useEffect(() => {
+    (async () => {
+      const user = await getItem("user");
+      socket.connect();
+      socket.emit("joinRoom", user._id);
+      registerNotificationEvent();
+
+      return () => {
+        socket.disconnect();
+      };
+    })();
+  }, []);
+
+  return (
     <ProofFormContextProvider>
       <NotificationContextProvider>
         <ThemeContextProvider>
           <LayoutWithTheme />
           <ProofForm />
 
-          {loading.boolean && <GlobalLoader loaderText={loading?.parent === "reportSubmit" ? "Uploading..": "Loading.." } />}
+          {loading.boolean && (
+            <GlobalLoader
+              loaderText={
+                loading?.parent === "reportSubmit" ? "Uploading.." : ""
+              }
+            />
+          )}
           <GlobalConfirmModal />
           <PopupNotification />
         </ThemeContextProvider>

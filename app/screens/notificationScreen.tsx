@@ -28,12 +28,10 @@ export default function NotificationScreen() {
   };
   return (
     <ScrollView className={`${isDarkMode ? "bg-[#1a1a1a]" : "bg-[#F9FAFB]"}`}>
-      {notifications.map((data) => (
+      {notifications.map((data, idx) => (
         <Notification
-          key={data._id}
-          username={data.senderName}
-          message={"reported to your post!"}
-          date={data.createdAt}
+          key={data._id || idx}
+          data={data}
         />
       ))}
       {notifications.length > 9 && !isBtnClicked && (

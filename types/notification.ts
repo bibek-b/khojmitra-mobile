@@ -4,9 +4,7 @@ export interface NotificationStoreType  {
 }
 
 export interface NotificationPropType {
-    username: string,
-    message: string,
-    date: string,
+    data : ReceiveNotificationPropType
 }
 
 export interface ReceiveNotificationPropType {
@@ -15,4 +13,6 @@ export interface ReceiveNotificationPropType {
     senderName: string;
     createdAt: string;
     postId: string;
+    postTitle: string;
+    message?:string;
 }

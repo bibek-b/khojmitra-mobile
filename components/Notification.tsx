@@ -6,7 +6,7 @@ import { Text, TouchableOpacity, View } from "react-native";
 import { format } from "timeago.js";
 
 
-export default function Notification({username, message, date}: NotificationPropType) {
+export default function Notification({data}: NotificationPropType) {
   const { isDarkMode } = useContext(ThemeContext);
 
   return (
@@ -17,10 +17,12 @@ export default function Notification({username, message, date}: NotificationProp
       </View>
       <View className="text-sm">
         <Text className={`max-w-[260px] flex-row flex-wrap ${isDarkMode ? "text-white": "text-[#a1a1a1]"}`} numberOfLines={2}>
-        <Text className={`font-semibold `}>{username}: </Text>
-        {message}
+        <Text className={`font-semibold `}>{data?.senderName}: </Text>
+        <View>
+          <Text>Reported to your <Text className="font-bold">{data.postTitle} </Text> post</Text>
+        </View>
       </Text>
-      <Text className={`opacity-60 ${isDarkMode ? "text-white": "text-black"}`}>{format(date)}</Text>
+      <Text className={`opacity-60 ${isDarkMode ? "text-white": "text-black"}`}>{format(data.createdAt)}</Text>
       </View>
     </TouchableOpacity>
   );

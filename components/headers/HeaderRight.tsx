@@ -1,4 +1,5 @@
 import { ThemeContext } from "@/context/ThemeContext";
+import { userNotificationStore } from "@/store/useNotificationStore";
 import { useSearchFeedStore } from "@/store/useSearchFeedStore";
 import { HeaderAnimationPropsType } from "@/types/animation";
 import { Feather, Ionicons } from "@expo/vector-icons";
@@ -19,8 +20,10 @@ export default function HeaderRight({
   searchWidth,
 }: HeaderAnimationPropsType) {
   const { isDarkMode } = useContext(ThemeContext);
+  const { notifications } = userNotificationStore();
   const { searchInput, setSearchInput} = useSearchFeedStore();
 
+  const notificationCount = notifications.length + 1 || 0;
   return (
     <View className="flex-row pr-2 gap-4 ">
       <Animated.View
@@ -61,8 +64,8 @@ export default function HeaderRight({
           </TouchableOpacity>
           <TouchableOpacity className="p-2 relative" onPress={() => router.push('/screens/notificationScreen')}>
             <Ionicons name="notifications-outline" size={28} color={isDarkMode ? "#E0E0E0": "black"}/>
-            <Text className="h-5 w-5 text-center right-1 top-1 rounded-full bg-red-500 text-sm absolute text-white">
-              1
+             <Text className={`h-5 w-5 text-center right-1 top-1 rounded-full bg-red-500 text-sm absolute text-white ${notificationCount > 0 ?  "opacity-100": "opacity-0"}`}>
+              {notificationCount}
             </Text>
           </TouchableOpacity>
         </>

@@ -103,20 +103,17 @@ function LayoutWithTheme() {
 
 export default function RootLayout() {
   const { loading } = useLoaderStore();
-
-  
-
   useEffect(() => {
-    (async () => {
+    const initializeSocket = async () => {
       const user = await getItem("user");
       socket.connect();
       socket.emit("joinRoom", user._id);
       registerNotificationEvent();
-
-      return () => {
-        socket.disconnect();
-      };
-    })();
+    };
+    initializeSocket();
+    return () => {
+      socket.disconnect();
+    };
   }, []);
 
   return (

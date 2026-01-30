@@ -1,6 +1,6 @@
 import { router, Tabs } from "expo-router";
 import { Entypo, Ionicons, Feather, AntDesign } from "@expo/vector-icons";
-import { useContext, useEffect, useState } from "react";
+import { useCallback, useContext, useEffect, useState } from "react";
 import HeaderRight from "@/components/headers/HeaderRight";
 import HeaderLeft from "@/components/headers/HeaderLeft";
 import { useHeaderAnimations } from "../../hooks/useHeaderAnimations";
@@ -19,6 +19,23 @@ export default function TabLayout() {
   useEffect(() => {
     animateHeader(showSearchBar);
   }, [showSearchBar]);
+
+  //Memoize header components
+  const renderHeaderLeft = useCallback(
+    () => <HeaderLeft logoAnim={logoAnim} showSearchBar={showSearchBar} />,
+    [logoAnim, showSearchBar],
+  );
+
+  const renderHeaderRight = useCallback(
+    () => (
+      <HeaderRight
+        showSearchBar={showSearchBar}
+        setShowSearchBar={setShowSearchBar}
+        searchWidth={searchWidth}
+      />
+    ),
+    [showSearchBar, searchWidth],
+  );
 
   return (
     <Tabs
@@ -41,16 +58,8 @@ export default function TabLayout() {
           tabBarIcon: ({ color }: { color: string }) => (
             <Entypo name="home" size={24} color={color} />
           ),
-          headerLeft: () => (
-            <HeaderLeft logoAnim={logoAnim} showSearchBar={showSearchBar} />
-          ),
-          headerRight: () => (
-            <HeaderRight
-              showSearchBar={showSearchBar}
-              setShowSearchBar={setShowSearchBar}
-              searchWidth={searchWidth}
-            />
-          ),
+          headerLeft: renderHeaderLeft,
+          headerRight: renderHeaderRight,
         }}
       />
       <Tabs.Screen

@@ -1,5 +1,5 @@
 
-type PopupNotificationType = "error" | "success" 
+type PopupNotificationType = "error" | "success" | "info" 
 
 
 export type PopupNotificationStateType = {

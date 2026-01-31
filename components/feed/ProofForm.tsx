@@ -100,6 +100,7 @@ export default function ProofForm() {
         type: "error",
         message: error?.response.data.message,
       });
+      hideForm?.();
     } finally {
       hideLoading();
     }

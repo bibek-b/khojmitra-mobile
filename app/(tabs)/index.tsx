@@ -1,6 +1,5 @@
 import Feed from "@/components/feed/Feed";
 import { ScrollView, Text, View } from "react-native";
-import Fab from "../../components/common/Fab";
 import { useContext, useEffect } from "react";
 import { ThemeContext } from "@/context/ThemeContext";
 import { postApi } from "@/api/postApi";
@@ -8,7 +7,7 @@ import { NotificationContext } from "@/context/NotificationContext";
 import { useLoaderStore } from "@/store/useLoaderStore";
 import { usePostStore } from "@/store/usePostStore";
 import { useSearchFeedStore } from "@/store/useSearchFeedStore";
-import { serverUrl } from "@/env/serverUrl";
+import { useNotificationStore } from "@/store/useNotificationStore";
 
 export default function HomeTab() {
   const { isDarkMode } = useContext(ThemeContext);
@@ -17,8 +16,14 @@ export default function HomeTab() {
   const { showNotification } = useContext(NotificationContext);
   const { allPosts, setAllPosts } = usePostStore();
   const { searchInput } = useSearchFeedStore();
+  const {  newNotification } = useNotificationStore();
 
-
+  useEffect(() => {
+    if (newNotification) {
+      showNotification?.({ type: "info", message: "New Notification!" });
+    }
+  }, [newNotification]);
+  console.log(newNotification)
   useEffect(() => {
     const fetchAllPosts = async () => {
       try {
@@ -26,7 +31,7 @@ export default function HomeTab() {
         const res = await postApi.getAll();
         setAllPosts(res?.data.data);
       } catch (error: any) {
-        console.log(error)
+        console.log(error);
         showNotification &&
           showNotification({ type: "error", message: "Can't fetch post" });
       } finally {
@@ -55,7 +60,7 @@ export default function HomeTab() {
       p.description
         ?.trim()
         .toLowerCase()
-        .includes(searchInput.trim().toLowerCase())
+        .includes(searchInput.trim().toLowerCase()),
   );
   return (
     <View className="relative h-full">
@@ -63,7 +68,7 @@ export default function HomeTab() {
         <View
           className={`h-[3px] w-full bg-black/30 ${isDarkMode && "bg-white/30"}`}
         />
-        {(allPosts?.length > 0 && filteredPost?.length > 0) ? (
+        {allPosts?.length > 0 && filteredPost?.length > 0 ? (
           filteredPost.map((data) => (
             <View key={data._id} className=" justify-center w-full">
               <Feed post={data} />

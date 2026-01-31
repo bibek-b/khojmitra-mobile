@@ -103,6 +103,7 @@ function LayoutWithTheme() {
 
 export default function RootLayout() {
   const { loading } = useLoaderStore();
+  
   useEffect(() => {
     const initializeSocket = async () => {
       const user = await getItem("user");

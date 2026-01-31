@@ -1,5 +1,4 @@
 import { ThemeContext } from "@/context/ThemeContext";
-import { userNotificationStore } from "@/store/useNotificationStore";
 import { useSearchFeedStore } from "@/store/useSearchFeedStore";
 import { HeaderAnimationPropsType } from "@/types/animation";
 import { Feather, Ionicons } from "@expo/vector-icons";
@@ -13,17 +12,14 @@ import {
   View,
 } from "react-native";
 
-
 export default function HeaderRight({
   showSearchBar,
   setShowSearchBar,
   searchWidth,
 }: HeaderAnimationPropsType) {
   const { isDarkMode } = useContext(ThemeContext);
-  const { notifications } = userNotificationStore();
-  const { searchInput, setSearchInput} = useSearchFeedStore();
+  const { searchInput, setSearchInput } = useSearchFeedStore();
 
-  const notificationCount = notifications.length + 1 || 0;
   return (
     <View className="flex-row pr-2 gap-4 ">
       <Animated.View
@@ -35,15 +31,19 @@ export default function HeaderRight({
         }}
       >
         {showSearchBar && (
-          <View className={`border w-full ${isDarkMode ? "border-white/30" : "border-black/30"}  rounded-full flex-row items-center justify-between px-2 `}>
+          <View
+            className={`border w-full ${isDarkMode ? "border-white/30" : "border-black/30"}  rounded-full flex-row items-center justify-between px-2 `}
+          >
             <TextInput
-              className={`flex-1 px-4 text-base ${isDarkMode ? "text-[#e0e0e0] placeholder:text-white": "text-black"}`}
+              className={`flex-1 px-4 text-base ${isDarkMode ? "text-[#e0e0e0] placeholder:text-white" : "text-black"}`}
               placeholder="Search"
               autoFocus={showSearchBar}
               value={searchInput}
               onChangeText={setSearchInput}
             />
-            <TouchableOpacity onPress={() => (setShowSearchBar?.(false), setSearchInput(''))}>
+            <TouchableOpacity
+              onPress={() => (setShowSearchBar?.(false), setSearchInput(""))}
+            >
               <Feather
                 name="x"
                 size={22}
@@ -60,12 +60,25 @@ export default function HeaderRight({
             className="p-2"
             onPress={() => setShowSearchBar?.(true)}
           >
-            <Feather name="search" size={28} color={isDarkMode ? "#E0E0E0": "black"} />
+            <Feather
+              name="search"
+              size={28}
+              color={isDarkMode ? "#E0E0E0" : "black"}
+            />
           </TouchableOpacity>
-          <TouchableOpacity className="p-2 relative" onPress={() => router.push('/screens/notificationScreen')}>
-            <Ionicons name="notifications-outline" size={28} color={isDarkMode ? "#E0E0E0": "black"}/>
-             <Text className={`h-5 w-5 text-center right-1 top-1 rounded-full bg-red-500 text-sm absolute text-white ${notificationCount > 0 ?  "opacity-100": "opacity-0"}`}>
-              {notificationCount}
+          <TouchableOpacity
+            className="p-2 relative"
+            onPress={() => router.push("/screens/notificationScreen")}
+          >
+            <Ionicons
+              name="notifications-outline"
+              size={28}
+              color={isDarkMode ? "#E0E0E0" : "black"}
+            />
+            <Text
+              className={`h-5 w-5 text-center right-1 top-1 rounded-full bg-red-500 text-sm absolute text-white `}
+            >
+              1
             </Text>
           </TouchableOpacity>
         </>

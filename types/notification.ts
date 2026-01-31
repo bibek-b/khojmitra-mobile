@@ -1,4 +1,8 @@
+import React, { SetStateAction } from "react";
+
 export interface NotificationStoreType  {
+    newNotification: boolean,
+    setNewNotification: (value: boolean) => void,
     notifications : ReceiveNotificationPropType[];
     setNotifications: (value: ReceiveNotificationPropType) => void;
 }

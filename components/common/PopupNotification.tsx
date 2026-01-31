@@ -11,7 +11,7 @@ export default function PopupNotification() {
   const bg =
     notification?.type === "success"
       ? "bg-green-500"
-      : notification?.type === "error" && "bg-red-500";
+      : notification?.type === "error" ? "bg-red-500" :  "bg-yellow-500";
 
 
   const closePopupWithAnim = (hideNotifi? : () => void) => {

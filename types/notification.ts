@@ -1,22 +1,24 @@
-import React, { SetStateAction } from "react";
 
-export interface NotificationStoreType  {
-    newNotification: boolean,
-    setNewNotification: (value: boolean) => void,
-    notifications : ReceiveNotificationPropType[];
-    setNotifications: (value: ReceiveNotificationPropType) => void;
+export interface NotificationStoreType {
+  newNotification: boolean;
+  setNewNotification: (value: boolean) => void;
+  notifications: ReceiveNotificationPropType[];
+  setNotifications: (value: ReceiveNotificationPropType[]) => void;
+  addNotification: (value: ReceiveNotificationPropType) => void;
 }
 
 export interface NotificationPropType {
-    data : ReceiveNotificationPropType
+    senderName : string;
+    postTitle: string;
+    createdAt: string;
 }
 
 export interface ReceiveNotificationPropType {
-    _id: string;
-    senderId: string;
-    senderName: string;
-    createdAt: string;
-    postId: string;
-    postTitle: string;
-    message?:string;
+  _id: string;
+  senderId: string;
+  sender:  {  _id?: string; fullname: string };
+  createdAt: string;
+  postId: string;
+  post: {_id?:string; title: string};
+  message?: string;
 }

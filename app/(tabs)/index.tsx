@@ -17,13 +17,14 @@ export default function HomeTab() {
   const { allPosts, setAllPosts } = usePostStore();
   const { searchInput } = useSearchFeedStore();
   const {  newNotification } = useNotificationStore();
+  console.log(newNotification)
 
   useEffect(() => {
     if (newNotification) {
       showNotification?.({ type: "info", message: "New Notification!" });
     }
   }, [newNotification]);
-  console.log(newNotification)
+
   useEffect(() => {
     const fetchAllPosts = async () => {
       try {

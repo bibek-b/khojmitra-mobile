@@ -87,6 +87,7 @@ export default function ProofForm() {
         receiverId: proofForm?.postOwnerId,
         postId: proofForm?.postId
       });
+      
       showNotification?.({
         type: "success",
         message: res?.data.data.message || "Proof form submitted successfully",
@@ -96,11 +97,14 @@ export default function ProofForm() {
       setDescription("");
       setImages([]);
     } catch (error: any) {
+      if(error.response.status === 401) {
+        hideForm?.();
+      }
       showNotification?.({
         type: "error",
-        message: error?.response.data.message,
+        message: error?.response.data.message || "Error submitting Proof form",
       });
-      hideForm?.();
+      // hideForm?.();
     } finally {
       hideLoading();
     }
@@ -108,7 +112,6 @@ export default function ProofForm() {
 
   const closeFormWithAnim = (onComplete?: () => void) => {
     setDescription("");
-    setImages([]);
     setImages([]);
     Animated.timing(scaleAnim, {
       toValue: 0.1,

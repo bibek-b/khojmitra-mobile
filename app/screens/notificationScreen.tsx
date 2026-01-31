@@ -5,8 +5,10 @@ import { NotificationContext } from "@/context/NotificationContext";
 import { ThemeContext } from "@/context/ThemeContext";
 import { useLoaderStore } from "@/store/useLoaderStore";
 import { useNotificationStore } from "@/store/useNotificationStore";
+import { ReceiveNotificationPropType } from "@/types/notification";
+import { getItem } from "@/utils/AsyncStorage";
 import { useContext, useEffect, useState } from "react";
-import { ScrollView, Text, TouchableOpacity, View } from "react-native";
+import { ScrollView, Text, TouchableOpacity } from "react-native";
 
 export default function NotificationScreen() {
   const [isBtnClicked, setIsBtnClicked] = useState(false);
@@ -14,15 +16,18 @@ export default function NotificationScreen() {
   const { isDarkMode } = useContext(ThemeContext);
   const { showNotification } = useContext(NotificationContext);
   const { showLoading, hideLoading} = useLoaderStore();
+
   
   const { notifications, setNotifications } = useNotificationStore();
-  const [slicedData, setSlicedData] = useState(notifications.slice(0, 9));
+  // const [slicedData, setSlicedData] = useState(notifications.slice(0, 9));
 
   useEffect(() => {
     (async () => {
       try {
+        const me = await getItem("user");
         const res = await notificationApi.getNotifications();
-        setNotifications(res?.data?.data);
+        //exclude the notifications you sent to others
+        setNotifications(res?.data?.data?.filter((d: ReceiveNotificationPropType) => (d.sender._id || d.senderId) !== me._id));
       } catch (error: any) {
         console.log(error);
         showNotification &&
@@ -37,15 +42,18 @@ export default function NotificationScreen() {
     // setSlicedData(notificationData);
     setIsBtnClicked(true);
   };
+  console.log({notifications})
   return (
     <ScrollView className={`${isDarkMode ? "bg-[#1a1a1a]" : "bg-[#F9FAFB]"}`}>
-      {slicedData.map((data, idx) => (
+      {notifications?.map((data, idx) => (
         <Notification
           key={data._id || idx}
-          data={data}
+          senderName={data?.sender?.fullname}
+          postTitle={data?.post?.title}
+          createdAt={data?.createdAt}
         />
       ))}
-      {slicedData.length > 9 && !isBtnClicked && (
+      {notifications.length > 9 && !isBtnClicked && (
         <TouchableOpacity
           className=" mb-4 items-center"
           onPress={handleLoadNotification}

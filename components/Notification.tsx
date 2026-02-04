@@ -26,7 +26,7 @@ export default function Notification({ senderName, postTitle, createdAt }: Notif
           <View>
             <Text className="dark:text-white">
               Reported to your{" "}
-              <Text className="font-bold dark:text-white">
+              <Text className="font-semibold dark:text-white">
                 {postTitle}{" "}
               </Text>{" "}
               post

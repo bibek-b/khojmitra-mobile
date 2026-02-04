@@ -45,14 +45,14 @@ export default function NotificationScreen() {
   console.log({notifications})
   return (
     <ScrollView className={`${isDarkMode ? "bg-[#1a1a1a]" : "bg-[#F9FAFB]"}`}>
-      {notifications?.map((data, idx) => (
+      {notifications.length > 0 ? notifications.map((data, idx) => (
         <Notification
           key={data._id || idx}
           senderName={data?.sender?.fullname}
           postTitle={data?.post?.title}
           createdAt={data?.createdAt}
         />
-      ))}
+      )): <Text className="text-white/60 text-lg mt-60 ml-32 ">No notification yet!</Text>}
       {notifications.length > 9 && !isBtnClicked && (
         <TouchableOpacity
           className=" mb-4 items-center"

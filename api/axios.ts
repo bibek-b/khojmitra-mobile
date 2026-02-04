@@ -25,19 +25,19 @@ api.interceptors.response.use(
 
     if ((error?.response?.status === 401 || error?.response?.status === 403 ) && !originalReq._retry) {
       originalReq._retry = true;
-      try {
-        const { data } = await authApi.refreshToken();
-        await setItem("access_token", data?.access_token);
+      // try {
+      //   const { data } = await authApi.refreshToken();
+      //   await setItem("access_token", data?.access_token);
 
-        originalReq.headers.Authorization = `Bearer ${data?.access_token}`;
-        return api(originalReq);
-      } catch (error) {
+      //   originalReq.headers.Authorization = `Bearer ${data?.access_token}`;
+      //   return api(originalReq);
+      // } catch (error) {
         await removeItem("access_token");
         await removeItem("user");
         router.replace("/screens/signInScreen");
 
         // redirectToLogin()
-      }
+      // }
     }
     return Promise.reject(error);
   }

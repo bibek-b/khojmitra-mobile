@@ -264,6 +264,8 @@ export default function Feed({ post, onDeletePost }: FeedProps) {
                 postId: post?._id!,
                 postOwnerId: post?.user?._id
               })
+
+              
             )}
             className="flex-row items-center gap-3 justify-start pt-6"
           >

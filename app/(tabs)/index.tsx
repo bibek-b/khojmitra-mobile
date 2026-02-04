@@ -17,7 +17,6 @@ export default function HomeTab() {
   const { allPosts, setAllPosts } = usePostStore();
   const { searchInput } = useSearchFeedStore();
   const {  newNotification } = useNotificationStore();
-  console.log(newNotification)
 
   useEffect(() => {
     if (newNotification) {

@@ -5,8 +5,8 @@ import { ReceiveNotificationPropType } from "@/types/notification";
 export const registerNotificationEvent = () => {
     const { addNotification, setNewNotification } = useNotificationStore.getState();
 
-    socket.on('notification', (data: ReceiveNotificationPropType) => {
+    socket.on('notification:new', (data: ReceiveNotificationPropType) => {
         setNewNotification(true);
-        addNotification(data)
+        // addNotification(data)
     });
 }

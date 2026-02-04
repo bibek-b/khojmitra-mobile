@@ -11,6 +11,7 @@ export interface NotificationPropType {
     senderName : string;
     postTitle: string;
     createdAt: string;
+    message: string;
 }
 
 export interface ReceiveNotificationPropType {
@@ -20,5 +21,5 @@ export interface ReceiveNotificationPropType {
   createdAt: string;
   postId: string;
   post: {_id?:string; title: string};
-  message?: string;
+  message: string;
 }

@@ -1,6 +1,5 @@
 import { notificationApi } from "@/api/notificationApi";
 import Notification from "@/components/Notification";
-import { notificationData } from "@/constants/dummyData";
 import { NotificationContext } from "@/context/NotificationContext";
 import { ThemeContext } from "@/context/ThemeContext";
 import { useLoaderStore } from "@/store/useLoaderStore";
@@ -26,6 +25,7 @@ export default function NotificationScreen() {
       try {
         const me = await getItem("user");
         const res = await notificationApi.getNotifications();
+        console.log(res)
         //exclude the notifications you sent to others
         setNotifications(res?.data?.data?.filter((d: ReceiveNotificationPropType) => (d.sender._id || d.senderId) !== me._id));
       } catch (error: any) {
@@ -51,6 +51,7 @@ export default function NotificationScreen() {
           senderName={data?.sender?.fullname}
           postTitle={data?.post?.title}
           createdAt={data?.createdAt}
+          message={data.message}
         />
       )): <Text className="text-white/60 text-lg mt-60 ml-32 ">No notification yet!</Text>}
       {notifications.length > 9 && !isBtnClicked && (

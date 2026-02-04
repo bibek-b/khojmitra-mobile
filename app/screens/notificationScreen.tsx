@@ -25,13 +25,11 @@ export default function NotificationScreen() {
       try {
         const me = await getItem("user");
         const res = await notificationApi.getNotifications();
-        console.log(res)
         //exclude the notifications you sent to others
-        setNotifications(res?.data?.data?.filter((d: ReceiveNotificationPropType) => (d.sender._id || d.senderId) !== me._id));
+        setNotifications(res?.data?.data?.filter((d: ReceiveNotificationPropType) => (d.sender?._id || d.senderId) !== me._id));
       } catch (error: any) {
-        console.log(error);
         showNotification &&
-          showNotification({ type: "error", message: "Can't fetch post" });
+          showNotification({ type: "error", message: "Error fetching notifications!" });
       } finally {
         hideLoading();
       }

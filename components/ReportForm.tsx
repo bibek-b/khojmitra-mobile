@@ -78,10 +78,9 @@ export default function ReportForm({ idToUpdate }: { idToUpdate?: string }) {
     const user = await getItem("user");
     const fd = new FormData();
 
-    console.log(user)
     fd.append("type", checkedValue!);
     fd.append("title", title!);
-    fd.append("category", selCategory!);
+    fd.append("category", String(selCategory));
     fd.append("location", location!);
 
     const numericDate = `${date.getFullYear()}-${(date.getMonth() + 1).toString().padStart(2, "0")}-${date.getDate().toString().padStart(2, "0")}`;

@@ -6,10 +6,12 @@ import { useRouter } from "expo-router";
 import { setItem } from "@/utils/AsyncStorage";
 import { AuthFormPayloadType } from "@/types/auth.types";
 import AuthForm from "@/components/AuthForm";
+import { useLoaderStore } from "@/store/useLoaderStore";
 
 export default function SignInScreen() {
   const { showNotification } = useContext(NotificationContext);
   const [errors, setErrors] = useState<AuthFormPayloadType>({});
+  const { showLoading, hideLoading } = useLoaderStore();
   const router = useRouter();
 
   const handleSubmit = async ({ email, password }: AuthFormPayloadType) => {
@@ -17,6 +19,7 @@ export default function SignInScreen() {
     if (!isValid) return;
 
     try {
+      showLoading("signIn");
       const res = await authApi.signIn({ email, password });
       setItem("user", res?.data.user);
       setItem("access_token", res?.data.accessToken);
@@ -27,14 +30,15 @@ export default function SignInScreen() {
       });
       router.navigate("/");
     } catch (error: any) {
-      console.log(error);
-      
       showNotification?.({
         type: "error",
         message:
           error?.response?.data.message ||
           "Oops! Something went wrong. please try again",
       });
+    } finally {
+      hideLoading
+      ();
     }
   };
   return (

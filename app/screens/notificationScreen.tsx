@@ -25,7 +25,6 @@ export default function NotificationScreen() {
       try {
         const me = await getItem("user");
         const res = await notificationApi.getMyNotifications(me._id);
-        //exclude the notifications you sent to others
         setNotifications(res?.data?.data);  
       } catch (error: any) {
         console.log(error)
@@ -35,17 +34,18 @@ export default function NotificationScreen() {
         hideLoading();
       }
     })();
-  },[])
+  },[]);
 
-  const handleLoadNotification = () => {
-    // setSlicedData(notificationData);
+  const handleMoreNotification = () => {
     setIsBtnClicked(true);
   };
-  // console.log({notifications})
+
   return (
     <ScrollView className={`${isDarkMode ? "bg-[#1a1a1a]" : "bg-[#F9FAFB]"}`}>
       {notifications.length > 0 ? notifications.map((data, idx) => (
         <Notification
+        sender={data.sender}
+        post={data.post}
           key={data._id || idx}
           createdAt={data?.createdAt}
           message={data.message}
@@ -54,7 +54,7 @@ export default function NotificationScreen() {
       {notifications.length > 9 && !isBtnClicked && (
         <TouchableOpacity
           className=" mb-4 items-center"
-          onPress={handleLoadNotification}
+          onPress={handleMoreNotification}
         >
           <Text
             className={`text-white text-center  ${isDarkMode ? "bg-white/30" : "bg-black/30"} text-[18px] font-medium px-10 py-2 w-[90%] rounded-md`}

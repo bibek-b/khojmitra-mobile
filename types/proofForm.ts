@@ -9,12 +9,13 @@ export type ProofFormContextType = {
   setProofForm?: (data: ProofFormTypeState) => void;
 };
 
-export interface proofsType {
+export interface ProofType {
+    _id: string;
+    claimType: "owner" | "found"
     description?: string,
     images?: imageType[],
     postId: string,
     claimerId: string;
-
 }
 
 export interface addProofPropsType {

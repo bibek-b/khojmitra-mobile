@@ -1,21 +1,23 @@
+import { NotificationDetailPostType, SenderType } from "./notificationDetailStoreType";
 
 export interface NotificationStoreType {
-
   notifications: ReceiveNotificationPropType[];
   setNotifications: (value: ReceiveNotificationPropType[]) => void;
 }
 
 export interface NotificationPropType {
-    createdAt: string;
-    message: string;
+  sender: SenderType;
+  post: NotificationDetailPostType;
+  createdAt: string;
+  message: string;
 }
 
 export interface ReceiveNotificationPropType {
   _id: string;
   senderId: string;
-  sender:  {  _id?: string; fullname: string };
+  sender: SenderType;
   createdAt: string;
   postId: string;
-  post: {_id?:string; title: string};
+  post: NotificationDetailPostType;
   message: string;
 }

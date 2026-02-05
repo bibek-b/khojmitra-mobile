@@ -5,10 +5,9 @@ import { useContext } from "react";
 import { Text, TouchableOpacity, View } from "react-native";
 import { format } from "timeago.js";
 
-export default function Notification({ senderName, postTitle, createdAt, message }: NotificationPropType) {
+export default function Notification({  createdAt, message }: NotificationPropType) {
   const { isDarkMode } = useContext(ThemeContext);
 
-  console.log(format(createdAt))
   return (
     <TouchableOpacity className="p-5 flex-1 flex-row gap-2 ">
       <View className="relative">
@@ -19,8 +18,9 @@ export default function Notification({ senderName, postTitle, createdAt, message
         />
         {/* <Text className="absolute text-2xl -bottom-2 right-0">{type === "Lost"? "🔴": "🟢"}</Text> */}
       </View>
-      <View>
-        <Text
+      <View className="flex-row items-center">
+        <View>
+          <Text
           className={`max-w-[260px] flex-row flex-wrap ${isDarkMode ? "text-white" : "text-[#a1a1a1]"}`}
           numberOfLines={2.5}
         >
@@ -35,6 +35,10 @@ export default function Notification({ senderName, postTitle, createdAt, message
         >
           {format(new Date(createdAt))}
         </Text>
+        </View>
+       {/* <TouchableOpacity className="absolute right-4 bottom-0">
+         <Text className="text-sm  text-blue-600">View Detail</Text>
+       </TouchableOpacity> */}
       </View>
     </TouchableOpacity>
   );

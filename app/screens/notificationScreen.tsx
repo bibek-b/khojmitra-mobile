@@ -47,8 +47,6 @@ export default function NotificationScreen() {
       {notifications.length > 0 ? notifications.map((data, idx) => (
         <Notification
           key={data._id || idx}
-          senderName={data?.sender?.fullname}
-          postTitle={data?.post?.title}
           createdAt={data?.createdAt}
           message={data.message}
         />

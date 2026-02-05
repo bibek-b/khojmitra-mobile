@@ -6,8 +6,6 @@ export interface NotificationStoreType {
 }
 
 export interface NotificationPropType {
-    senderName : string;
-    postTitle: string;
     createdAt: string;
     message: string;
 }

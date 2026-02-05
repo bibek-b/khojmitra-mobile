@@ -1,15 +1,17 @@
 import { ThemeContext } from "@/context/ThemeContext";
 import { NotificationPropType } from "@/types/notification";
 import { FontAwesome } from "@expo/vector-icons";
+import { useRouter } from "expo-router";
 import { useContext } from "react";
 import { Text, TouchableOpacity, View } from "react-native";
 import { format } from "timeago.js";
 
 export default function Notification({  createdAt, message }: NotificationPropType) {
   const { isDarkMode } = useContext(ThemeContext);
+  const router = useRouter();
 
   return (
-    <TouchableOpacity className="p-5 flex-1 flex-row gap-2 ">
+    <TouchableOpacity className="p-5 flex-1 flex-row gap-2 " onPress={() => router.navigate('/screens/notificationDetailScreen')}>
       <View className="relative">
         <FontAwesome
           name="user-circle"

@@ -24,10 +24,18 @@ function LayoutWithTheme() {
       }}
     >
       <Stack.Screen name="(tabs)" options={{ headerShown: false }} />
-      <Stack.Screen
+       <Stack.Screen
         name="screens/notificationScreen"
         options={{
           title: "Notifications",
+          headerTitleStyle: { fontWeight: 700, fontSize: 24 },
+          headerTintColor: isDarkMode ? "white" : "#1a1a1a",
+        }}
+      />
+      <Stack.Screen
+        name="screens/notificationDetailScreen"
+        options={{
+          title: "Notification(s) Details",
           headerTitleStyle: { fontWeight: 700, fontSize: 24 },
           headerTintColor: isDarkMode ? "white" : "#1a1a1a",
         }}

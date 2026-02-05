@@ -1,6 +1,6 @@
 import { notificationApi } from "@/api/notificationApi";
 import Notification from "@/components/Notification";
-import { NotificationContext } from "@/context/NotificationContext";
+import { PopupNotificationContext } from "@/context/PopupNotificationContext";
 import { ThemeContext } from "@/context/ThemeContext";
 import { useLoaderStore } from "@/store/useLoaderStore";
 import { useNotificationStore } from "@/store/useNotificationStore";
@@ -13,7 +13,7 @@ export default function NotificationScreen() {
   const [isBtnClicked, setIsBtnClicked] = useState(false);
   
   const { isDarkMode } = useContext(ThemeContext);
-  const { showNotification } = useContext(NotificationContext);
+  const { showPopupNotification } = useContext(PopupNotificationContext);
   const { showLoading, hideLoading} = useLoaderStore();
 
   
@@ -24,12 +24,13 @@ export default function NotificationScreen() {
     (async () => {
       try {
         const me = await getItem("user");
-        const res = await notificationApi.getNotifications();
+        const res = await notificationApi.getMyNotifications(me._id);
         //exclude the notifications you sent to others
-        setNotifications(res?.data?.data?.filter((d: ReceiveNotificationPropType) => (d.sender?._id || d.senderId) !== me._id));
+        setNotifications(res?.data?.data);  
       } catch (error: any) {
-        showNotification &&
-          showNotification({ type: "error", message: "Error fetching notifications!" });
+        console.log(error)
+        showPopupNotification &&
+          showPopupNotification({ type: "error", message: "Error fetching notifications!" });
       } finally {
         hideLoading();
       }
@@ -40,7 +41,7 @@ export default function NotificationScreen() {
     // setSlicedData(notificationData);
     setIsBtnClicked(true);
   };
-  console.log({notifications})
+  // console.log({notifications})
   return (
     <ScrollView className={`${isDarkMode ? "bg-[#1a1a1a]" : "bg-[#F9FAFB]"}`}>
       {notifications.length > 0 ? notifications.map((data, idx) => (

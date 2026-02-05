@@ -32,7 +32,8 @@ export default function PopupNotification() {
   };
 
   useEffect(() => {
-
+    if(!popupNotification) return;
+    
     fadeAnim.setValue(0);
     slideAnim.setValue(-80);
     scaleAnim.setValue(0.8);

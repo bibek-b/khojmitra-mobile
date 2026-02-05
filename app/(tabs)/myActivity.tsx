@@ -1,8 +1,7 @@
 import Feed from "@/components/feed/Feed";
 import { ScrollView, Text, TouchableOpacity, View } from "react-native";
-import Fab from "../../components/common/Fab";
 import { useContext, useEffect, useState } from "react";
-import { NotificationContext } from "@/context/NotificationContext";
+import { PopupNotificationContext } from "@/context/PopupNotificationContext";
 import { useLoaderStore } from "@/store/useLoaderStore";
 import { postApi } from "@/api/postApi";
 import { getItem } from "@/utils/AsyncStorage";
@@ -19,7 +18,7 @@ import { PostType } from "@/types/post.types";
 
 export default function MyPostsTab() {
   const { showLoading, hideLoading } = useLoaderStore();
-  const { showNotification } = useContext(NotificationContext);
+  const { showPopupNotification } = useContext(PopupNotificationContext);
   const [myPosts, setMyPosts] = useState<PostType[]>([]);
   const { allPosts, setAllPosts } = usePostStore();
   const { isDarkMode } = useContext(ThemeContext);
@@ -46,7 +45,7 @@ export default function MyPostsTab() {
         const message =
         error?.response?.data?.message ||
         "Oops! Something went wrong. Please try again";
-      showNotification?.({
+      showPopupNotification?.({
         type: "error",
         message,
       });
@@ -62,7 +61,7 @@ export default function MyPostsTab() {
 
       await postApi.delete(id);
       setAllPosts(allPosts.filter((p) => p._id !== id));
-      showNotification?.({
+      showPopupNotification?.({
         type: "success",
         message: "Post deleted successfully",
       });
@@ -70,7 +69,7 @@ export default function MyPostsTab() {
       const message =
         error?.response?.data?.message ||
         "Oops! Something went wrong. Please try again";
-      showNotification?.({
+      showPopupNotification?.({
         type: "error",
         message,
       });

@@ -2,7 +2,7 @@ import { Stack } from "expo-router";
 import "@/global.css";
 import { ThemeContext, ThemeContextProvider } from "@/context/ThemeContext";
 import { useContext, useEffect } from "react";
-import { NotificationContextProvider } from "@/context/NotificationContext";
+import {  PopupNotificationContextProvider } from "@/context/PopupNotificationContext";
 import { ProofFormContextProvider } from "@/context/ProofFormContext";
 import ProofForm from "@/components/feed/ProofForm";
 import PopupNotification from "@/components/common/PopupNotification";
@@ -119,7 +119,7 @@ export default function RootLayout() {
 
   return (
     <ProofFormContextProvider>
-      <NotificationContextProvider>
+      <PopupNotificationContextProvider>
         <ThemeContextProvider>
           <LayoutWithTheme />
           <ProofForm />
@@ -134,7 +134,7 @@ export default function RootLayout() {
           <GlobalConfirmModal />
           <PopupNotification />
         </ThemeContextProvider>
-      </NotificationContextProvider>
+      </PopupNotificationContextProvider>
     </ProofFormContextProvider>
   );
 }

@@ -14,7 +14,7 @@ import {
 import UploadImgBtn from "../common/UploadImgBtn";
 import ImagePickerModal from "../common/ImagePickerModal";
 import DisplayImages from "../common/DisplayImages";
-import { NotificationContext } from "@/context/NotificationContext";
+import { PopupNotificationContext } from "@/context/PopupNotificationContext";
 import { ProofFormContext } from "@/context/ProofFormContext";
 import { imageType } from "@/types/image";
 import { useLoaderStore } from "@/store/useLoaderStore";
@@ -27,7 +27,7 @@ export default function ProofForm() {
   const { isFormVisible, hideForm, proofForm } = useContext(ProofFormContext);
 
   const { showLoading, hideLoading } = useLoaderStore();
-  const { showNotification } = useContext(NotificationContext);
+  const { showPopupNotification } = useContext(PopupNotificationContext);
   const [images, setImages] = useState<imageType[]>([]);
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [description, setDescription] = useState("");
@@ -51,7 +51,7 @@ export default function ProofForm() {
 
   const handleSubmit = async () => {
     if (images.length === 0 && description.trim().length === 0) {
-      showNotification?.({
+      showPopupNotification?.({
         type: "error",
         message: "Please fill description or upload an image.",
       });
@@ -88,7 +88,7 @@ export default function ProofForm() {
         postId: proofForm?.postId
       });
       
-      showNotification?.({
+      showPopupNotification?.({
         type: "success",
         message: res?.data.data.message || "Proof form submitted successfully",
       });
@@ -100,7 +100,7 @@ export default function ProofForm() {
       if(error.response.status === 401) {
         hideForm?.();
       }
-      showNotification?.({
+      showPopupNotification?.({
         type: "error",
         message: error?.response.data.message || "Error submitting Proof form",
       });

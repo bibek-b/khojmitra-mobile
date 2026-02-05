@@ -11,7 +11,7 @@ import { ThemeContext } from "@/context/ThemeContext";
 import ImagePickerModal from "./common/ImagePickerModal";
 import UploadImgBtn from "./common/UploadImgBtn";
 import DisplayImages from "./common/DisplayImages";
-import { NotificationContext } from "@/context/NotificationContext";
+import { PopupNotificationContext } from "@/context/PopupNotificationContext";
 import { postApi } from "@/api/postApi";
 import { getItem } from "@/utils/AsyncStorage";
 import { useLoaderStore } from "@/store/useLoaderStore";
@@ -29,7 +29,7 @@ const reportType = [
 
 export default function ReportForm({ idToUpdate }: { idToUpdate?: string }) {
   const { isDarkMode } = useContext(ThemeContext);
-  const { showNotification } = useContext(NotificationContext);
+  const { showPopupNotification } = useContext(PopupNotificationContext);
   const { showLoading, hideLoading } = useLoaderStore();
   const { allPosts, isEditPost } = usePostStore();
 
@@ -120,13 +120,13 @@ export default function ReportForm({ idToUpdate }: { idToUpdate?: string }) {
       } else {
         res = await postApi.create(fd);
       }
-      showNotification?.({ type: "success", message: res.data.message });
+      showPopupNotification?.({ type: "success", message: res.data.message });
       router.push("/");
     } catch (error: any) {
       const message =
         error?.response?.data?.message ||
         "Oops! Something went wrong. Please try again";
-      showNotification?.({
+      showPopupNotification?.({
         type: "error",
         message,
       });

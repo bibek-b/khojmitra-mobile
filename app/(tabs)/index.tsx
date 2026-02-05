@@ -3,26 +3,25 @@ import { ScrollView, Text, View } from "react-native";
 import { useContext, useEffect } from "react";
 import { ThemeContext } from "@/context/ThemeContext";
 import { postApi } from "@/api/postApi";
-import { NotificationContext } from "@/context/NotificationContext";
+import { PopupNotificationContext } from "@/context/PopupNotificationContext";
 import { useLoaderStore } from "@/store/useLoaderStore";
 import { usePostStore } from "@/store/usePostStore";
 import { useSearchFeedStore } from "@/store/useSearchFeedStore";
-import { useNotificationStore } from "@/store/useNotificationStore";
+
 
 export default function HomeTab() {
   const { isDarkMode } = useContext(ThemeContext);
   const { showLoading, hideLoading } = useLoaderStore();
 
-  const { showNotification } = useContext(NotificationContext);
+  const { showPopupNotification } = useContext(PopupNotificationContext);
   const { allPosts, setAllPosts } = usePostStore();
   const { searchInput } = useSearchFeedStore();
-  const {  newNotification } = useNotificationStore();
 
-  useEffect(() => {
-    if (newNotification) {
-      showNotification?.({ type: "info", message: "New Notification!" });
-    }
-  }, [newNotification]);
+  // useEffect(() => {
+  //   if (newNotification) {
+  //     showNotification?.({ type: "info", message: "New Notification!" });
+  //   }
+  // }, [newNotification]);
 
   useEffect(() => {
     const fetchAllPosts = async () => {
@@ -31,9 +30,7 @@ export default function HomeTab() {
         const res = await postApi.getAll();
         setAllPosts(res?.data.data);
       } catch (error: any) {
-        console.log(error);
-        showNotification &&
-          showNotification({ type: "error", message: "Can't fetch post" });
+          showPopupNotification?.({ type: "error", message: "Can't fetch post" });
       } finally {
         hideLoading();
       }

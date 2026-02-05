@@ -1,6 +1,6 @@
 import { useContext, useState } from "react";
 import { validateSignin } from "../validations/authFormValidator";
-import { NotificationContext } from "@/context/NotificationContext";
+import { PopupNotificationContext } from "@/context/PopupNotificationContext";
 import { authApi } from "@/api/authApi";
 import { useRouter } from "expo-router";
 import { setItem } from "@/utils/AsyncStorage";
@@ -9,7 +9,7 @@ import AuthForm from "@/components/AuthForm";
 import { useLoaderStore } from "@/store/useLoaderStore";
 
 export default function SignInScreen() {
-  const { showNotification } = useContext(NotificationContext);
+  const { showPopupNotification } = useContext(PopupNotificationContext);
   const [errors, setErrors] = useState<AuthFormPayloadType>({});
   const { showLoading, hideLoading } = useLoaderStore();
   const router = useRouter();
@@ -24,13 +24,13 @@ export default function SignInScreen() {
       setItem("user", res?.data.user);
       setItem("access_token", res?.data.accessToken);
 
-      showNotification?.({
+      showPopupNotification?.({
         type: "success",
         message: "Sign in successful",
       });
       router.navigate("/");
     } catch (error: any) {
-      showNotification?.({
+      showPopupNotification?.({
         type: "error",
         message:
           error?.response?.data.message ||

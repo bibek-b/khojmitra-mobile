@@ -28,7 +28,7 @@ export default function ChatScreen() {
       headerTitle: () => (
         <View className="flex-row items-center gap-2">
           <Image
-            source={{ uri: avatar }}
+            source={{ uri: avatar  }}
             className="w-14 h-14 object-cover rounded-full"
           />
           <Text className={`text-xl font-medium ${isDarkMode ? "text-white": "text-black"}`}>{username}</Text>

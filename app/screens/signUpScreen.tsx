@@ -1,5 +1,5 @@
 import { useContext, useState } from "react";
-import { NotificationContext } from "@/context/NotificationContext";
+import { PopupNotificationContext } from "@/context/PopupNotificationContext";
 import { authApi } from "@/api/authApi";
 import { validateSignup } from "../validations/authFormValidator";
 import { useRouter } from "expo-router";
@@ -9,7 +9,7 @@ import AuthForm from "@/components/AuthForm";
 import { setItem } from "@/utils/AsyncStorage";
 
 export default function SignUpScreen() {
-  const { showNotification } = useContext(NotificationContext);
+  const { showPopupNotification } = useContext(PopupNotificationContext);
   const { showLoading, hideLoading } = useLoaderStore();
   const [errors, setErrors] = useState<AuthFormPayloadType>({});
   const router = useRouter();
@@ -46,11 +46,11 @@ export default function SignUpScreen() {
       const res = await authApi.signUp(fd);
         setItem("user", res?.data.user);
             setItem("access_token", res?.data.accessToken);
-      showNotification?.({ type: "success", message: res.data.message });
+      showPopupNotification?.({ type: "success", message: res.data.message });
       router.navigate('/');
     } catch (error: any) {
       console.log({error})
-      showNotification?.({
+      showPopupNotification?.({
         type: "error",
         message: error?.response?.data.message || "Oops! something went wrong. Please try again"
       });

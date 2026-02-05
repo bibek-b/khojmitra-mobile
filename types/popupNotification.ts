@@ -3,19 +3,19 @@ type PopupNotificationType = "error" | "success" | "info"
 
 
 export type PopupNotificationStateType = {
-  type?: PopupNotificationType ;
-  message?: string;
+  type: PopupNotificationType ;
+  message: string;
   visible?: boolean;
 };
 
 
 
 export type PopupNotificationContextType = {
-  notification?: PopupNotificationStateType;
-  setNotification?: React.Dispatch<
+  popupNotification?: PopupNotificationStateType;
+  setPopupNotification?: React.Dispatch<
     React.SetStateAction<PopupNotificationStateType | undefined>
   >;
-  showNotification?: ({ type, message }: PopupNotificationStateType) => void;
-  hideNotification?: () => void;
+  showPopupNotification?: ({ type, message }: PopupNotificationStateType) => void;
+  hidePopupNotification?: () => void;
 };
 

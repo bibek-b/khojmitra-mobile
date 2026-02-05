@@ -1,16 +1,16 @@
-import { NotificationContext } from "@/context/NotificationContext";
+import { PopupNotificationContext } from "@/context/PopupNotificationContext";
 import { useContext, useEffect, useRef } from "react";
 import { Animated, Text, TouchableOpacity, View } from "react-native";
 
 export default function PopupNotification() {
-  const { notification, hideNotification } = useContext(NotificationContext);
+  const { popupNotification, hidePopupNotification } = useContext(PopupNotificationContext);
   const slideAnim = useRef(new Animated.Value(-80)).current;
   const fadeAnim = useRef(new Animated.Value(0)).current;
   const scaleAnim = useRef(new Animated.Value(0.8)).current;
   const bg =
-    notification?.type === "success"
+    popupNotification?.type === "success"
       ? "bg-green-500"
-      : notification?.type === "error"
+      : popupNotification?.type === "error"
         ? "bg-red-500"
         : "bg-yellow-500";
 
@@ -60,7 +60,7 @@ export default function PopupNotification() {
     }, 3000);
 
     return () => clearTimeout(timer);
-  }, [notification]);
+  }, [popupNotification]);
 
   return (
     <Animated.View
@@ -71,15 +71,15 @@ export default function PopupNotification() {
       className={`${bg} p-2 z-50  absolute top-8 left-3  rounded-[10px] shadow elevation-md  w-[95%] min-h-[50px]  justify-center`}
     >
       <Text className="capitalize text-white text-xl font-bold text-left">
-        {notification?.type} Info
+        {popupNotification?.type} 
       </Text>
       <Text className="text-white text-lg" numberOfLines={1}>
-        {notification?.message} Possible match found for you post UFC gloves
+        {popupNotification?.message} 
       </Text>
 
       <TouchableOpacity
         className="font-bold "
-         onPress={() => closePopupWithAnim(hideNotification)}
+         onPress={() => closePopupWithAnim(hidePopupNotification)}
       >
         <Text className="text-white font-bold text-right ">Close</Text>
       </TouchableOpacity>

@@ -11,7 +11,6 @@ import { useLoaderStore } from "@/store/useLoaderStore";
 import GlobalConfirmModal from "@/components/common/GlobalConfirmModal";
 import socket from "./lib/socket";
 import { getItem } from "@/utils/AsyncStorage";
-import { registerNotificationEvent } from "./lib/socketEvents";
 
 function LayoutWithTheme() {
   const { isDarkMode } = useContext(ThemeContext);
@@ -109,7 +108,6 @@ export default function RootLayout() {
       const user = await getItem("user");
       socket.connect();
       socket.emit("joinRoom", user._id);
-      registerNotificationEvent();
     };
     initializeSocket();
     return () => {

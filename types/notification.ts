@@ -1,10 +1,8 @@
 
 export interface NotificationStoreType {
-  newNotification: boolean;
-  setNewNotification: (value: boolean) => void;
+
   notifications: ReceiveNotificationPropType[];
   setNotifications: (value: ReceiveNotificationPropType[]) => void;
-  addNotification: (value: ReceiveNotificationPropType) => void;
 }
 
 export interface NotificationPropType {

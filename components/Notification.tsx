@@ -7,6 +7,8 @@ import { format } from "timeago.js";
 
 export default function Notification({ senderName, postTitle, createdAt, message }: NotificationPropType) {
   const { isDarkMode } = useContext(ThemeContext);
+
+  console.log(format(createdAt))
   return (
     <TouchableOpacity className="p-5 flex-1 flex-row gap-2 ">
       <View className="relative">
@@ -31,7 +33,7 @@ export default function Notification({ senderName, postTitle, createdAt, message
         <Text
           className={`opacity-60 ${isDarkMode ? "text-white" : "text-black"}`}
         >
-          {format(createdAt)}
+          {format(new Date(createdAt))}
         </Text>
       </View>
     </TouchableOpacity>

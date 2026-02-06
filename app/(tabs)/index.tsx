@@ -7,6 +7,7 @@ import { PopupNotificationContext } from "@/context/PopupNotificationContext";
 import { useLoaderStore } from "@/store/useLoaderStore";
 import { usePostStore } from "@/store/usePostStore";
 import { useSearchFeedStore } from "@/store/useSearchFeedStore";
+import SeparatorLine from "@/components/common/SeparatorLine";
 
 
 export default function HomeTab() {
@@ -57,16 +58,13 @@ export default function HomeTab() {
   return (
     <View className="relative h-full">
       <ScrollView showsVerticalScrollIndicator={false}>
-        <View
-          className={`h-[3px] w-full bg-black/30 ${isDarkMode && "bg-white/30"}`}
-        />
+      <SeparatorLine/>
         {allPosts?.length > 0 && filteredPost?.length > 0 ? (
           filteredPost.map((data) => (
             <View key={data._id} className=" justify-center w-full">
               <Feed post={data} />
-              <View
-                className={`h-[3px] w-full bg-black/30 mt-2 ${isDarkMode && "bg-white/30"}`}
-              />
+                    <SeparatorLine/>
+
             </View>
           ))
         ) : (

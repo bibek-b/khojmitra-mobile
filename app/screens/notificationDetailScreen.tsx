@@ -174,8 +174,10 @@ export default function NotificationDetailScreen() {
               <TouchableOpacity
                 onPress={() => handleAction(b.accessor)}
                 key={b.id}
-                className={`flex-1 py-2 rounded-xl flex-row items-center justify-center gap-2 border 
-        ${b.accessor === "accept" ? "border-green-500" : "border-red-500"}
+                className={`flex-1 py-2 rounded-xl flex-row items-center justify-center gap-2 
+                  dark:bg-white/5
+                  border ${b.accessor === "accept" ? "border-green-500/30" : "border-red-500/30"}
+
         `}
                 activeOpacity={0.8}
               >

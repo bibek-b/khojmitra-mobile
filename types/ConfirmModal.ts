@@ -1,11 +1,11 @@
+export type confirmBtnVariantType = "primary" | "danger"
 
 
 export interface modalContentType {
     title: string,
-    detailInfo: string,
-    acceptText: string,
-    acceptBtnBg: string,
-    denyText: string
+    detail: string,
+    confirmText: string,
+    confirmBtnVariant: confirmBtnVariantType,
 }
 
 export interface ConfirmModalType {

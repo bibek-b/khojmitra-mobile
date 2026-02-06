@@ -7,10 +7,9 @@ export const useConfirmModalStore = create<ConfirmModalType>((set) => ({
   hideConfirmModal: () => set({ confirmModal: false }),
   modalContent: {
     title: "",
-    detailInfo: "",
-    acceptText: "",
-    denyText: "",
-    acceptBtnBg: "",
+    detail: "",
+    confirmText: "",
+    confirmBtnVariant: "danger",
   },
   setModalContent: (data: modalContentType) => set({ modalContent: data }),
   onConfirm: () => {},

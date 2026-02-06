@@ -4,7 +4,6 @@ import { Modal, Text, TouchableOpacity, TouchableWithoutFeedback, View } from "r
 export default function GlobalConfirmModal() {
   const { confirmModal, modalContent, onConfirm, hideConfirmModal } =
     useConfirmModalStore();
-  const acceptBtnBg = modalContent?.acceptBtnBg;
   return (
    <Modal visible={confirmModal} transparent={true} animationType="fade">
    <TouchableWithoutFeedback onPress={hideConfirmModal}>
@@ -15,15 +14,15 @@ export default function GlobalConfirmModal() {
           {modalContent?.title}
         </Text>
         <Text className="dark:text-white text-lg text-center">
-          {modalContent?.detailInfo}
+          {modalContent?.detail}
         </Text>
         <View className=" gap-4 justify-center items-center">
           <TouchableOpacity
             onPress={() => (onConfirm(), hideConfirmModal())}
-            className={` ${acceptBtnBg ? acceptBtnBg : "bg-red-500"} py-2 rounded-full w- text-center w-[90%] items-center `}
+            className={` ${modalContent.confirmBtnVariant === "primary" ? "bg-blue-600" : "bg-red-500"} py-2 rounded-full w- text-center w-[90%] items-center `}
           >
             <Text className="dark:text-white text-lg">
-              {modalContent?.acceptText}
+              {modalContent?.confirmText}
             </Text>
           </TouchableOpacity>
           <TouchableOpacity
@@ -31,7 +30,7 @@ export default function GlobalConfirmModal() {
             className=" border dark:border-white/60 py-2 rounded-3xl w-[90%] items-center"
           >
             <Text className="dark:text-white text-lg">
-              {modalContent?.denyText}
+              Cancel
             </Text>
           </TouchableOpacity>
         </View>

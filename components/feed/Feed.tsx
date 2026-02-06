@@ -44,29 +44,29 @@ export default function Feed({ post, onDeletePost }: FeedProps) {
     })();
   }, []);
 
-  useEffect(() => {
-    if (confirmModal) {
-      setModalContent({
-        title: "Delete post",
-        detailInfo: "Are you sure you want to delete this post?",
-        acceptText: "Yes, Delete",
-        denyText: "Cancel",
-        acceptBtnBg: "bg-red-500",
-      });
+  // useEffect(() => {
+  //   if (confirmModal) {
+  //     setModalContent({
+  //       title: "Delete post",
+  //       detailInfo: "Are you sure you want to delete this post?",
+  //       acceptText: "Yes, Delete",
+  //       denyText: "Cancel",
+  //       acceptBtnBg: "bg-red-500",
+  //     });
 
-      setOnConfirm(() => {
-        onDeletePost?.(idToDelete);
-      });
-    } else {
-      setModalContent({
-        title: "",
-        detailInfo: "",
-        acceptText: "",
-        denyText: "",
-        acceptBtnBg: "",
-      });
-    }
-  }, [confirmModal]);
+  //     setOnConfirm(() => {
+  //       onDeletePost?.(idToDelete);
+  //     });
+  //   } else {
+  //     setModalContent({
+  //       title: "",
+  //       detailInfo: "",
+  //       acceptText: "",
+  //       denyText: "",
+  //       acceptBtnBg: "",
+  //     });
+  //   }
+  // }, [confirmModal]);
 
   const { isDarkMode } = useContext(ThemeContext);
   const { showForm, setProofForm } = useContext(ProofFormContext);

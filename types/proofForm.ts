@@ -16,6 +16,7 @@ export interface ProofType {
     images?: imageType[],
     postId: string,
     claimerId: string;
+    createdAt: string;
 }
 
 export interface addProofPropsType {

@@ -18,6 +18,6 @@ export interface ReceiveNotificationPropType {
   sender: SenderType;
   createdAt: string;
   postId: string;
-  post: NotificationDetailPostType;
+post: NotificationDetailPostType;
   message: string;
 }

@@ -1,17 +1,23 @@
 import { proofApi } from "@/api/proofApi";
-import SeparatorLine from "@/components/common/SeparatorLine";
 import Content from "@/components/notification/Content";
+import Underline from "@/components/notification/Underline";
 import { notificationDetailPostActionBtns } from "@/constants/notification";
 import { PopupNotificationContext } from "@/context/PopupNotificationContext";
 import { ThemeContext } from "@/context/ThemeContext";
 import { useNotificationDetailStore } from "@/store/useNotificationDetailStore";
 import { imageType } from "@/types/image";
 import { ProofType } from "@/types/proofForm";
-import { ReportType } from "@/types/report";
-import { Feather, FontAwesome, Ionicons } from "@expo/vector-icons";
-import { AxiosError } from "axios";
+import { Feather, Ionicons } from "@expo/vector-icons";
 import React, { useContext, useEffect, useState } from "react";
-import { Image, Modal, Text, TouchableOpacity, View } from "react-native";
+import {
+  Image,
+  Modal,
+  ScrollView,
+  Text,
+  TouchableOpacity,
+  View,
+} from "react-native";
+import { format } from "timeago.js";
 
 export default function NotificationDetailScreen() {
   const { isDarkMode } = useContext(ThemeContext);
@@ -19,7 +25,6 @@ export default function NotificationDetailScreen() {
   const [proof, setProof] = useState<ProofType>();
   const { showPopupNotification } = useContext(PopupNotificationContext);
   const [selectedImage, setSelectedImage] = useState<imageType | null>(null);
-
 
   useEffect(() => {
     (async () => {
@@ -39,113 +44,134 @@ export default function NotificationDetailScreen() {
   }, []);
 
   return (
-    <View className={`flex-1 ${isDarkMode ? "bg-[#1a1a1a]" : "bg-[#F9FAFB]"}`}>
-       {!!selectedImage && (
+    <View className={`flex-1 ${isDarkMode ? "bg-[#0f0f0f]" : "bg-[#F9FAFB]"}`}>
+      {/* Image Modal */}
+      {!!selectedImage && (
         <Modal
           visible={true}
           animationType="fade"
           transparent={true}
           onRequestClose={() => setSelectedImage(null)}
         >
-          <View className="flex-1 bg-black justify-center items-center">
+          <View className="flex-1 bg-black/95 justify-center items-center">
             <TouchableOpacity
-              className="absolute top-12 right-6 z-10"
+              className="absolute top-12 right-6 z-10 bg-white/10 backdrop-blur-md rounded-full p-2"
               onPress={() => setSelectedImage(null)}
+              activeOpacity={0.8}
             >
-              <Feather name="x" size={32} color="#f5f5f5" />
+              <Feather name="x" size={28} color="#f5f5f5" />
             </TouchableOpacity>
             <Image
-              source={{ uri:  String(selectedImage) }}
+              source={{ uri: String(selectedImage) }}
               className="w-full h-full"
               resizeMode="contain"
             />
           </View>
         </Modal>
       )}
-      <View>
-        <View className="flex-row items-center p-4">
-          <Text className="dark:text-white">Type: </Text>
-          <TouchableOpacity
-            className="bg-blue-600  py-1 px-4 rounded-full flex-row items-center justify-center
-                 gap-2"
-          >
-            <Text className="text-white">Report</Text>
-            <Ionicons name="chevron-down" size={20} color="white" />
-          </TouchableOpacity>
-        </View>
 
-        <View className="mt-4">
-          <SeparatorLine />
-
-        <View className="gap-3 p-4">
-          <View className="flex-row gap-4">
-            <View className=" flex-row gap-10 items-center ">
+      <ScrollView showsVerticalScrollIndicator={false}>
+        {/* Main Content Card */}
+        <View
+          className={`mx-4 my-8 rounded-3xl ${
+            isDarkMode ? "bg-[#1a1a1a]" : "bg-white"
+          } shadow-xl overflow-hidden border ${
+            isDarkMode ? "border-white/5" : "border-gray-100"
+          }`}
+        >
+          {/* User Header */}
+          <View className="p-5">
+            <View className="flex-row items-center justify-between">
               <TouchableOpacity
-                className="flex-row items-center gap-2"
-                //   onPress={() => router.push("/screens/profileScreen")}
+                className="flex-row items-center gap-3 flex-1"
+                activeOpacity={0.7}
               >
-                <Image
-                  source={{
-                    uri:
-                      sender.avatar ||
-                      "https://thumb.ac-illust.com/51/51e1c1fc6f50743937e62fca9b942694_t.jpeg",
-                  }}
-                  className="w-12 h-12 object-cover rounded-full "
-                />
-                <Text
-                  className={`text-xl font-bold ${isDarkMode && "text-[#f5f5f5]"}`}
-                >
-                  {sender?.fullname}
-                </Text>
+                {/* Avatar with ring */}
+                <View className="relative">
+                  <View className="absolute inset-0 bg-blue-500/20 rounded-full blur-md" />
+                  <Image
+                    source={{
+                      uri:
+                        sender.avatar ||
+                        "https://thumb.ac-illust.com/51/51e1c1fc6f50743937e62fca9b942694_t.jpeg",
+                    }}
+                    className="w-14 h-14 rounded-full border-2 border-blue-500/30"
+                  />
+                  {/* Online indicator */}
+                  <View className="absolute bottom-0 right-0 w-4 h-4 bg-green-500 rounded-full border-2 border-white dark:border-[#1a1a1a]" />
+                </View>
+
+                <View className="flex-1">
+                  <Text
+                    className={`text-lg font-bold ${
+                      isDarkMode ? "text-[#f5f5f5]" : "text-gray-900"
+                    }`}
+                  >
+                    {sender?.fullname}
+                  </Text>
+                  <Text className="text-gray-500 dark:text-gray-400 text-sm">
+                    @{sender?.fullname || "user"}
+                  </Text>
+                </View>
               </TouchableOpacity>
-              <Text
-                className={`opacity-60 ${isDarkMode && "text-[#f5f5f5]"}  text-sm`}
+
+              {/* Timestamp badge */}
+              <View
+                className={`px-3 py-1.5 rounded-full ${
+                  isDarkMode ? "bg-white/5" : "bg-gray-100"
+                }`}
               >
-                {/* {format(new Date(post?.createdAt!))} */}
-                1h
+                <Text className="text-gray-500 dark:text-gray-400 text-xs font-medium">
+                  {format(new Date(proof!?.createdAt))}
+                </Text>
+              </View>
+            </View>
+
+            {/* Claim Type Badge */}
+            <View className="mt-3 bg-gray-100 dark:bg-white/5 rounded-xl p-3 flex-row items-center justify-center gap-2">
+              <Ionicons name="shield-checkmark" size={18} color="#3B82F6" />
+              <Text className="text-gray-600 dark:text-gray-400 text-sm">
+                Claimed as
+              </Text>
+              <Text className="font-bold text-blue-600 capitalize">
+                {proof?.claimType}
               </Text>
             </View>
           </View>
 
-          <View className="gap-1 flex-row items-center justify-center">
-            <Text
-              className={`tracking-wide  ${isDarkMode && "text-[#f5f5f5]"}`}
-            >
-              Claimed post as
-            </Text>
-            <Text
-              className={`tracking-wide  ${isDarkMode && "text-[#f5f5f5]"}  font-medium capitalize`}
-            >
-              {proof?.claimType}
-            </Text>
+          {/* Proof Content */}
+          <View className="p-5">
+            <Content proof={proof} setSelectedImage={setSelectedImage} />
           </View>
+          <Underline />
 
-          <Text className={` dark:text-[#f5f5f5] font-semibold text-lg`}>
-            Proof(s)
-          </Text>
-
-          <Content proof={proof} setSelectedImage={setSelectedImage} />
-
-          <View className="flex-row justify-between mt-4">
+          {/* Action Buttons */}
+          <View className="px-4 py-4 flex-row gap-3">
             {notificationDetailPostActionBtns.map((b) => (
-              <TouchableOpacity key={b.id} className="flex-row items-center gap-2">
-                <FontAwesome
+              <TouchableOpacity
+                key={b.id}
+                className={`flex-1 py-2 rounded-xl flex-row items-center justify-center gap-2 border 
+        ${b.accessor === "accept" ? "border-green-500" : "border-red-500"}
+        `}
+                activeOpacity={0.8}
+              >
+                <Ionicons
                   name={
-                    b.iconName as React.ComponentProps<
-                      typeof FontAwesome
-                    >["name"]
-                  } 
-                  size={20}
-                  color={isDarkMode ? "white" : "black"}
+                    b.accessor === "accept"
+                      ? "checkmark-circle"
+                      : "close-circle"
+                  }
+                  size={22}
+                  color={b.accessor === "accept" ? "#22c55e" : "#ef4444"}
                 />
-                <Text className="text-white">{b.label}</Text>
+                <Text className="text-white font-bold text-base">
+                  {b.label}
+                </Text>
               </TouchableOpacity>
             ))}
           </View>
         </View>
-        <SeparatorLine />
-        </View>
-      </View>
+      </ScrollView>
     </View>
   );
 }

@@ -20,7 +20,7 @@ export default function Notification({
   const handleNotificationClick = () => {
     setSender(sender);
     setPost(post);
-    router.navigate("/screens/notificationDetailScreen");
+    router.navigate({pathname: "/screens/notificationDetailScreen"});
   };
 
   return (

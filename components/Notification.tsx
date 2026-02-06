@@ -1,10 +1,10 @@
 import { ThemeContext } from "@/context/ThemeContext";
 import { useNotificationDetailStore } from "@/store/useNotificationDetailStore";
 import { NotificationPropType } from "@/types/notification";
-import { FontAwesome } from "@expo/vector-icons";
+import { Ionicons } from "@expo/vector-icons";
 import { useRouter } from "expo-router";
 import { useContext } from "react";
-import { Text, TouchableOpacity, View } from "react-native";
+import { Image, Text, TouchableOpacity, View } from "react-native";
 import { format } from "timeago.js";
 
 export default function Notification({
@@ -20,41 +20,70 @@ export default function Notification({
   const handleNotificationClick = () => {
     setSender(sender);
     setPost(post);
-    router.navigate({pathname: "/screens/notificationDetailScreen"});
+    router.navigate({ pathname: "/screens/notificationDetailScreen" });
   };
 
   return (
     <TouchableOpacity
-      className="p-5 flex-1 flex-row gap-2 "
+      className={`mx-4 my-2 p-4 rounded-2xl flex-row gap-3 ${
+        isDarkMode ? "bg-white/5" : "bg-white"
+      } border ${isDarkMode ? "border-white/10" : "border-gray-100"}`}
       onPress={handleNotificationClick}
+      activeOpacity={0.7}
     >
+      {/* Avatar with notification badge */}
       <View className="relative">
-        <FontAwesome
-          name="user-circle"
-          size={54}
-          color={isDarkMode ? "white" : "#1a1a1a"}
-        />
-        {/* <Text className="absolute text-2xl -bottom-2 right-0">{type === "Lost"? "🔴": "🟢"}</Text> */}
+        {sender?.avatar ? (
+          <Image
+            source={{ uri: sender.avatar }}
+            className="w-12 h-12 rounded-full"
+          />
+        ) : (
+          <View className="w-12 h-12 rounded-full bg-blue-100 dark:bg-blue-500/20 items-center justify-center">
+            <Ionicons
+              name="person"
+              size={24}
+              color={isDarkMode ? "#60A5FA" : "#3B82F6"}
+            />
+          </View>
+        )}
+        
+        {/* Notification type indicator */}
+        <View className="absolute -bottom-1 -right-1 w-5 h-5 bg-blue-600 rounded-full items-center justify-center border-2 border-white dark:border-[#0f0f0f]">
+          <Ionicons name="notifications" size={10} color="white" />
+        </View>
       </View>
-      <View className="flex-row items-center">
-        <View>
-          <Text
-            className={`max-w-[260px] flex-row flex-wrap ${isDarkMode ? "text-white" : "text-[#a1a1a1]"}`}
-            numberOfLines={2.5}
-          >
-            <View>
-              <Text className="dark:text-white">{message}</Text>
-            </View>
-          </Text>
-          <Text
-            className={`opacity-60 ${isDarkMode ? "text-white" : "text-black"}`}
-          >
+
+      {/* Content */}
+      <View className="flex-1">
+        <Text
+          className={`text-base leading-5 mb-1 ${
+            isDarkMode ? "text-gray-200" : "text-gray-800"
+          }`}
+          numberOfLines={2}
+        >
+          {message}
+        </Text>
+
+        <View className="flex-row items-center gap-1.5 mt-1">
+          <Ionicons
+            name="time-outline"
+            size={12}
+            color={isDarkMode ? "#9CA3AF" : "#6B7280"}
+          />
+          <Text className="text-xs text-gray-500 dark:text-gray-400">
             {format(new Date(createdAt))}
           </Text>
         </View>
-        {/* <TouchableOpacity className="absolute right-4 bottom-0">
-         <Text className="text-sm  text-blue-600">View Detail</Text>
-       </TouchableOpacity> */}
+      </View>
+
+      {/* Arrow indicator */}
+      <View className="justify-center">
+        <Ionicons
+          name="chevron-forward"
+          size={20}
+          color={isDarkMode ? "#4B5563" : "#D1D5DB"}
+        />
       </View>
     </TouchableOpacity>
   );

@@ -190,7 +190,7 @@ export default function NotificationDetailScreen() {
                   size={22}
                   color={b.accessor === "accept" ? "#22c55e" : "#ef4444"}
                 />
-                <Text className="text-white font-bold text-base">
+                <Text className=" dark:text-white font-bold text-base">
                   {b.label}
                 </Text>
               </TouchableOpacity>

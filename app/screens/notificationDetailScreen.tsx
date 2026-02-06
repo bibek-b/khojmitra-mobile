@@ -4,7 +4,9 @@ import Underline from "@/components/notification/Underline";
 import { notificationDetailPostActionBtns } from "@/constants/notification";
 import { PopupNotificationContext } from "@/context/PopupNotificationContext";
 import { ThemeContext } from "@/context/ThemeContext";
+import { useConfirmModalStore } from "@/store/useConfirmModalStore";
 import { useNotificationDetailStore } from "@/store/useNotificationDetailStore";
+import { modalContentType } from "@/types/ConfirmModal";
 import { imageType } from "@/types/image";
 import { ProofType } from "@/types/proofForm";
 import { Feather, Ionicons } from "@expo/vector-icons";
@@ -25,6 +27,8 @@ export default function NotificationDetailScreen() {
   const [proof, setProof] = useState<ProofType>();
   const { showPopupNotification } = useContext(PopupNotificationContext);
   const [selectedImage, setSelectedImage] = useState<imageType | null>(null);
+  const { confirmModal, setModalContent, showConfirmModal, hideConfirmModal } =
+    useConfirmModalStore();
 
   useEffect(() => {
     (async () => {
@@ -42,6 +46,25 @@ export default function NotificationDetailScreen() {
       }
     })();
   }, []);
+
+  const handleAction = (type: string) => {
+    showConfirmModal();
+
+    const isAccept = type === "accept";
+
+    const data: modalContentType = {
+      title: "Are you sure?",
+      detail: `You want to ${isAccept ? "accept" : "decline"} this post "${post.title}" by ${sender.fullname} as ${proof?.claimType} and start chat with a person.`,
+      confirmText: isAccept ? "Start Chatting" : "Yes Decline",
+      confirmBtnVariant: isAccept ? "primary" : "danger",
+    };
+    if (type === "accept") {
+      setModalContent(data);
+      
+    } else if (type == "decline") {
+      setModalContent(data);
+    }
+  };
 
   return (
     <View className={`flex-1 ${isDarkMode ? "bg-[#0f0f0f]" : "bg-[#F9FAFB]"}`}>
@@ -149,6 +172,7 @@ export default function NotificationDetailScreen() {
           <View className="px-4 py-4 flex-row gap-3">
             {notificationDetailPostActionBtns.map((b) => (
               <TouchableOpacity
+                onPress={() => handleAction(b.accessor)}
                 key={b.id}
                 className={`flex-1 py-2 rounded-xl flex-row items-center justify-center gap-2 border 
         ${b.accessor === "accept" ? "border-green-500" : "border-red-500"}

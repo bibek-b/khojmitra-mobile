@@ -52,6 +52,7 @@ export default function NotificationScreen() {
             message={data.message}
             type={data.type}
             matchedPosts={data.matchedPosts}
+            relatedPost={data.relatedPost}
           />
         ))
       ) : (

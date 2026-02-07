@@ -13,18 +13,22 @@ export default function Notification({
   createdAt,
   message,
   type,
-  matchedPosts
+  matchedPosts,
+  relatedPost
 }: NotificationPropType) {
+  console.log(
+    relatedPost
+  )
   const { isDarkMode } = useContext(ThemeContext);
-  const { setSender, setPost, setType, setMatchedPosts } = useNotificationDetailStore();
+  const { setSender, setPost, setType, setMatchedPosts, setRelatedPost } = useNotificationDetailStore();
   const router = useRouter();
 
   const handleNotificationClick = () => {
-    console.log(sender)
     setType(type);
     sender && setSender(sender);
     setPost(post);
-    setMatchedPosts(matchedPosts!)
+    setMatchedPosts(matchedPosts!);
+    relatedPost && setRelatedPost(relatedPost);
     router.navigate( "/screens/notificationDetailScreen" );
   };
 

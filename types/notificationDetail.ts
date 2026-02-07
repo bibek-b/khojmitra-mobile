@@ -24,6 +24,8 @@ export interface NotificationDetailStoreType {
     setType: (val: NotificationType) => void;
     matchedPosts: MatchedPostsType[];
     setMatchedPosts: (val: MatchedPostsType[]) => void;
+    relatedPost: PostType | null;
+    setRelatedPost: (val: PostType) => void;
 }
 
 export interface ReportDetailPropType {
@@ -34,6 +36,6 @@ export interface ReportDetailPropType {
 }
 
 export interface PossibleMatchPropType {
-    posts: PostType[];
-    
+    posts: PostType[] | PostType;
+
 }

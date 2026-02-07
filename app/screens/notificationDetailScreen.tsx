@@ -16,36 +16,32 @@ import { Image, Modal, ScrollView, TouchableOpacity, View } from "react-native";
 
 export default function NotificationDetailScreen() {
   const { isDarkMode } = useContext(ThemeContext);
-  const { sender, post, type, matchedPosts } = useNotificationDetailStore();
+  const { sender, post, type, matchedPosts, relatedPost } =
+    useNotificationDetailStore();
   const [proof, setProof] = useState<ProofType>();
   const [postsDetail, setPostsDetail] = useState<PostType[]>();
   const { showPopupNotification } = useContext(PopupNotificationContext);
   const [selectedImage, setSelectedImage] = useState<imageType | null>(null);
   const { setModalContent, showConfirmModal } = useConfirmModalStore();
 
-  
   useEffect(() => {
     (async () => {
       try {
-        if(type === "REPORT") {
-         const proofRes =  await proofApi.getProofByClaimerAndPostId(
-          sender?._id,
-          post?._id,
-        );
-        setProof(proofRes.data.data);
-      }
-      else if(type === "POSSIBLE_MATCH") {
-         const matchedPostIds = matchedPosts.map(m => m.postId);
+        if (type === "REPORT") {
+          const proofRes = await proofApi.getProofByClaimerAndPostId(
+            sender?._id,
+            post?._id,
+          );
+          setProof(proofRes.data.data);
+        }  else if (type === "POSSIBLE_MATCH_OWNER") {
+          const matchedPostIds = matchedPosts.map((m) => m.postId);
 
-         //fetched matched post details
-         for (const id of matchedPostIds) {
-          //fetch all at once
-           const posts = await Promise.all(matchedPostIds.map(id => postApi.getPost(id)));
+          const posts = await Promise.all(
+            matchedPostIds.map((id) => postApi.getPost(id)),
+          );
 
-           setPostsDetail(posts.map(p => p.data.data));
-         }
-       }
-
+          setPostsDetail(posts.map((p) => p.data.data));
+        }
       } catch (error: any) {
         showPopupNotification?.({
           type: "error",
@@ -110,7 +106,10 @@ export default function NotificationDetailScreen() {
             handleAction={handleAction}
           />
         ) : (
-          type === "POSSIBLE_MATCH" && <PossibleMatchDetail posts={postsDetail!}  />
+          (type === "POSSIBLE_MATCH_EXISTING" ||
+            type === "POSSIBLE_MATCH_OWNER") && (
+            <PossibleMatchDetail posts={matchedPosts.length > 0 ? postsDetail! : relatedPost!} />
+          )
         )}
       </ScrollView>
     </View>

@@ -20,11 +20,12 @@ export default function Notification({
   const router = useRouter();
 
   const handleNotificationClick = () => {
-    setSender(sender);
-    setPost(post);
+    console.log(sender)
     setType(type);
+    sender && setSender(sender);
+    setPost(post);
     setMatchedPosts(matchedPosts!)
-    router.navigate({ pathname: "/screens/notificationDetailScreen" });
+    router.navigate( "/screens/notificationDetailScreen" );
   };
 
   return (

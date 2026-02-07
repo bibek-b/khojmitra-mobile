@@ -21,13 +21,13 @@ export interface MatchedPostsType {
   scoreDetail: ScoreDetailType;
 }
 export interface NotificationPropType {
-  _id: string;
+  _id?: string;
   sender: SenderType;
   post: NotificationDetailPostType;
   createdAt: string;
   message: string;
   type: NotificationType;
-  matchedPosts?: MatchedPostsType;
+  matchedPosts?: MatchedPostsType[];
 }
 
 // export interface ReceiveNotificationPropType {

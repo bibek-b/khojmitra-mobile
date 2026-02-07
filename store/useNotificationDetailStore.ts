@@ -11,7 +11,7 @@ export const useNotificationDetailStore = create<NotificationDetailStoreType>(
     sender: { _id: "", fullname: "", avatar: "" },
     setSender: (val: SenderType) =>
       set({
-        sender: { _id: val._id, fullname: val.fullname, avatar: val.avatar },
+        sender: { _id: val?._id, fullname: val?.fullname, avatar: val?.avatar },
       }),
     post: { _id: "", title: "" },
     setPost: (val: NotificationDetailPostType) =>
@@ -19,6 +19,6 @@ export const useNotificationDetailStore = create<NotificationDetailStoreType>(
     type: "",
     setType: (val: NotificationType) => set({type: val}),
     matchedPosts: [],
-    setMatchedPosts: (val: MatchedPostsType) => set({matchedPosts: val})
+    setMatchedPosts: (val: MatchedPostsType[]) => set({matchedPosts: val})
   }),
 );

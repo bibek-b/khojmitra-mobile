@@ -1,5 +1,6 @@
 import { imageType } from "./image";
 import { MatchedPostsType, NotificationType } from "./notification";
+import { PostType } from "./post.types";
 import { ProofType } from "./proofForm";
 
 export type ActionType = "accept" | "decline"; 
@@ -21,8 +22,8 @@ export interface NotificationDetailStoreType {
     setPost: (val: NotificationDetailPostType) => void;
     type: NotificationType | "";
     setType: (val: NotificationType) => void;
-    matchedPosts: MatchedPostsType | [];
-    setMatchedPosts: (val: MatchedPostsType) => void;
+    matchedPosts: MatchedPostsType[];
+    setMatchedPosts: (val: MatchedPostsType[]) => void;
 }
 
 export interface ReportDetailPropType {
@@ -30,4 +31,9 @@ export interface ReportDetailPropType {
     proof: ProofType;
     setSelectedImage: (img: imageType) => void;
     handleAction : (val: ActionType) => void;
+}
+
+export interface PossibleMatchPropType {
+    posts: PostType[];
+    
 }

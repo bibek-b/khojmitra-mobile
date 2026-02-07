@@ -1,13 +1,14 @@
 import { postApi } from "@/api/postApi";
 import { proofApi } from "@/api/proofApi";
-import PossibleMatchDetail from "@/components/notification/PossibleMatchDetail";
-import ReportDetail from "@/components/notification/ReportDetail";
+import PossibleMatchDetail from "@/components/notification/notificationDetail/PossibleMatchDetail";
+import ReportDetail from "@/components/notification/notificationDetail/ReportDetail";
 import { PopupNotificationContext } from "@/context/PopupNotificationContext";
 import { ThemeContext } from "@/context/ThemeContext";
 import { useConfirmModalStore } from "@/store/useConfirmModalStore";
 import { useNotificationDetailStore } from "@/store/useNotificationDetailStore";
 import { modalContentType } from "@/types/ConfirmModal";
 import { imageType } from "@/types/image";
+import { PostType } from "@/types/post.types";
 import { ProofType } from "@/types/proofForm";
 import { Feather } from "@expo/vector-icons";
 import React, { useContext, useEffect, useState } from "react";
@@ -17,18 +18,34 @@ export default function NotificationDetailScreen() {
   const { isDarkMode } = useContext(ThemeContext);
   const { sender, post, type, matchedPosts } = useNotificationDetailStore();
   const [proof, setProof] = useState<ProofType>();
+  const [postsDetail, setPostsDetail] = useState<PostType[]>();
   const { showPopupNotification } = useContext(PopupNotificationContext);
   const [selectedImage, setSelectedImage] = useState<imageType | null>(null);
   const { setModalContent, showConfirmModal } = useConfirmModalStore();
 
+  
   useEffect(() => {
     (async () => {
       try {
-        const proofRes = await proofApi.getProofByClaimerAndPostId(
-          sender._id,
-          post._id,
+        if(type === "REPORT") {
+         const proofRes =  await proofApi.getProofByClaimerAndPostId(
+          sender?._id,
+          post?._id,
         );
         setProof(proofRes.data.data);
+      }
+      else if(type === "POSSIBLE_MATCH") {
+         const matchedPostIds = matchedPosts.map(m => m.postId);
+
+         //fetched matched post details
+         for (const id of matchedPostIds) {
+          //fetch all at once
+           const posts = await Promise.all(matchedPostIds.map(id => postApi.getPost(id)));
+
+           setPostsDetail(posts.map(p => p.data.data));
+         }
+       }
+
       } catch (error: any) {
         showPopupNotification?.({
           type: "error",
@@ -93,7 +110,7 @@ export default function NotificationDetailScreen() {
             handleAction={handleAction}
           />
         ) : (
-          type === "POSSIBLE_MATCH" && <PossibleMatchDetail  />
+          type === "POSSIBLE_MATCH" && <PossibleMatchDetail posts={postsDetail!}  />
         )}
       </ScrollView>
     </View>

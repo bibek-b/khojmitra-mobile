@@ -1,11 +1,11 @@
 import {
+  NotificationPropType,
   NotificationStoreType,
-  ReceiveNotificationPropType,
 } from "@/types/notification";
 import { create } from "zustand";
 
 export const useNotificationStore = create<NotificationStoreType>((set) => ({
   notifications: [],
-  setNotifications: (data: ReceiveNotificationPropType[]) =>
+  setNotifications: (data: NotificationPropType[]) =>
     set({ notifications: data }),
 }));

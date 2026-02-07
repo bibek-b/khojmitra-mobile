@@ -1,8 +1,9 @@
+import { MatchedPostsType, NotificationType } from "@/types/notification";
 import {
     NotificationDetailPostType,
   NotificationDetailStoreType,
   SenderType,
-} from "@/types/notificationDetailStoreType";
+} from "@/types/notificationDetail";
 import { create } from "zustand";
 
 export const useNotificationDetailStore = create<NotificationDetailStoreType>(
@@ -15,5 +16,9 @@ export const useNotificationDetailStore = create<NotificationDetailStoreType>(
     post: { _id: "", title: "" },
     setPost: (val: NotificationDetailPostType) =>
       set({ post: { _id: val._id, title: val.title } }),
+    type: "",
+    setType: (val: NotificationType) => set({type: val}),
+    matchedPosts: [],
+    setMatchedPosts: (val: MatchedPostsType) => set({matchedPosts: val})
   }),
 );

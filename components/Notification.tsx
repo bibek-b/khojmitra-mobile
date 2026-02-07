@@ -12,14 +12,18 @@ export default function Notification({
   post,
   createdAt,
   message,
+  type,
+  matchedPosts
 }: NotificationPropType) {
   const { isDarkMode } = useContext(ThemeContext);
-  const { setSender, setPost } = useNotificationDetailStore();
+  const { setSender, setPost, setType, setMatchedPosts } = useNotificationDetailStore();
   const router = useRouter();
 
   const handleNotificationClick = () => {
     setSender(sender);
     setPost(post);
+    setType(type);
+    setMatchedPosts(matchedPosts!)
     router.navigate({ pathname: "/screens/notificationDetailScreen" });
   };
 

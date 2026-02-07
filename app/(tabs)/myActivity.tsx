@@ -15,6 +15,7 @@ import { useReportStore } from "@/store/useReportStore";
 import { proofApi } from "@/api/proofApi";
 import MyReports from "@/components/myActivity/MyReports";
 import { PostType } from "@/types/post.types";
+import { useDeletePost } from "@/hooks/useDeletePost";
 
 export default function MyPostsTab() {
   const { showLoading, hideLoading } = useLoaderStore();
@@ -55,28 +56,7 @@ export default function MyPostsTab() {
     })()
   },[activeReportNav])
 
-  const handleDeletePost = async (id: string) => {
-    try {
-      showLoading("Feed");
-
-      await postApi.delete(id);
-      setAllPosts(allPosts.filter((p) => p._id !== id));
-      showPopupNotification?.({
-        type: "success",
-        message: "Post deleted successfully",
-      });
-    } catch (error: any) {
-      const message =
-        error?.response?.data?.message ||
-        "Oops! Something went wrong. Please try again";
-      showPopupNotification?.({
-        type: "error",
-        message,
-      });
-    } finally {
-      hideLoading();
-    }
-  };
+ const { handleDeletePost } = useDeletePost();
   return (
     <View>
       <ScrollView showsVerticalScrollIndicator={false}>

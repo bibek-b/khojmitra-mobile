@@ -1,4 +1,10 @@
-import { AntDesign, Entypo, Feather, FontAwesome, FontAwesome5 } from "@expo/vector-icons";
+import {
+  AntDesign,
+  Entypo,
+  Feather,
+  FontAwesome,
+  FontAwesome5,
+} from "@expo/vector-icons";
 import { router } from "expo-router";
 import { useEffect, useState } from "react";
 import {
@@ -26,16 +32,16 @@ const moreOptions = [
 ];
 
 export default function Feed({ post, onDeletePost }: FeedProps) {
-
   const [expanded, setExpanded] = useState(false);
   const [selectedImage, setSelectedImage] = useState<imageType | null>(null);
   const isLost = post.type === "Lost";
   const [moreOptionOpen, setMoreOptionOpen] = useState(false);
   const [myId, setMyId] = useState("");
-  const [idToDelete, setIdToDelete] = useState("");
   const { showConfirmModal, confirmModal, setModalContent, setOnConfirm } =
     useConfirmModalStore();
   const { TrueEditPost } = usePostStore();
+  const { isDarkMode } = useContext(ThemeContext);
+  const { showForm, setProofForm } = useContext(ProofFormContext);
 
   useEffect(() => {
     (async () => {
@@ -68,8 +74,20 @@ export default function Feed({ post, onDeletePost }: FeedProps) {
   //   }
   // }, [confirmModal]);
 
-  const { isDarkMode } = useContext(ThemeContext);
-  const { showForm, setProofForm } = useContext(ProofFormContext);
+  const handleDeletePost = (id: string) => {
+    showConfirmModal();
+    setModalContent({
+        title: "Delete post",
+        detail: "Are you sure you want to delete this post? This action is irreversible!",
+        confirmText: "Yes, Delete",
+        confirmBtnVariant: "danger",
+      });
+       setOnConfirm(() => {
+        onDeletePost?.(id);
+      });
+     setMoreOptionOpen(false);
+  };
+
 
   const handleMorePress = async () => {
     setMoreOptionOpen(true);
@@ -101,15 +119,13 @@ export default function Feed({ post, onDeletePost }: FeedProps) {
                       key={opt.id}
                       className="flex-row items-center gap-4"
                       onPress={() => {
-                        (opt.label === "Edit Post"
+                        opt.label === "Edit Post"
                           ? (router.push({
                               pathname: "/screens/addEditReportScreen",
                               params: { idToUpdate: post?._id },
                             }),
                             TrueEditPost())
-                          : showConfirmModal(),
-                          setIdToDelete(post?._id!),
-                          setMoreOptionOpen(false));
+                          : handleDeletePost(post._id!);
                       }}
                     >
                       <Text
@@ -146,7 +162,7 @@ export default function Feed({ post, onDeletePost }: FeedProps) {
               <Feather name="x" size={32} color="#f5f5f5" />
             </TouchableOpacity>
             <Image
-              source={{ uri:  String(selectedImage) }}
+              source={{ uri: String(selectedImage) }}
               className="w-full h-full"
               resizeMode="contain"
             />
@@ -236,56 +252,54 @@ export default function Feed({ post, onDeletePost }: FeedProps) {
             {images.map((img: imageType, idx: number) => (
               <TouchableOpacity key={idx} onPress={() => setSelectedImage(img)}>
                 <Image
-                source={{uri: String(img)}}
+                  source={{ uri: String(img) }}
                   className="w-[160px] h-[160px] rounded-md shadow-md"
                 />
               </TouchableOpacity>
             ))}
           </View>
-          
-          {(post.user._id === myId) ? <TouchableOpacity
-           
-            className="flex-row items-center gap-3 justify-start pt-6"
-          >
-             
+
+          {post.user._id === myId ? (
+            <TouchableOpacity className="flex-row items-center gap-3 justify-start pt-6">
               <AntDesign
                 name="check-circle"
                 size={24}
                 color={isDarkMode ? "white" : "black"}
               />
-            <Text className={`${isDarkMode && "text-[#f5f5f5]"} `}>
-              Resolve
-            </Text>
-          </TouchableOpacity> : <TouchableOpacity
-            onPress={() => (
-              showForm?.(),
-              setProofForm?.({
-                type: type.toLowerCase() as "lost" | "found",
-                postId: post?._id!,
-                postOwnerId: post?.user?._id
-              })
-
-              
-            )}
-            className="flex-row items-center gap-3 justify-start pt-6"
-          >
-            {type === "Lost" ? (
-              <FontAwesome5
-                name="handshake"
-                size={24}
-                color={isDarkMode ? "white" : "black"}
-              />
-            ) : (
-              <Feather
-                name="user-check"
-                size={24}
-                color={isDarkMode ? "white" : "black"}
-              />
-            )}
-            <Text className={`${isDarkMode && "text-[#f5f5f5]"} `}>
-              {type === "Lost" ? "I Found This" : "This is Mine"}
-            </Text>
-          </TouchableOpacity>}
+              <Text className={`${isDarkMode && "text-[#f5f5f5]"} `}>
+                Resolve
+              </Text>
+            </TouchableOpacity>
+          ) : (
+            <TouchableOpacity
+              onPress={() => (
+                showForm?.(),
+                setProofForm?.({
+                  type: type.toLowerCase() as "lost" | "found",
+                  postId: post?._id!,
+                  postOwnerId: post?.user?._id,
+                })
+              )}
+              className="flex-row items-center gap-3 justify-start pt-6"
+            >
+              {type === "Lost" ? (
+                <FontAwesome5
+                  name="handshake"
+                  size={24}
+                  color={isDarkMode ? "white" : "black"}
+                />
+              ) : (
+                <Feather
+                  name="user-check"
+                  size={24}
+                  color={isDarkMode ? "white" : "black"}
+                />
+              )}
+              <Text className={`${isDarkMode && "text-[#f5f5f5]"} `}>
+                {type === "Lost" ? "I Found This" : "This is Mine"}
+              </Text>
+            </TouchableOpacity>
+          )}
         </View>
       </View>
     </View>

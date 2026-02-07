@@ -8,6 +8,7 @@ import { useLoaderStore } from "@/store/useLoaderStore";
 import { usePostStore } from "@/store/usePostStore";
 import { useSearchFeedStore } from "@/store/useSearchFeedStore";
 import SeparatorLine from "@/components/common/SeparatorLine";
+import { useDeletePost } from "@/hooks/useDeletePost";
 
 
 export default function HomeTab() {
@@ -55,6 +56,8 @@ export default function HomeTab() {
         .toLowerCase()
         .includes(searchInput.trim().toLowerCase()),
   );
+
+  const { handleDeletePost } = useDeletePost();
   return (
     <View className="relative h-full">
       <ScrollView showsVerticalScrollIndicator={false}>
@@ -62,7 +65,7 @@ export default function HomeTab() {
         {allPosts?.length > 0 && filteredPost?.length > 0 ? (
           filteredPost.map((data) => (
             <View key={data._id} className=" justify-center w-full">
-              <Feed post={data} />
+              <Feed post={data} onDeletePost={handleDeletePost} />
                     <SeparatorLine/>
 
             </View>

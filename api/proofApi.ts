@@ -12,6 +12,6 @@ export const proofApi = {
   getAllProofs: () => api.get("/proofs"),
   getProof: (id: string) => api.get(`/proofs/${id}`),
   getProofByClaimerAndPostId: (claimerId: string, postId: string) =>
-    api.get(`/proofs/${claimerId}/${postId}`),
+    api.get(`/proofs/claimer/${claimerId}/post/${postId}`),
   getUserProofs: (userId: string) => api.get(`/proofs/mines/${userId}`),
 };

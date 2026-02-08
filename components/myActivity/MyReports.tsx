@@ -1,4 +1,5 @@
 import { serverUrl } from "@/env/serverUrl";
+import { ServerImgType } from "@/types/image";
 import { ReportType } from "@/types/report";
 import { Feather } from "@expo/vector-icons";
 import { useState } from "react";
@@ -6,8 +7,7 @@ import { Image, Modal, Text, TouchableOpacity, View } from "react-native";
 
 export default function MyReports({ report }: { report: ReportType }) {
   const images = report?.images;
-  const [selectedImage, setSelectedImage] = useState("");
-  console.log(images)
+  const [selectedImage, setSelectedImage] = useState<ServerImgType | null>(null);
 
   return (
     <View className="p-5 gap-4 ">
@@ -34,17 +34,17 @@ export default function MyReports({ report }: { report: ReportType }) {
           visible={true}
           animationType="fade"
           transparent={true}
-          onRequestClose={() => setSelectedImage("")}
+          onRequestClose={() => setSelectedImage(null)}
         >
           <View className="flex-1 bg-black justify-center items-center">
             <TouchableOpacity
               className="absolute top-12 right-6 z-10"
-              onPress={() => setSelectedImage("")}
+              onPress={() => setSelectedImage(null)}
             >
               <Feather name="x" size={32} color="#f5f5f5" />
             </TouchableOpacity>
             <Image
-              source={{ uri: selectedImage }}
+              source={{ uri: String(selectedImage) }}
               className="w-full h-full"
               resizeMode="contain"
             />
@@ -54,12 +54,12 @@ export default function MyReports({ report }: { report: ReportType }) {
       <View>
         {images.length > 0 ? (
           <View className="flex-row  w-full flex-wrap justify-center gap-2">
-            {images.map((img, idx) => {
+            {images.map((img: ServerImgType, idx: number) => {
               return (
-              <TouchableOpacity key={idx} onPress={() => setSelectedImage(img)}>
+              <TouchableOpacity key={idx} onPress={() => setSelectedImage(img.url as ServerImgType)}>
                 <Image
                   source={{
-                    uri: img,
+                    uri: img.url,
                   }}
                   className="w-[160px] h-[160px] rounded-md shadow-md"
                 />

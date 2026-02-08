@@ -1,9 +1,9 @@
 import { ContentProps } from "@/types/content";
-import { imageType } from "@/types/image";
 import { Ionicons } from "@expo/vector-icons";
 import { useState } from "react";
 import { Image, Text, TouchableOpacity, View } from "react-native";
 import Underline from "./Underline";
+import { ServerImgType } from "@/types/image";
 
 export default function Content({ proof, setSelectedImage }: ContentProps) {
   const [expanded, setExpanded] = useState(false);
@@ -51,18 +51,19 @@ export default function Content({ proof, setSelectedImage }: ContentProps) {
         <View className={`flex-row flex-wrap gap-2 ${
           proof.images.length === 1 ? 'justify-center' : 'justify-start'
         }`}>
-          {proof.images.map((img: imageType, idx: number) => (
+          {proof.images.map((img: ServerImgType, idx: number) => {
+            return (
             <TouchableOpacity
               key={idx}
-              onPress={() => setSelectedImage(img)}
+              onPress={() => setSelectedImage(img.url as ServerImgType)}
               activeOpacity={0.8}
             >
               <View className="relative rounded-lg overflow-hidden">
                 <Image
-                  source={{ uri: String(img) }}
+                  source={{ uri: img.url }}
                   className={`${
                     proof.images!.length === 1 
-                      ? 'w-full h-[280px]' 
+                      ? 'w-80 h-52' 
                       : 'w-[143px] h-[143px]'
                   } bg-gray-200 dark:bg-gray-700`}
                   resizeMode="cover"
@@ -83,7 +84,8 @@ export default function Content({ proof, setSelectedImage }: ContentProps) {
                 </View>
               </View>
             </TouchableOpacity>
-          ))}
+          )
+          })}
         </View>
       )}
 

@@ -252,7 +252,7 @@ export default function Feed({ post, onDeletePost }: FeedProps) {
           <View className="flex-row  w-full flex-wrap justify-center gap-2">
             {images.map((img: ServerImgType, idx: number) => (
               <TouchableOpacity key={idx} 
-              onPress={() => setSelectedImage(img)}
+              onPress={() => setSelectedImage(img.url as ServerImgType)}
               >
                 <Image
                   source={{ uri: img.url }}

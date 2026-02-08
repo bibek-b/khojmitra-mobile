@@ -27,7 +27,7 @@ export default function Notification({
     setPost(post);
     setMatchedPosts(matchedPosts!);
     relatedPost && setRelatedPost(relatedPost);
-    router.navigate( "/screens/notificationDetailScreen" );
+    router.push( "/screens/notificationDetailScreen" );
   };
 
   return (

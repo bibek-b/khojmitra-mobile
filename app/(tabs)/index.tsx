@@ -12,7 +12,6 @@ import { useDeletePost } from "@/hooks/useDeletePost";
 
 
 export default function HomeTab() {
-  const { isDarkMode } = useContext(ThemeContext);
   const { showLoading, hideLoading } = useLoaderStore();
 
   const { showPopupNotification } = useContext(PopupNotificationContext);
@@ -64,7 +63,7 @@ export default function HomeTab() {
       <SeparatorLine/>
         {allPosts?.length > 0 && filteredPost?.length > 0 ? (
           filteredPost.map((data) => (
-            <View key={data._id} className=" justify-center w-full">
+            <View key={data?._id} className=" justify-center w-full">
               <Feed post={data} onDeletePost={handleDeletePost} />
                     <SeparatorLine/>
 

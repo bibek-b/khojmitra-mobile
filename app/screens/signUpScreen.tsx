@@ -26,12 +26,11 @@ export default function SignUpScreen() {
       setErrors
     );
 
-    console.log(avatar)
     if (!isValid) return;
     const fd = new FormData();
     if (avatar) {
       const isObject = typeof avatar === "object";
-      fd.append("userAvatarImages", {
+      fd.append("userAvatarImg", {
         uri: isObject && avatar.uri,
         type: isObject && avatar.mimeType || "image/jpeg",
         name: isObject && avatar.fileName || "avatar.jpg",

@@ -50,29 +50,6 @@ export default function Feed({ post, onDeletePost }: FeedProps) {
     })();
   }, []);
 
-  // useEffect(() => {
-  //   if (confirmModal) {
-  //     setModalContent({
-  //       title: "Delete post",
-  //       detailInfo: "Are you sure you want to delete this post?",
-  //       acceptText: "Yes, Delete",
-  //       denyText: "Cancel",
-  //       acceptBtnBg: "bg-red-500",
-  //     });
-
-  //     setOnConfirm(() => {
-  //       onDeletePost?.(idToDelete);
-  //     });
-  //   } else {
-  //     setModalContent({
-  //       title: "",
-  //       detailInfo: "",
-  //       acceptText: "",
-  //       denyText: "",
-  //       acceptBtnBg: "",
-  //     });
-  //   }
-  // }, [confirmModal]);
 
   const handleDeletePost = (id: string) => {
     showConfirmModal();
@@ -99,7 +76,7 @@ export default function Feed({ post, onDeletePost }: FeedProps) {
 
   const parent = "myPost";
 
-  console.log({images})
+
   return (
     <View>
       <Modal
@@ -126,7 +103,7 @@ export default function Feed({ post, onDeletePost }: FeedProps) {
                               params: { idToUpdate: post?._id },
                             }),
                             TrueEditPost())
-                          : handleDeletePost(post._id!);
+                          : handleDeletePost(post?._id!);
                       }}
                     >
                       <Text
@@ -148,7 +125,7 @@ export default function Feed({ post, onDeletePost }: FeedProps) {
         </TouchableWithoutFeedback>
       </Modal>
 
-      {!!selectedImage && (
+      {selectedImage && (
         <Modal
           visible={true}
           animationType="fade"
@@ -171,7 +148,7 @@ export default function Feed({ post, onDeletePost }: FeedProps) {
         </Modal>
       )}
 
-      {post.user._id === myId && (
+      {post.user?._id === myId && (
         <TouchableOpacity
           className="absolute right-3 top-2"
           onPress={() => parent === "myPost" && handleMorePress()}
@@ -262,7 +239,7 @@ export default function Feed({ post, onDeletePost }: FeedProps) {
             ))}
           </View>
 
-          {post.user._id === myId ? (
+          {post.user?._id === myId ? (
             <TouchableOpacity className="flex-row items-center gap-3 justify-start pt-6">
               <AntDesign
                 name="check-circle"

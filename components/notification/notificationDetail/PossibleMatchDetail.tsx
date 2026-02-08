@@ -1,20 +1,26 @@
 import SeparatorLine from "@/components/common/SeparatorLine";
 import Feed from "@/components/feed/Feed";
 import { PossibleMatchPropType } from "@/types/notificationDetail";
-import {  View } from "react-native";
+import { View } from "react-native";
 
-export default function PossibleMatchDetail({posts}: PossibleMatchPropType) {
-  console.log({posts})
-    return (
-        <View className="py-2">
-            <SeparatorLine />
-          {Array.isArray(posts) ?posts?.map(p => {
-            return (
-           <>
-            <Feed key={p?._id} post={p} />
-            <SeparatorLine /></>
-          )
-          }): <Feed post={posts} />}
-        </View>
-    )
+export default function PossibleMatchDetail({ posts }: PossibleMatchPropType) {
+  if (!posts) return null;
+
+  return (
+    <View className="py-2">
+      <SeparatorLine />
+      {Array.isArray(posts) ? (
+        posts?.map((p) => {
+          return (
+            <View key={p?._id}>
+              <Feed post={p} />
+              <SeparatorLine />
+            </View>
+          );
+        })
+      ) : (
+        <Feed post={posts} />
+      )}
+    </View>
+  );
 }

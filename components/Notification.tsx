@@ -16,9 +16,7 @@ export default function Notification({
   matchedPosts,
   relatedPost
 }: NotificationPropType) {
-  console.log(
-    relatedPost
-  )
+
   const { isDarkMode } = useContext(ThemeContext);
   const { setSender, setPost, setType, setMatchedPosts, setRelatedPost } = useNotificationDetailStore();
   const router = useRouter();

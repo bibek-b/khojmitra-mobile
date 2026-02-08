@@ -7,7 +7,7 @@ import { ThemeContext } from "@/context/ThemeContext";
 import { useConfirmModalStore } from "@/store/useConfirmModalStore";
 import { useNotificationDetailStore } from "@/store/useNotificationDetailStore";
 import { modalContentType } from "@/types/ConfirmModal";
-import { imageType } from "@/types/image";
+import { ServerImgType } from "@/types/image";
 import { PostType } from "@/types/post.types";
 import { ProofType } from "@/types/proofForm";
 import { Feather } from "@expo/vector-icons";
@@ -21,36 +21,44 @@ export default function NotificationDetailScreen() {
   const [proof, setProof] = useState<ProofType>();
   const [postsDetail, setPostsDetail] = useState<PostType[]>();
   const { showPopupNotification } = useContext(PopupNotificationContext);
-  const [selectedImage, setSelectedImage] = useState<imageType | null>(null);
+  const [selectedImage, setSelectedImage] = useState<ServerImgType | null>(null);
   const { setModalContent, showConfirmModal } = useConfirmModalStore();
-
   useEffect(() => {
     (async () => {
-      try {
         if (type === "REPORT") {
-          const proofRes = await proofApi.getProofByClaimerAndPostId(
-            sender?._id,
-            post?._id,
-          );
-          setProof(proofRes.data.data);
-        }  else if (type === "POSSIBLE_MATCH_OWNER") {
-          const matchedPostIds = matchedPosts.map((m) => m.postId);
-
-          const posts = await Promise.all(
-            matchedPostIds.map((id) => postApi.getPost(id)),
-          );
-
-          setPostsDetail(posts.map((p) => p.data.data));
-        }
-      } catch (error: any) {
-        showPopupNotification?.({
+         try {
+           const proofRes = await proofApi.getProofByClaimerAndPostId(
+             sender?._id,
+             post?._id,
+           );
+           setProof(proofRes.data.data);
+         } catch (error: any) {
+          console.log({error})
+           showPopupNotification?.({
           type: "error",
           message: error.response.data.message,
         });
+         }
+        }  else if (type === "POSSIBLE_MATCH_OWNER") {
+          try {
+            const matchedPostIds = matchedPosts.map((m) => m.postId);
+  
+            const posts = await Promise.all(
+              matchedPostIds.map((id) => postApi.getPost(id)),
+            );
+  
+            setPostsDetail(posts.map((p) => p.data.data));
+          } catch (error: any) {
+           showPopupNotification?.({
+          type: "error",
+          message: error.response.data.message,
+        });
+        }
       }
+     
     })();
   }, []);
-
+console.log({proof})
   const handleAction = (type: string) => {
     showConfirmModal();
 

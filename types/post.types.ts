@@ -1,5 +1,4 @@
-import React, { SetStateAction } from "react";
-import { imageType } from "./image";
+import { ServerImgType } from "./image";
 
 export enum postCategories {
   "Electronics",
@@ -19,7 +18,7 @@ export interface PostType  {
     category: postCategories;
     location: string;
     date: string;
-    images?: imageType[];
+    images?: ServerImgType[];
     description: string;
     createdAt?: string;
     updatedAt?:string;

@@ -23,7 +23,7 @@ import { format } from "timeago.js";
 import { getItem } from "@/utils/AsyncStorage";
 import { FeedProps } from "@/types/feed";
 import { useConfirmModalStore } from "@/store/useConfirmModalStore";
-import { imageType } from "@/types/image";
+import { ServerImgType } from "@/types/image";
 import { usePostStore } from "@/store/usePostStore";
 
 const moreOptions = [
@@ -33,7 +33,7 @@ const moreOptions = [
 
 export default function Feed({ post, onDeletePost }: FeedProps) {
   const [expanded, setExpanded] = useState(false);
-  const [selectedImage, setSelectedImage] = useState<imageType | null>(null);
+  const [selectedImage, setSelectedImage] = useState<ServerImgType | null>(null);
   const isLost = post.type === "Lost";
   const [moreOptionOpen, setMoreOptionOpen] = useState(false);
   const [myId, setMyId] = useState("");
@@ -99,6 +99,7 @@ export default function Feed({ post, onDeletePost }: FeedProps) {
 
   const parent = "myPost";
 
+  console.log({images})
   return (
     <View>
       <Modal
@@ -249,10 +250,12 @@ export default function Feed({ post, onDeletePost }: FeedProps) {
           )}
 
           <View className="flex-row  w-full flex-wrap justify-center gap-2">
-            {images.map((img: imageType, idx: number) => (
-              <TouchableOpacity key={idx} onPress={() => setSelectedImage(img)}>
+            {images.map((img: ServerImgType, idx: number) => (
+              <TouchableOpacity key={idx} 
+              onPress={() => setSelectedImage(img)}
+              >
                 <Image
-                  source={{ uri: String(img) }}
+                  source={{ uri: img.url }}
                   className="w-[160px] h-[160px] rounded-md shadow-md"
                 />
               </TouchableOpacity>

@@ -1,10 +1,12 @@
-export type imageType =
-  | string
-  | {
+export type LocalImgType = {
       uri?: string;
       mimeType?: string;
       fileName?: string;
     };
+
+    export interface ServerImgType {
+      url?: string;
+    }
 
 export type ImagePickerPropTypes = {
   image?: string;
@@ -15,19 +17,19 @@ export type ImagePickerTypes = {
   visible?: boolean;
   onClose?: () => void;
   selectionLimit: number;
-  setImages?: React.Dispatch<React.SetStateAction<imageType[]>>;
-  setImage?: React.Dispatch<React.SetStateAction<imageType>>;
+  setImages?: React.Dispatch<React.SetStateAction<LocalImgType[]>>;
+  setImage?: React.Dispatch<React.SetStateAction<LocalImgType>>;
   singleImage?: boolean;
-  images?: imageType[];
+  images?: LocalImgType[];
   isSignUp?: boolean;
 };
 
 export type UploadImgBtnProp = {
-  images: imageType[];
+  images: LocalImgType[];
   setIsModalOpen: React.Dispatch<React.SetStateAction<boolean>>;
 };
 
 export type displayImageProps = {
-  images: imageType[];
-  setImages: React.Dispatch<React.SetStateAction<imageType[]>>;
+  images: LocalImgType[];
+  setImages: React.Dispatch<React.SetStateAction<LocalImgType[]>>;
 };

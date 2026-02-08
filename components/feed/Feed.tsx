@@ -34,7 +34,7 @@ const moreOptions = [
 export default function Feed({ post, onDeletePost }: FeedProps) {
   const [expanded, setExpanded] = useState(false);
   const [selectedImage, setSelectedImage] = useState<ServerImgType | null>(null);
-  const isLost = post.type === "Lost";
+  const isLost = post?.type === "Lost";
   const [moreOptionOpen, setMoreOptionOpen] = useState(false);
   const [myId, setMyId] = useState("");
   const { showConfirmModal, confirmModal, setModalContent, setOnConfirm } =
@@ -70,9 +70,9 @@ export default function Feed({ post, onDeletePost }: FeedProps) {
     setMoreOptionOpen(true);
   };
 
-  const images = post.images!;
-  const type = post.type!;
-  const description = post.description!;
+  const images = post?.images!;
+  const type = post?.type!;
+  const description = post?.description!;
 
   const parent = "myPost";
 

@@ -17,48 +17,45 @@ import { Image, Modal, ScrollView, TouchableOpacity, View } from "react-native";
 export default function NotificationDetailScreen() {
   const { isDarkMode } = useContext(ThemeContext);
   const { sender, post, type, matchedPosts, relatedPost } =
-    useNotificationDetailStore();
+    useNotificationDetailStore.getState();
   const [proof, setProof] = useState<ProofType>();
   const [postsDetail, setPostsDetail] = useState<PostType[]>();
   const { showPopupNotification } = useContext(PopupNotificationContext);
   const [selectedImage, setSelectedImage] = useState<ServerImgType | null>(null);
   const { setModalContent, showConfirmModal } = useConfirmModalStore();
-  useEffect(() => {
-    (async () => {
-        if (type === "REPORT") {
-         try {
-           const proofRes = await proofApi.getProofByClaimerAndPostId(
-             sender?._id,
-             post?._id,
-           );
-           setProof(proofRes.data.data);
-         } catch (error: any) {
-          console.log({error})
-           showPopupNotification?.({
-          type: "error",
-          message: error.response.data.message,
-        });
-         }
-        }  else if (type === "POSSIBLE_MATCH_OWNER") {
-          try {
-            const matchedPostIds = matchedPosts.map((m) => m.postId);
-  
-            const posts = await Promise.all(
-              matchedPostIds.map((id) => postApi.getPost(id)),
-            );
-  
-            setPostsDetail(posts.map((p) => p.data.data));
-          } catch (error: any) {
-           showPopupNotification?.({
-          type: "error",
-          message: error.response.data.message,
-        });
-        }
+
+useEffect(() => {
+  console.log("hle");
+  if (!type) return; 
+  (async () => {
+    try {
+      if (type === "REPORT") {
+        const proofRes = await proofApi.getProofByClaimerAndPostId(
+          sender?._id!,
+          post?._id!,
+        );
+        setProof(proofRes.data.data);
       }
-     
-    })();
-  }, []);
-console.log({proof})
+
+      if (type === "POSSIBLE_MATCH_OWNER") {
+        const matchedPostIds = matchedPosts.map(m => m.postId);
+
+        const posts = await Promise.all(
+          matchedPostIds.map(id => postApi.getPost(id))
+        );
+
+        setPostsDetail(posts.map(p => p.data.data));
+      }
+    } catch (error: any) {
+      showPopupNotification?.({
+        type: "error",
+        message: error.response?.data?.message ?? "Something went wrong",
+      });
+    }
+  })();
+}, [type]); 
+
+
   const handleAction = (type: string) => {
     showConfirmModal();
 
@@ -76,7 +73,6 @@ console.log({proof})
       setModalContent(data);
     }
   };
-
   return (
     <View className={`flex-1 ${isDarkMode ? "bg-[#0f0f0f]" : "bg-[#F9FAFB]"}`}>
       {/* Image Modal */}
@@ -114,10 +110,11 @@ console.log({proof})
             handleAction={handleAction}
           />
         ) : (
-          (type === "POSSIBLE_MATCH_EXISTING" ||
-            type === "POSSIBLE_MATCH_OWNER") && (
-            <PossibleMatchDetail posts={matchedPosts.length > 0 ? postsDetail! : relatedPost!} />
-          )
+          (type && type === "POSSIBLE_MATCH_EXISTING") ? (
+            <PossibleMatchDetail posts={ relatedPost!} />
+          ): 
+          type === "POSSIBLE_MATCH_OWNER" &&
+          <PossibleMatchDetail posts={postsDetail!} />
         )}
       </ScrollView>
     </View>

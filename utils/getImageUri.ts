@@ -8,7 +8,7 @@ export const getImageUri = (img: any) => {
 
     //Existing Image (from backend)
     if(typeof img === "string"){
-        return `${serverUrl}${img}`;
+        return `${img}`;
     }
 
     return ""

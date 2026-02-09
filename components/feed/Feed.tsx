@@ -457,13 +457,6 @@ export default function Feed({ post, onDeletePost }: FeedProps) {
                     className="w-full h-full"
                     resizeMode="cover"
                   />
-                  {idx === 2 && images.length > 3 && (
-                    <View className="absolute inset-0 bg-black/60 items-center justify-center">
-                      <Text className="text-white text-2xl font-bold">
-                        +{images.length - 3}
-                      </Text>
-                    </View>
-                  )}
                 </TouchableOpacity>
               ))}
             </View>

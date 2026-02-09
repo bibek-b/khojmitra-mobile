@@ -29,7 +29,6 @@ export default function Notification({
     relatedPost && setRelatedPost(relatedPost);
     router.push( "/screens/notificationDetailScreen" );
   };
-
   return (
     <TouchableOpacity
       className={`mx-4 my-2 p-4 rounded-2xl flex-row gap-3 ${

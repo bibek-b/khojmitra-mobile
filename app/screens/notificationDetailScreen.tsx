@@ -8,12 +8,19 @@ import { useConfirmModalStore } from "@/store/useConfirmModalStore";
 import { useLoaderStore } from "@/store/useLoaderStore";
 import { useNotificationDetailStore } from "@/store/useNotificationDetailStore";
 import { modalContentType } from "@/types/ConfirmModal";
-import { ServerImgType } from "@/types/image";
+import { ImgType } from "@/types/image";
 import { PostType } from "@/types/post.types";
 import { ProofType } from "@/types/proofForm";
 import { Feather } from "@expo/vector-icons";
 import React, { useContext, useEffect, useState } from "react";
-import { Image, Modal, ScrollView, TouchableOpacity, View } from "react-native";
+import {
+  Image,
+  Modal,
+  ScrollView,
+  Text,
+  TouchableOpacity,
+  View,
+} from "react-native";
 
 export default function NotificationDetailScreen() {
   const { isDarkMode } = useContext(ThemeContext);
@@ -22,28 +29,33 @@ export default function NotificationDetailScreen() {
   const [proof, setProof] = useState<ProofType>();
   const [postsDetail, setPostsDetail] = useState<PostType[]>();
   const { showPopupNotification } = useContext(PopupNotificationContext);
-  const [selectedImage, setSelectedImage] = useState<ServerImgType | null>(
-    null,
-  );
+  const [selectedImage, setSelectedImage] = useState<ImgType | null>(null);
   const { setModalContent, showConfirmModal } = useConfirmModalStore();
-  const { showLoading, hideLoading} = useLoaderStore();
-
+  const { showLoading, hideLoading } = useLoaderStore();
   useEffect(() => {
     if (!type) return;
-    
+
     (async () => {
       try {
-        showLoading('');
+        showLoading("");
         if (type === "REPORT") {
+          if(!sender._id  || !post._id){
+            setProof(undefined);
+            return
+          }
           const proofRes = await proofApi.getProofByClaimerAndPostId(
-            sender?._id!,
-            post?._id!,
+            sender?._id,
+            post?._id,
           );
           setProof(proofRes.data.data);
         }
 
         if (type === "POSSIBLE_MATCH_OWNER") {
-          const matchedPostIds = matchedPosts?.map((m) => m.postId);
+          if (!matchedPosts || matchedPosts.length === 0) {
+            setPostsDetail([]);
+            return;
+          }
+          const matchedPostIds = matchedPosts.map((m) => m.postId);
 
           const posts = await Promise.all(
             matchedPostIds?.map((id) => postApi.getPost(id)),
@@ -60,10 +72,10 @@ export default function NotificationDetailScreen() {
         hideLoading();
       }
     })();
-  }, [type]);
-
+  }, [type, matchedPosts, sender, post]);
 
   const handleAction = (type: string) => {
+    if(!sender || !post  || !proof) return;
     showConfirmModal();
 
     const isAccept = type === "accept";
@@ -109,19 +121,35 @@ export default function NotificationDetailScreen() {
 
       <ScrollView showsVerticalScrollIndicator={false}>
         {/* Main Content Card */}
-        {type === "REPORT" ? (
+        {type === "REPORT" &&  proof ? (
           <ReportDetail
             sender={sender}
-            proof={proof!}
+            proof={proof}
             setSelectedImage={setSelectedImage}
             handleAction={handleAction}
           />
-        ) : type && type === "POSSIBLE_MATCH_EXISTING" ? (
-          <PossibleMatchDetail posts={relatedPost!} />
         ) : (
-          type === "POSSIBLE_MATCH_OWNER" && (
-            <PossibleMatchDetail posts={postsDetail!} />
-          )
+          <View>
+            <Text>The Proof is no longer available</Text>
+          </View>
+        )}
+
+        {type === "POSSIBLE_MATCH_EXISTING" && relatedPost ? (
+          <PossibleMatchDetail posts={relatedPost} />
+        ) : (
+          <View>
+            <Text>The Posts are no longer available</Text>
+          </View>
+        )}
+
+        {  type === "POSSIBLE_MATCH_OWNER" && (postsDetail &&
+        postsDetail.length > 0 )
+       ? (
+          <PossibleMatchDetail posts={postsDetail} />
+        ) : (
+          <View>
+            <Text>The Post is no longer available</Text>
+          </View>
         )}
       </ScrollView>
     </View>

@@ -14,7 +14,11 @@ export default function ReportDetail({
   setSelectedImage,
   handleAction,
 }: ReportDetailPropType) {
+
   const { isDarkMode } = useContext(ThemeContext);
+
+  if(!proof) return null;
+  
   return (
     <View
       className={`mx-4 my-8 rounded-3xl ${
@@ -66,7 +70,7 @@ export default function ReportDetail({
             }`}
           >
             <Text className="text-gray-500 dark:text-gray-400 text-xs font-medium">
-              {format(new Date(proof!?.createdAt))}
+              {format(new Date(proof?.createdAt))}
             </Text>
           </View>
         </View>

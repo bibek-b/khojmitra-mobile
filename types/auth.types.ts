@@ -1,4 +1,4 @@
-import { imageType } from "./image";
+import { ImgType } from "./image";
 
 
 
@@ -8,7 +8,7 @@ export type AuthFormPayloadType = {
   password?: string;
   fullname?: string;
   confirmPassword?: string;
-  avatar?: imageType
+  avatar?: ImgType
 };
 
 export type AuthSubmitTypes = {

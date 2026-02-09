@@ -32,13 +32,4 @@ export interface NotificationPropType {
   relatedPost?: PostType ; 
 }
 
-// export interface ReceiveNotificationPropType {
-//   _id: string;
-//   senderId: string;
-//   sender: SenderType;
-//   createdAt: string;
-//   postId: string;
-//   post: NotificationDetailPostType;
-//   message: string;
-//   type: NotificationType;
-// }
+

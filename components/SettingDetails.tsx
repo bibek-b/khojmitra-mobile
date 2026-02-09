@@ -40,16 +40,13 @@ export default function SettingDetails() {
 
   const handlePress = (label: string) => {
     if(label === "Language") {
-      router.push('/languageScreen');
+      // router.push('/screens/languageScreen');
     }
      if(label === "About") {
-      router.push("/aboutScreen")
+      // router.push("/screens/aboutScreen")
     }
     if(label === "Edit Profile") {
-      router.push("/editProfileScreen");
-    }
-    if(label === "Dark Mode") {
-
+      // router.push("/screens/editProfileScreen");
     }
   }
   return (

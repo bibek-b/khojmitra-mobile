@@ -1,4 +1,4 @@
-import { imageType } from "./image";
+import { ImgType } from "./image";
 
 export type ProofFormContextType = {
   isFormVisible?: boolean;
@@ -13,7 +13,7 @@ export interface ProofType {
     _id: string;
     claimType: "owner" | "found"
     description?: string,
-    images?: imageType[],
+    images?: ImgType[],
     postId: string,
     claimerId: string;
     createdAt: string;

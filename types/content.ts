@@ -1,7 +1,7 @@
-import {  ServerImgType } from "./image";
+import { ImgType } from "./image";
 import { ProofType } from "./proofForm";
 
 export interface ContentProps {
     proof?: ProofType;
-    setSelectedImage: (val: ServerImgType) => void;
+    setSelectedImage: (val: ImgType) => void;
 }

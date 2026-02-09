@@ -1,4 +1,4 @@
-import { ServerImgType } from "./image";
+import { ImgType } from "./image";
 import { MatchedPostsType, NotificationType } from "./notification";
 import { PostType } from "./post.types";
 import { ProofType } from "./proofForm";
@@ -31,7 +31,7 @@ export interface NotificationDetailStoreType {
 export interface ReportDetailPropType {
     sender: SenderType;
     proof: ProofType;
-    setSelectedImage: (img: ServerImgType) => void;
+    setSelectedImage: (img: ImgType) => void;
     handleAction : (val: ActionType) => void;
 }
 

@@ -1,4 +1,4 @@
-import {  ServerImgType } from "./image";
+import { ImgType } from "./image";
 import { PostType } from "./post.types";
 
 //setting all ? - using this type for error state also thats why
@@ -16,7 +16,7 @@ export interface ReportType {
   claimType: "Owner" | "Founder",
   post: PostType,
   description?: string,
-  images: ServerImgType[],
+  images: ImgType[],
   status: string,
   createdAt?:string,
   updatedAt?:string,

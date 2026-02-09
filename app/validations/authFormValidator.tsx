@@ -1,11 +1,11 @@
-import { AuthSubmitFormPropTypes } from "@/types/theme";
+import { AuthFormPayloadType } from "@/types/auth.types";
 
 export const validateSignup = (
-  { fullname, email, password, confirmPassword }: AuthSubmitFormPropTypes,
+  { fullname, email, password, confirmPassword }: AuthFormPayloadType,
   setErrors: any
 ) => {
   let hasError = false;
-  const newErrors: AuthSubmitFormPropTypes = {};
+  const newErrors: AuthFormPayloadType = {};
   if (!fullname) {
     newErrors.fullname = "Full name is required.";
     hasError = true;
@@ -50,11 +50,11 @@ export const validateSignup = (
 };
 
 export const validateSignin = (
-  {  email, password }: AuthSubmitFormPropTypes,
+  {  email, password }: AuthFormPayloadType,
   setErrors: any
 ) => {
   let hasError = false;
-  const newErrors: AuthSubmitFormPropTypes = {};
+  const newErrors: AuthFormPayloadType = {};
 
 
   if (!password) {

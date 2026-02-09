@@ -22,14 +22,16 @@ export default function Notification({
   const router = useRouter();
 
   const handleNotificationClick = () => {
+    
     router.push("/screens/notificationDetailScreen");
     setType(type);
-    if (!sender  || !post || !matchedPosts || !relatedPost) return;
+
+    if (!sender  || !post ) return;
 
     setSender(sender);
     setPost(post);
-    setMatchedPosts(matchedPosts!);
-    setRelatedPost(relatedPost);
+    matchedPosts && setMatchedPosts(matchedPosts);
+    relatedPost && setRelatedPost(relatedPost);
   };
   return (
     <TouchableOpacity

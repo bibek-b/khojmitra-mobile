@@ -1,12 +1,12 @@
+import { AnimateValuePropsType } from "@/types/animation";
 import { Animated } from "react-native";
-import { AnimateValueProps } from "../types/theme";
 
 export const animateValue = ({
   value,
   toValue,
   duration,
   useNativeDriver,
-}: AnimateValueProps) => {
+}: AnimateValuePropsType) => {
   return Animated.timing(value, {
     toValue,
     duration,

@@ -1,4 +1,4 @@
-import { ServerImgType } from "./image";
+import { ImgType } from "./image";
 
 export enum postCategories {
   "Electronics",
@@ -18,7 +18,7 @@ export interface PostType  {
     category: postCategories;
     location: string;
     date: string;
-    images?: ServerImgType[];
+    images?: ImgType[];
     description: string;
     createdAt?: string;
     updatedAt?:string;

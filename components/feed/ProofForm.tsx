@@ -16,11 +16,11 @@ import ImagePickerModal from "../common/ImagePickerModal";
 import DisplayImages from "../common/DisplayImages";
 import { PopupNotificationContext } from "@/context/PopupNotificationContext";
 import { ProofFormContext } from "@/context/ProofFormContext";
-import { imageType } from "@/types/image";
 import { useLoaderStore } from "@/store/useLoaderStore";
 import { proofApi } from "@/api/proofApi";
 import { getItem } from "@/utils/AsyncStorage";
 import socket from "@/app/lib/socket";
+import { ImgType } from "@/types/image";
 
 export default function ProofForm() {
   const { isDarkMode } = useContext(ThemeContext);
@@ -28,7 +28,7 @@ export default function ProofForm() {
 
   const { showLoading, hideLoading } = useLoaderStore();
   const { showPopupNotification } = useContext(PopupNotificationContext);
-  const [images, setImages] = useState<imageType[]>([]);
+  const [images, setImages] = useState<ImgType[]>([]);
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [description, setDescription] = useState("");
   const [proofType, setProofType] = useState<"found" | "owner" | "">("");

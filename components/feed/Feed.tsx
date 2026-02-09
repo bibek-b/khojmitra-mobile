@@ -16,7 +16,6 @@ import {
   TouchableWithoutFeedback,
   View,
   Animated,
-  Dimensions,
 } from "react-native";
 import { useContext } from "react";
 import { ThemeContext } from "@/context/ThemeContext";
@@ -25,11 +24,10 @@ import { format } from "timeago.js";
 import { getItem } from "@/utils/AsyncStorage";
 import { FeedProps } from "@/types/feed";
 import { useConfirmModalStore } from "@/store/useConfirmModalStore";
-import { ServerImgType } from "@/types/image";
+import { ImgType } from "@/types/image";
 import { usePostStore } from "@/store/usePostStore";
 
 
-const { width } = Dimensions.get("window");
 
 const moreOptions = [
   { 
@@ -48,7 +46,7 @@ const moreOptions = [
 
 export default function Feed({ post, onDeletePost }: FeedProps) {
   const [expanded, setExpanded] = useState(false);
-  const [selectedImage, setSelectedImage] = useState<ServerImgType | null>(null);
+  const [selectedImage, setSelectedImage] = useState<ImgType | null>(null);
   const [imageIndex, setImageIndex] = useState(0);
   const isLost = post?.type === "Lost";
   const [moreOptionOpen, setMoreOptionOpen] = useState(false);
@@ -436,34 +434,26 @@ export default function Feed({ post, onDeletePost }: FeedProps) {
         {images && images.length > 0 && (
           <View className="mb-4">
             <View
-              className={`flex-row flex-wrap ${
-                images.length === 1
-                  ? "justify-center"
-                  : images.length === 2
-                  ? "gap-2"
-                  : "gap-2"
-              }`}
+              className={`flex-row flex-wrap justify-center gap-2`}
             >
-              {images.map((img: ServerImgType, idx: number) => (
+              {images.map((img: ImgType, idx: number) => (
                 <TouchableOpacity
                   key={idx}
                   onPress={() => {
-                    setSelectedImage(img.url as ServerImgType);
+                    setSelectedImage(img.uri as ImgType);
                     setImageIndex(idx);
                   }}
-                  className="rounded-2xl overflow-hidden"
+                  className="rounded-xl overflow-hidden"
                   style={{
                     width:
                       images.length === 1
                         ? "100%"
-                        : images.length === 2
-                        ? (width - 56) / 2
-                        : (width - 64) / 3,
-                    height: images.length === 1 ? 250 : 120,
+                        : 142,
+                    height: images.length === 1 ? 250 : 140,
                   }}
                 >
                   <Image
-                    source={{ uri: img.url }}
+                    source={{ uri: img.uri }}
                     className="w-full h-full"
                     resizeMode="cover"
                   />

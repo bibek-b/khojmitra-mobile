@@ -28,15 +28,15 @@ export default function usePickImages({
           });
           if (!result.canceled) {
             if (!singleImage) {
-            setImages?.((prev) => [...prev, ...result?.assets]);
+              setImages?.((prev) => [...prev, ...result?.assets]);
             } else {
               setImage?.(result?.assets[0]);
             }
           }
         } else {
           const { status } =
-            await ImagePicker.requestMediaLibraryPermissionsAsync();
-
+          await ImagePicker.requestMediaLibraryPermissionsAsync();
+          
           if (status !== "granted") {
             alert("Permission to access gallery is required.");
             return;

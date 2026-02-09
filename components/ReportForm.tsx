@@ -16,11 +16,10 @@ import { postApi } from "@/api/postApi";
 import { getItem } from "@/utils/AsyncStorage";
 import { useLoaderStore } from "@/store/useLoaderStore";
 import { GlobalLoader } from "./common/GlobalLoader";
-import { imageType } from "@/types/image";
 import { AddEditReportFormTypes } from "@/types/report";
 import { usePostStore } from "@/store/usePostStore";
 import { postCategories } from "@/types/post.types";
-import { getImageUri } from "@/utils/getImageUri";
+import { ImgType } from "@/types/image";
 
 const reportType = [
   { id: 1, sign: "🔴", label: "Lost" },
@@ -37,7 +36,7 @@ export default function ReportForm({ idToUpdate }: { idToUpdate?: string }) {
   const [selCategory, setSelCategory] = useState<postCategories | string>("");
   const [date, setDate] = useState<Date>(new Date());
   const [showDatePicker, setShowDatePicker] = useState(false);
-  const [images, setImages] = useState<imageType[]>([]);
+  const [images, setImages] = useState<ImgType[]>([]);
   const [title, setTitle] = useState("");
   const [location, setLocation] = useState("");
   const [description, setDescription] = useState("");

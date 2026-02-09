@@ -14,20 +14,22 @@ export default function Notification({
   message,
   type,
   matchedPosts,
-  relatedPost
+  relatedPost,
 }: NotificationPropType) {
-
   const { isDarkMode } = useContext(ThemeContext);
-  const { setSender, setPost, setType, setMatchedPosts, setRelatedPost } = useNotificationDetailStore();
+  const { setSender, setPost, setType, setMatchedPosts, setRelatedPost } =
+    useNotificationDetailStore();
   const router = useRouter();
 
   const handleNotificationClick = () => {
+    router.push("/screens/notificationDetailScreen");
     setType(type);
-    sender && setSender(sender);
+    if (!sender  || !post || !matchedPosts || !relatedPost) return;
+
+    setSender(sender);
     setPost(post);
     setMatchedPosts(matchedPosts!);
-    relatedPost && setRelatedPost(relatedPost);
-    router.push( "/screens/notificationDetailScreen" );
+    setRelatedPost(relatedPost);
   };
   return (
     <TouchableOpacity
@@ -53,7 +55,7 @@ export default function Notification({
             />
           </View>
         )}
-        
+
         {/* Notification type indicator */}
         <View className="absolute -bottom-1 -right-1 w-5 h-5 bg-blue-600 rounded-full items-center justify-center border-2 border-white dark:border-[#0f0f0f]">
           <Ionicons name="notifications" size={10} color="white" />

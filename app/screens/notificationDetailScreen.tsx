@@ -11,9 +11,10 @@ import { modalContentType } from "@/types/ConfirmModal";
 import { ImgType } from "@/types/image";
 import { PostType } from "@/types/post.types";
 import { ProofType } from "@/types/proofForm";
-import { Feather } from "@expo/vector-icons";
+import { Feather, Ionicons, MaterialIcons } from "@expo/vector-icons";
 import React, { useContext, useEffect, useState } from "react";
 import {
+  Alert,
   Image,
   Modal,
   ScrollView,
@@ -34,14 +35,13 @@ export default function NotificationDetailScreen() {
   const { showLoading, hideLoading } = useLoaderStore();
   useEffect(() => {
     if (!type) return;
-
     (async () => {
       try {
         showLoading("");
         if (type === "REPORT") {
-          if(!sender._id  || !post._id){
+          if (!sender._id || !post._id) {
             setProof(undefined);
-            return
+            return;
           }
           const proofRes = await proofApi.getProofByClaimerAndPostId(
             sender?._id,
@@ -75,7 +75,7 @@ export default function NotificationDetailScreen() {
   }, [type, matchedPosts, sender, post]);
 
   const handleAction = (type: string) => {
-    if(!sender || !post  || !proof) return;
+    if (!sender || !post || !proof) return;
     showConfirmModal();
 
     const isAccept = type === "accept";
@@ -92,6 +92,78 @@ export default function NotificationDetailScreen() {
       setModalContent(data);
     }
   };
+
+const renderContent = () => {
+  if (type === "REPORT") {
+    if (proof) {
+      return (
+        <ReportDetail
+          sender={sender}
+          proof={proof}
+          setSelectedImage={setSelectedImage}
+          handleAction={handleAction}
+        />
+      );
+    }
+    return (
+      <View className="flex-1 items-center justify-center py-16 px-6">
+        <View
+          className="w-20 h-20 rounded-full items-center justify-center mb-4"
+          style={{ backgroundColor: "rgba(239, 68, 68, 0.15)" }}
+        >
+          <Ionicons name="document-text-outline" size={36} color="#ef4444" />
+        </View>
+        <Text className="text-white text-lg font-semibold mb-2">
+          Proof Unavailable
+        </Text>
+        <Text className="text-gray-400 text-center text-sm">
+          The proof is no longer available
+        </Text>
+      </View>
+    );
+  } else if (type === "POSSIBLE_MATCH_EXISTING") {
+    if (relatedPost) {
+      return <PossibleMatchDetail posts={relatedPost} />;
+    }
+    return (
+      <View className="flex-1 items-center justify-center py-16 px-6">
+        <View
+          className="w-20 h-20 rounded-full items-center justify-center mb-4"
+          style={{ backgroundColor: "rgba(59, 130, 246, 0.15)" }}
+        >
+          <MaterialIcons name="post-add" size={36} color="#3b82f6" />
+        </View>
+        <Text className="text-white text-lg font-semibold mb-2">
+          Post Unavailable
+        </Text>
+        <Text className="text-gray-400 text-center text-sm">
+          The post is no longer available
+        </Text>
+      </View>
+    );
+  } else if (type === "POSSIBLE_MATCH_OWNER") {
+    if (postsDetail && postsDetail.length > 0) {
+      return <PossibleMatchDetail posts={postsDetail} />;
+    }
+    return (
+      <View className="flex-1 items-center justify-center py-16 px-6">
+        <View
+          className="w-20 h-20 rounded-full items-center justify-center mb-4"
+          style={{ backgroundColor: "rgba(139, 92, 246, 0.15)" }}
+        >
+          <Feather name="inbox" size={36} color="#8b5cf6" />
+        </View>
+        <Text className="text-white text-lg font-semibold mb-2">
+          No Posts Found
+        </Text>
+        <Text className="text-gray-400 text-center text-sm">
+          The posts are no longer available
+        </Text>
+      </View>
+    );
+  }
+};
+
   return (
     <View className={`flex-1 ${isDarkMode ? "bg-[#0f0f0f]" : "bg-[#F9FAFB]"}`}>
       {/* Image Modal */}
@@ -121,36 +193,7 @@ export default function NotificationDetailScreen() {
 
       <ScrollView showsVerticalScrollIndicator={false}>
         {/* Main Content Card */}
-        {type === "REPORT" &&  proof ? (
-          <ReportDetail
-            sender={sender}
-            proof={proof}
-            setSelectedImage={setSelectedImage}
-            handleAction={handleAction}
-          />
-        ) : (
-          <View>
-            <Text>The Proof is no longer available</Text>
-          </View>
-        )}
-
-        {type === "POSSIBLE_MATCH_EXISTING" && relatedPost ? (
-          <PossibleMatchDetail posts={relatedPost} />
-        ) : (
-          <View>
-            <Text>The Posts are no longer available</Text>
-          </View>
-        )}
-
-        {  type === "POSSIBLE_MATCH_OWNER" && (postsDetail &&
-        postsDetail.length > 0 )
-       ? (
-          <PossibleMatchDetail posts={postsDetail} />
-        ) : (
-          <View>
-            <Text>The Post is no longer available</Text>
-          </View>
-        )}
+        {renderContent()}
       </ScrollView>
     </View>
   );

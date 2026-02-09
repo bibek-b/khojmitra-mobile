@@ -9,7 +9,7 @@ export default function PossibleMatchDetail({ posts }: PossibleMatchPropType) {
   return (
     <View className="py-2">
       <SeparatorLine />
-      {/* {Array.isArray(posts) ? (
+      {Array.isArray(posts) ? (
         posts?.map((p) => {
           return (
             <View key={p?._id}>
@@ -20,7 +20,7 @@ export default function PossibleMatchDetail({ posts }: PossibleMatchPropType) {
         })
       ) : (
         <Feed post={posts} />
-      )} */}
+      )}
     </View>
   );
 }

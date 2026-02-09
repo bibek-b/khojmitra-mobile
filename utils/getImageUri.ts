@@ -1,14 +1,8 @@
-import { serverUrl } from "@/env/serverUrl";
+import { ImgType } from "@/types/image";
 
-export const getImageUri = (img: any) => {
-    //picked from a device
+export const getImageUri = (img: ImgType) => {
     if(typeof img === "object" && img.uri){
         return img.uri;
-    }
-
-    //Existing Image (from backend)
-    if(typeof img === "string"){
-        return `${img}`;
     }
 
     return ""

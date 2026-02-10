@@ -22,7 +22,7 @@ export default function NotificationScreen() {
     (async () => {
       try {
         const me = await getItem("user");
-        const res = await notificationApi.getMyNotifications(me._id);
+        const res = await notificationApi.getMyNotifications(me?._id);
         setNotifications(res?.data?.data);
       } catch (error: any) {
         console.log(error);

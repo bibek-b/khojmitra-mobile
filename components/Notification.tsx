@@ -25,13 +25,13 @@ export default function Notification({
     
     router.push("/screens/notificationDetailScreen");
     setType(type);
+    matchedPosts && setMatchedPosts(matchedPosts);
+    relatedPost && setRelatedPost(relatedPost);
 
-    if (!sender  || !post ) return;
+    if (!sender  || !post  ) return;
 
     setSender(sender);
     setPost(post);
-    matchedPosts && setMatchedPosts(matchedPosts);
-    relatedPost && setRelatedPost(relatedPost);
   };
   return (
     <TouchableOpacity

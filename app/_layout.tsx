@@ -115,7 +115,7 @@ export default function RootLayout() {
     const initializeSocket = async () => {
       const user = await getItem("user");
       socket.connect();
-      socket.emit("joinRoom", user._id);
+      socket.emit("joinRoom", user?._id);
     };
     initializeSocket();
     return () => {

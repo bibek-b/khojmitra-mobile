@@ -21,6 +21,7 @@ export default function NotificationScreen() {
   useEffect(() => {
     (async () => {
       try {
+        showLoading('notificationScreen');
         const me = await getItem("user");
         const res = await notificationApi.getMyNotifications(me?._id);
         setNotifications(res?.data?.data);

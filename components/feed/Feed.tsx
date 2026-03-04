@@ -26,6 +26,7 @@ import { FeedProps } from "@/types/feed";
 import { useConfirmModalStore } from "@/store/useConfirmModalStore";
 import { ImgType } from "@/types/image";
 import { usePostStore } from "@/store/usePostStore";
+import ImageViewer from 'react-native-image-zoom-viewer';
 
 
 
@@ -219,10 +220,12 @@ export default function Feed({ post, onDeletePost }: FeedProps) {
               </View>
             </View>
 
-            <Image
-              source={{ uri: String(selectedImage) }}
-              className="w-full h-full"
-              resizeMode="contain"
+            <ImageViewer
+              imageUrls={images.map(img => ({url: img.uri!}))}
+              enableSwipeDown
+              onSwipeDown={() => setSelectedImage(null)}
+              // backgroundColor="black"
+              renderIndicator={() => <View />}
             />
           </View>
         </Modal>

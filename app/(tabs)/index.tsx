@@ -10,7 +10,6 @@ import { useSearchFeedStore } from "@/store/useSearchFeedStore";
 import SeparatorLine from "@/components/common/SeparatorLine";
 import { useDeletePost } from "@/hooks/useDeletePost";
 
-
 export default function HomeTab() {
   const { showLoading, hideLoading } = useLoaderStore();
 
@@ -18,19 +17,19 @@ export default function HomeTab() {
   const { allPosts, setAllPosts } = usePostStore();
   const { searchInput } = useSearchFeedStore();
 
+  const fetchAllPosts = async () => {
+    try {
+      showLoading("fetchPosts");
+      const res = await postApi.getAll();
+      setAllPosts(res?.data.data);
+    } catch (error: any) {
+      showPopupNotification?.({ type: "error", message: "Can't fetch post" });
+    } finally {
+      hideLoading();
+    }
+  };
 
   useEffect(() => {
-    const fetchAllPosts = async () => {
-      try {
-        showLoading("fetchPosts");
-        const res = await postApi.getAll();
-        setAllPosts(res?.data.data);
-      } catch (error: any) {
-          showPopupNotification?.({ type: "error", message: "Can't fetch post" });
-      } finally {
-        hideLoading();
-      }
-    };
     fetchAllPosts();
   }, []);
 
@@ -60,13 +59,12 @@ export default function HomeTab() {
   return (
     <View className="relative h-full">
       <ScrollView showsVerticalScrollIndicator={false}>
-      <SeparatorLine/>
+        <SeparatorLine />
         {allPosts?.length > 0 && filteredPost?.length > 0 ? (
           filteredPost.map((data) => (
             <View key={data?._id} className=" justify-center w-full">
               <Feed post={data} onDeletePost={handleDeletePost} />
-                    <SeparatorLine/>
-
+              <SeparatorLine />
             </View>
           ))
         ) : (

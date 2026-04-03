@@ -35,6 +35,7 @@ export interface PostStoreType {
   isEditPost: boolean,
   TrueEditPost(): void;
   FalseEditPost(): void;
+  addNewPost: (data: PostType) => void
 
 }
 

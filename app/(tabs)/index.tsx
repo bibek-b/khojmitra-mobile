@@ -9,12 +9,14 @@ import { usePostStore } from "@/store/usePostStore";
 import { useSearchFeedStore } from "@/store/useSearchFeedStore";
 import SeparatorLine from "@/components/common/SeparatorLine";
 import { useDeletePost } from "@/hooks/useDeletePost";
+import socket from "../lib/socket";
+import { PostType } from "@/types/post.types";
 
 export default function HomeTab() {
   const { showLoading, hideLoading } = useLoaderStore();
 
   const { showPopupNotification } = useContext(PopupNotificationContext);
-  const { allPosts, setAllPosts } = usePostStore();
+  const { allPosts, setAllPosts, addNewPost } = usePostStore();
   const { searchInput } = useSearchFeedStore();
 
   const fetchAllPosts = async () => {
@@ -31,7 +33,19 @@ export default function HomeTab() {
 
   useEffect(() => {
     fetchAllPosts();
+
+    const handleNewPost = (data: PostType) => {
+      console.log(data)
+      addNewPost(data);
+    };
+    socket.on("new-post", handleNewPost);
+
+    return () => {
+      socket.off("new-post", handleNewPost);
+    };
   }, []);
+
+  console.log({ allPosts });
 
   const filteredPost = allPosts.filter(
     (p) =>
@@ -60,7 +74,7 @@ export default function HomeTab() {
     <View className="relative h-full">
       <ScrollView showsVerticalScrollIndicator={false}>
         <SeparatorLine />
-        {allPosts?.length > 0 && filteredPost?.length > 0 ? (
+        { filteredPost?.length > 0 ? (
           filteredPost.map((data) => (
             <View key={data?._id} className=" justify-center w-full">
               <Feed post={data} onDeletePost={handleDeletePost} />

@@ -1,6 +1,6 @@
 import Feed from "@/components/feed/Feed";
 import { ScrollView, Text, View } from "react-native";
-import { useContext, useEffect } from "react";
+import { useContext, useEffect, useMemo } from "react";
 import { ThemeContext } from "@/context/ThemeContext";
 import { postApi } from "@/api/postApi";
 import { PopupNotificationContext } from "@/context/PopupNotificationContext";
@@ -47,29 +47,35 @@ export default function HomeTab() {
 
   const debouncedSearch = useDebouncedValue(searchInput, 400);
 
-
-  const filteredPost = allPosts.filter(
-    (p) =>
-      p.title
-        ?.trim()
-        .toLowerCase()
-        .includes(debouncedSearch.trim().toLowerCase()) ||
-      p.type?.trim().toLowerCase().includes(debouncedSearch.trim().toLowerCase()) ||
-      String(p.category)
-        ?.trim()
-        .toLowerCase()
-        .includes(debouncedSearch.trim().toLowerCase()) ||
-      p.location
-        ?.trim()
-        .toLowerCase()
-        .includes(debouncedSearch.trim().toLowerCase()) ||
-      p.date?.trim().toLowerCase().includes(debouncedSearch.trim().toLowerCase()) ||
-      p.description
-        ?.trim()
-        .toLowerCase()
-        .includes(debouncedSearch.trim().toLowerCase()),
-  );
-
+  const filteredPost = useMemo(() => {
+    return allPosts.filter(
+      (p) =>
+        p.title
+          ?.trim()
+          .toLowerCase()
+          .includes(debouncedSearch.trim().toLowerCase()) ||
+        p.type
+          ?.trim()
+          .toLowerCase()
+          .includes(debouncedSearch.trim().toLowerCase()) ||
+        String(p.category)
+          ?.trim()
+          .toLowerCase()
+          .includes(debouncedSearch.trim().toLowerCase()) ||
+        p.location
+          ?.trim()
+          .toLowerCase()
+          .includes(debouncedSearch.trim().toLowerCase()) ||
+        p.date
+          ?.trim()
+          .toLowerCase()
+          .includes(debouncedSearch.trim().toLowerCase()) ||
+        p.description
+          ?.trim()
+          .toLowerCase()
+          .includes(debouncedSearch.trim().toLowerCase()),
+    );
+  }, [allPosts, debouncedSearch]);
 
   const { handleDeletePost } = useDeletePost();
 
@@ -77,7 +83,7 @@ export default function HomeTab() {
     <View className="relative h-full">
       <ScrollView showsVerticalScrollIndicator={false}>
         <SeparatorLine />
-        { filteredPost?.length > 0 ? (
+        {filteredPost?.length > 0 ? (
           filteredPost.map((data) => (
             <View key={data?._id} className=" justify-center w-full">
               <Feed post={data} onDeletePost={handleDeletePost} />

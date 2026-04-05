@@ -11,6 +11,7 @@ import SeparatorLine from "@/components/common/SeparatorLine";
 import { useDeletePost } from "@/hooks/useDeletePost";
 import socket from "../lib/socket";
 import { PostType } from "@/types/post.types";
+import { useDebouncedValue } from "@/hooks/useDebouncedValue";
 
 export default function HomeTab() {
   const { showLoading, hideLoading } = useLoaderStore();
@@ -35,7 +36,6 @@ export default function HomeTab() {
     fetchAllPosts();
 
     const handleNewPost = (data: PostType) => {
-      console.log(data)
       addNewPost(data);
     };
     socket.on("new-post", handleNewPost);
@@ -45,31 +45,34 @@ export default function HomeTab() {
     };
   }, []);
 
-  console.log({ allPosts });
+  const debouncedSearch = useDebouncedValue(searchInput, 400);
+
 
   const filteredPost = allPosts.filter(
     (p) =>
       p.title
         ?.trim()
         .toLowerCase()
-        .includes(searchInput.trim().toLowerCase()) ||
-      p.type?.trim().toLowerCase().includes(searchInput.trim().toLowerCase()) ||
+        .includes(debouncedSearch.trim().toLowerCase()) ||
+      p.type?.trim().toLowerCase().includes(debouncedSearch.trim().toLowerCase()) ||
       String(p.category)
         ?.trim()
         .toLowerCase()
-        .includes(searchInput.trim().toLowerCase()) ||
+        .includes(debouncedSearch.trim().toLowerCase()) ||
       p.location
         ?.trim()
         .toLowerCase()
-        .includes(searchInput.trim().toLowerCase()) ||
-      p.date?.trim().toLowerCase().includes(searchInput.trim().toLowerCase()) ||
+        .includes(debouncedSearch.trim().toLowerCase()) ||
+      p.date?.trim().toLowerCase().includes(debouncedSearch.trim().toLowerCase()) ||
       p.description
         ?.trim()
         .toLowerCase()
-        .includes(searchInput.trim().toLowerCase()),
+        .includes(debouncedSearch.trim().toLowerCase()),
   );
 
+
   const { handleDeletePost } = useDeletePost();
+
   return (
     <View className="relative h-full">
       <ScrollView showsVerticalScrollIndicator={false}>

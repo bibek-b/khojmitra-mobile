@@ -19,6 +19,7 @@ export default function ReportDetail({
 
   if(!proof) return null;
   
+  
   return (
     <View
       className={`mx-4 my-8 rounded-3xl ${

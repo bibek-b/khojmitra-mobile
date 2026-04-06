@@ -47,7 +47,7 @@ export default function HomeTab() {
 
   const debouncedSearch = useDebouncedValue(searchInput, 400);
 
-const filteredPost = useFilteredPost(allPosts, debouncedSearch);
+  const filteredPost = useFilteredPost(allPosts, debouncedSearch);
 
   const { handleDeletePost } = useDeletePost();
 

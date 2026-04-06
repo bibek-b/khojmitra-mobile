@@ -1,5 +1,4 @@
-import { serverUrl } from "@/env/serverUrl";
-import { ServerImgType } from "@/types/image";
+import { ImgType } from "@/types/image";
 import { ReportType } from "@/types/report";
 import { Feather } from "@expo/vector-icons";
 import { useState } from "react";
@@ -7,7 +6,7 @@ import { Image, Modal, Text, TouchableOpacity, View } from "react-native";
 
 export default function MyReports({ report }: { report: ReportType }) {
   const images = report?.images;
-  const [selectedImage, setSelectedImage] = useState<ServerImgType | null>(null);
+  const [selectedImage, setSelectedImage] = useState<ImgType | null>(null);
 
   return (
     <View className="p-5 gap-4 ">
@@ -54,12 +53,12 @@ export default function MyReports({ report }: { report: ReportType }) {
       <View>
         {images.length > 0 ? (
           <View className="flex-row  w-full flex-wrap justify-center gap-2">
-            {images.map((img: ServerImgType, idx: number) => {
+            {images.map((img: ImgType, idx: number) => {
               return (
-              <TouchableOpacity key={idx} onPress={() => setSelectedImage(img.url as ServerImgType)}>
+              <TouchableOpacity key={idx} onPress={() => setSelectedImage(img.uri as ImgType)}>
                 <Image
                   source={{
-                    uri: img.url,
+                    uri: img.uri,
                   }}
                   className="w-[160px] h-[160px] rounded-md shadow-md"
                 />

@@ -14,7 +14,6 @@ import { ProofType } from "@/types/proofForm";
 import { Feather, Ionicons, MaterialIcons } from "@expo/vector-icons";
 import React, { useContext, useEffect, useState } from "react";
 import {
-  Alert,
   Image,
   Modal,
   ScrollView,
@@ -92,6 +91,8 @@ export default function NotificationDetailScreen() {
       setModalContent(data);
     }
   };
+
+  console.log({proof})
 
 const renderContent = () => {
   if (type === "REPORT") {

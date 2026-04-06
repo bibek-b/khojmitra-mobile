@@ -3,10 +3,11 @@ import { Ionicons } from "@expo/vector-icons";
 import { useState } from "react";
 import { Image, Text, TouchableOpacity, View } from "react-native";
 import Underline from "./Underline";
-import { ServerImgType } from "@/types/image";
+import { ImgType } from "@/types/image";
 
 export default function Content({ proof, setSelectedImage }: ContentProps) {
   const [expanded, setExpanded] = useState(false);
+
 
   return (
     <View className="gap-4">
@@ -51,16 +52,16 @@ export default function Content({ proof, setSelectedImage }: ContentProps) {
         <View className={`flex-row flex-wrap gap-2 ${
           proof.images.length === 1 ? 'justify-center' : 'justify-start'
         }`}>
-          {proof.images.map((img: ServerImgType, idx: number) => {
+          {proof.images.map((img: ImgType, idx: number) => {
             return (
             <TouchableOpacity
               key={idx}
-              onPress={() => setSelectedImage(img.url as ServerImgType)}
+              onPress={() => setSelectedImage(img.uri as ImgType )}
               activeOpacity={0.8}
             >
               <View className="relative rounded-lg overflow-hidden">
                 <Image
-                  source={{ uri: img.url }}
+                  source={{ uri: img.uri }}
                   className={`${
                     proof.images!.length === 1 
                       ? 'w-80 h-52' 

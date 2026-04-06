@@ -43,9 +43,9 @@ export default function ProofForm() {
       useNativeDriver: true,
     }).start();
     if (proofForm?.type === "lost") {
-      setProofType("owner");
-    } else {
       setProofType("found");
+    } else {
+      setProofType("owner");
     }
   }, [isFormVisible]);
 
@@ -80,6 +80,7 @@ export default function ProofForm() {
     }
     try {
       showLoading("ProofModal");
+      console.log({fd})
       const res = await proofApi.addProof({ data: fd, type: proofType });
 
       socket.emit("sendReport", {

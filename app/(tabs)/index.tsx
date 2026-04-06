@@ -1,7 +1,6 @@
 import Feed from "@/components/feed/Feed";
 import { ScrollView, Text, View } from "react-native";
 import { useContext, useEffect, useMemo } from "react";
-import { ThemeContext } from "@/context/ThemeContext";
 import { postApi } from "@/api/postApi";
 import { PopupNotificationContext } from "@/context/PopupNotificationContext";
 import { useLoaderStore } from "@/store/useLoaderStore";
@@ -92,7 +91,7 @@ export default function HomeTab() {
           ))
         ) : (
           <View className="items-center justify-center h-screen">
-            <Text className="text-2xl dark:text-white">No data found.</Text>
+            <Text className="text-xl dark:text-white/50">No post found!</Text>
           </View>
         )}
       </ScrollView>

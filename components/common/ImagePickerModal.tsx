@@ -1,5 +1,5 @@
 import { ThemeContext } from "@/context/ThemeContext";
-import usePickImages from "@/hooks/usePickImages";
+import usePickImages from "@/customHooks/usePickImages";
 import { ImagePickerTypes } from "@/types/image";
 import { EvilIcons } from "@expo/vector-icons";
 import React, { useContext, useState } from "react";

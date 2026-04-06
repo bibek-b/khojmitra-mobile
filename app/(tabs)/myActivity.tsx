@@ -15,7 +15,7 @@ import { useReportStore } from "@/store/useReportStore";
 import { proofApi } from "@/api/proofApi";
 import MyReports from "@/components/myActivity/MyReports";
 import { PostType } from "@/types/post.types";
-import { useDeletePost } from "@/hooks/useDeletePost";
+import { useDeletePost } from "@/customHooks/useDeletePost";
 
 export default function MyPostsTab() {
   const { showLoading, hideLoading } = useLoaderStore();

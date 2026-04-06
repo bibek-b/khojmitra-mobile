@@ -7,10 +7,11 @@ import { useLoaderStore } from "@/store/useLoaderStore";
 import { usePostStore } from "@/store/usePostStore";
 import { useSearchFeedStore } from "@/store/useSearchFeedStore";
 import SeparatorLine from "@/components/common/SeparatorLine";
-import { useDeletePost } from "@/hooks/useDeletePost";
+import { useDeletePost } from "@/customHooks/useDeletePost";
 import socket from "../lib/socket";
 import { PostType } from "@/types/post.types";
-import { useDebouncedValue } from "@/hooks/useDebouncedValue";
+import { useDebouncedValue } from "@/customHooks/useDebouncedValue";
+import { useFilteredPost } from "@/customHooks/useFilteredPost";
 
 export default function HomeTab() {
   const { showLoading, hideLoading } = useLoaderStore();
@@ -46,35 +47,7 @@ export default function HomeTab() {
 
   const debouncedSearch = useDebouncedValue(searchInput, 400);
 
-  const filteredPost = useMemo(() => {
-    return allPosts.filter(
-      (p) =>
-        p.title
-          ?.trim()
-          .toLowerCase()
-          .includes(debouncedSearch.trim().toLowerCase()) ||
-        p.type
-          ?.trim()
-          .toLowerCase()
-          .includes(debouncedSearch.trim().toLowerCase()) ||
-        String(p.category)
-          ?.trim()
-          .toLowerCase()
-          .includes(debouncedSearch.trim().toLowerCase()) ||
-        p.location
-          ?.trim()
-          .toLowerCase()
-          .includes(debouncedSearch.trim().toLowerCase()) ||
-        p.date
-          ?.trim()
-          .toLowerCase()
-          .includes(debouncedSearch.trim().toLowerCase()) ||
-        p.description
-          ?.trim()
-          .toLowerCase()
-          .includes(debouncedSearch.trim().toLowerCase()),
-    );
-  }, [allPosts, debouncedSearch]);
+const filteredPost = useFilteredPost(allPosts, debouncedSearch);
 
   const { handleDeletePost } = useDeletePost();
 

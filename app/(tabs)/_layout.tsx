@@ -3,7 +3,7 @@ import { Entypo, Ionicons, Feather, AntDesign } from "@expo/vector-icons";
 import { useCallback, useContext, useEffect, useState } from "react";
 import HeaderRight from "@/components/headers/HeaderRight";
 import HeaderLeft from "@/components/headers/HeaderLeft";
-import { useHeaderAnimations } from "../../hooks/useHeaderAnimations";
+import { useHeaderAnimations } from "../../customHooks/useHeaderAnimations";
 import { ThemeContext } from "@/context/ThemeContext";
 import { TouchableOpacity } from "react-native";
 import { usePostStore } from "@/store/usePostStore";

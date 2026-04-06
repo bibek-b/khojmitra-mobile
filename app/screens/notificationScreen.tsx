@@ -26,7 +26,6 @@ export default function NotificationScreen() {
         const res = await notificationApi.getMyNotifications(me?._id);
         setNotifications(res?.data?.data);
       } catch (error: any) {
-        console.log(error);
         showPopupNotification?.({
           type: "error",
           message: "Error fetching notifications!",
@@ -36,6 +35,7 @@ export default function NotificationScreen() {
       }
     })();
   }, []);
+
 
   const handleMoreNotification = () => {
     setIsBtnClicked(true);

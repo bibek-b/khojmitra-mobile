@@ -2,6 +2,7 @@ import { ImgType } from "./image";
 import { MatchedPostsType, NotificationType } from "./notification";
 import { PostType } from "./post.types";
 import { ProofType } from "./proofForm";
+import { ReportType } from "./report";
 
 export type ActionType = "accept" | "decline"; 
 
@@ -29,10 +30,11 @@ export interface NotificationDetailStoreType {
 }
 
 export interface ReportDetailPropType {
-    sender: SenderType;
-    proof: ProofType;
+    sender?: SenderType;
+    data: ProofType | ReportType;
     setSelectedImage: (img: ImgType) => void;
     handleAction : (val: ActionType) => void;
+    parent?:string
 }
 
 export interface PossibleMatchPropType {

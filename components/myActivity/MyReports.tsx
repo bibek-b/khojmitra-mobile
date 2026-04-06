@@ -3,44 +3,32 @@ import { ReportType } from "@/types/report";
 import { Feather } from "@expo/vector-icons";
 import { useState } from "react";
 import { Image, Modal, Text, TouchableOpacity, View } from "react-native";
+import ReportDetail from "../notification/notificationDetail/ReportDetail";
 
 export default function MyReports({ report }: { report: ReportType }) {
   const images = report?.images;
   const [selectedImage, setSelectedImage] = useState<ImgType | null>(null);
 
-  return (
-    <View className="p-5 gap-4 ">
-      <View className="flex-row items-center">
-        <Text className="dark:text-white text-lg">Claim Type: </Text>
-        <Text className="dark:text-white text-lg font-semibold capitalize">
-          {report?.claimType}
-        </Text>
-      </View>
-      <View className="flex-row items-center gap-4">
-        <View className="flex-row items-center">
-          <Text className="dark:text-white text-lg">Post Title: </Text>
-          <Text className="dark:text-white text-lg font-semibold">
-            {report?.post?.title}
-          </Text>
-        </View>
-        <TouchableOpacity>
-          <Text className="text-[#1976D2]">See more..</Text>
-        </TouchableOpacity>
-      </View>
+  if (!report) return null;
 
-      {!!selectedImage && (
+  const handleAction = () => {};
+  return (
+    <>
+      {/* Image Modal */}
+      {selectedImage && (
         <Modal
           visible={true}
           animationType="fade"
           transparent={true}
           onRequestClose={() => setSelectedImage(null)}
         >
-          <View className="flex-1 bg-black justify-center items-center">
+          <View className="flex-1 bg-black/95 justify-center items-center">
             <TouchableOpacity
-              className="absolute top-12 right-6 z-10"
+              className="absolute top-12 right-6 z-10 bg-white/10 backdrop-blur-md rounded-full p-2"
               onPress={() => setSelectedImage(null)}
+              activeOpacity={0.8}
             >
-              <Feather name="x" size={32} color="#f5f5f5" />
+              <Feather name="x" size={28} color="#f5f5f5" />
             </TouchableOpacity>
             <Image
               source={{ uri: String(selectedImage) }}
@@ -50,36 +38,12 @@ export default function MyReports({ report }: { report: ReportType }) {
           </View>
         </Modal>
       )}
-      <View>
-        {images.length > 0 ? (
-          <View className="flex-row  w-full flex-wrap justify-center gap-2">
-            {images.map((img: ImgType, idx: number) => {
-              return (
-              <TouchableOpacity key={idx} onPress={() => setSelectedImage(img.uri as ImgType)}>
-                <Image
-                  source={{
-                    uri: img.uri,
-                  }}
-                  className="w-[160px] h-[160px] rounded-md shadow-md"
-                />
-              </TouchableOpacity>
-            )
-            })}
-          </View>
-        ) : (
-          <View>
-            <Text className="dark:text-white text-lg ">Description</Text>
-            <Text className="dark:text-white text-lg font-semibold">
-              {report?.description}
-            </Text>
-          </View>
-        )}
-      </View>
-
-      <View className="flex-row items-center">
-        <Text className="dark:text-white text-lg ">Status: </Text>
-        <Text className="dark:text-white text-lg font-semibold">Pending</Text>
-      </View>
-    </View>
+      <ReportDetail
+        data={report}
+        setSelectedImage={setSelectedImage}
+        handleAction={handleAction}
+        parent="myReports"
+      />
+    </>
   );
 }

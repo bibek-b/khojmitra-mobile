@@ -92,7 +92,6 @@ export default function NotificationDetailScreen() {
     }
   };
 
-  console.log({proof})
 
 const renderContent = () => {
   if (type === "REPORT") {
@@ -100,7 +99,7 @@ const renderContent = () => {
       return (
         <ReportDetail
           sender={sender}
-          proof={proof}
+          data={proof}
           setSelectedImage={setSelectedImage}
           handleAction={handleAction}
         />

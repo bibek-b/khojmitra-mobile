@@ -5,7 +5,7 @@ import { Image, Text, TouchableOpacity, View } from "react-native";
 import Underline from "./Underline";
 import { ImgType } from "@/types/image";
 
-export default function Content({ proof, setSelectedImage }: ContentProps) {
+export default function Content({ data, setSelectedImage }: ContentProps) {
   const [expanded, setExpanded] = useState(false);
 
 
@@ -24,17 +24,17 @@ export default function Content({ proof, setSelectedImage }: ContentProps) {
           </View>
 
       {/* Description */}
-      {proof?.description && (
+      {data?.description && (
         <View>
           <Text
             numberOfLines={expanded ? undefined : 3}
             ellipsizeMode="tail"
             className="text-gray-700 dark:text-gray-200 leading-6 text-base"
           >
-            {proof.description}
+            {data.description}
           </Text>
 
-          {proof.description.trim().length > 100 && (
+          {data.description.trim().length > 100 && (
             <TouchableOpacity 
               onPress={() => setExpanded(!expanded)}
               className="mt-2"
@@ -48,11 +48,11 @@ export default function Content({ proof, setSelectedImage }: ContentProps) {
       )}
 
       {/* Images */}
-      {proof?.images && proof.images.length > 0 && (
+      {data?.images && data.images.length > 0 && (
         <View className={`flex-row flex-wrap gap-2 ${
-          proof.images.length === 1 ? 'justify-center' : 'justify-start'
+          data.images.length === 1 ? 'justify-center' : 'justify-start'
         }`}>
-          {proof.images.map((img: ImgType, idx: number) => {
+          {data.images.map((img: ImgType, idx: number) => {
             return (
             <TouchableOpacity
               key={idx}
@@ -63,7 +63,7 @@ export default function Content({ proof, setSelectedImage }: ContentProps) {
                 <Image
                   source={{ uri: img.uri }}
                   className={`${
-                    proof.images!.length === 1 
+                    data.images!.length === 1 
                       ? 'w-80 h-52' 
                       : 'w-[143px] h-[143px]'
                   } bg-gray-200 dark:bg-gray-700`}
@@ -71,10 +71,10 @@ export default function Content({ proof, setSelectedImage }: ContentProps) {
                 />
                 
                 {/* Image counter for multiple images */}
-                {proof.images!.length > 1 && (
+                {data.images!.length > 1 && (
                   <View className="absolute top-2 left-2 bg-black/60 rounded-md px-2 py-0.5">
                     <Text className="text-white text-xs font-semibold">
-                      {idx + 1}/{proof.images!.length}
+                      {idx + 1}/{data.images!.length}
                     </Text>
                   </View>
                 )}

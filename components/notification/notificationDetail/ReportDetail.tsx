@@ -10,16 +10,15 @@ import { ActionType, ReportDetailPropType } from "@/types/notificationDetail";
 
 export default function ReportDetail({
   sender,
-  proof,
+  data,
   setSelectedImage,
   handleAction,
+  parent,
 }: ReportDetailPropType) {
-
   const { isDarkMode } = useContext(ThemeContext);
 
-  if(!proof) return null;
-  
-  
+  if (!data) return null;
+
   return (
     <View
       className={`mx-4 my-8 rounded-3xl ${
@@ -31,47 +30,49 @@ export default function ReportDetail({
       {/* User Header */}
       <View className="p-5">
         <View className="flex-row items-center justify-between">
-          <TouchableOpacity
-            className="flex-row items-center gap-3 flex-1"
-            activeOpacity={0.7}
-          >
-            {/* Avatar with ring */}
-            <View className="relative">
-              <View className="absolute inset-0 bg-blue-500/20 rounded-full blur-md" />
-              <Image
-                source={{
-                  uri:
-                    sender.avatar ||
-                    "https://thumb.ac-illust.com/51/51e1c1fc6f50743937e62fca9b942694_t.jpeg",
-                }}
-                className="w-14 h-14 rounded-full border-2 border-blue-500/30"
-              />
-              {/* Online indicator */}
-              <View className="absolute bottom-0 right-0 w-4 h-4 bg-green-500 rounded-full border-2 border-white dark:border-[#1a1a1a]" />
-            </View>
+          {parent !== "myReports" && (
+            <TouchableOpacity
+              className="flex-row items-center gap-3 flex-1"
+              activeOpacity={0.7}
+            >
+              {/* Avatar with ring */}
+              <View className="relative">
+                <View className="absolute inset-0 bg-blue-500/20 rounded-full blur-md" />
+                <Image
+                  source={{
+                    uri:
+                      sender?.avatar ||
+                      "https://thumb.ac-illust.com/51/51e1c1fc6f50743937e62fca9b942694_t.jpeg",
+                  }}
+                  className="w-14 h-14 rounded-full border-2 border-blue-500/30"
+                />
+                {/* Online indicator */}
+                <View className="absolute bottom-0 right-0 w-4 h-4 bg-green-500 rounded-full border-2 border-white dark:border-[#1a1a1a]" />
+              </View>
 
-            <View className="flex-1">
-              <Text
-                className={`text-lg font-bold ${
-                  isDarkMode ? "text-[#f5f5f5]" : "text-gray-900"
-                }`}
-              >
-                {sender?.fullname}
-              </Text>
-              <Text className="text-gray-500 dark:text-gray-400 text-sm">
-                @{sender?.fullname || "user"}
-              </Text>
-            </View>
-          </TouchableOpacity>
+              <View className="flex-1">
+                <Text
+                  className={`text-lg font-bold ${
+                    isDarkMode ? "text-[#f5f5f5]" : "text-gray-900"
+                  }`}
+                >
+                  {sender?.fullname}
+                </Text>
+                <Text className="text-gray-500 dark:text-gray-400 text-sm">
+                  @{sender?.fullname || "user"}
+                </Text>
+              </View>
+            </TouchableOpacity>
+          )}
 
           {/* Timestamp badge */}
           <View
             className={`px-3 py-1.5 rounded-full ${
               isDarkMode ? "bg-white/5" : "bg-gray-100"
-            }`}
+            } ${parent === "myReports" && "text-center w-full justify-center items-center"}`}
           >
             <Text className="text-gray-500 dark:text-gray-400 text-xs font-medium">
-              {format(new Date(proof?.createdAt))}
+              {format(new Date(data?.createdAt!))}
             </Text>
           </View>
         </View>
@@ -83,43 +84,60 @@ export default function ReportDetail({
             Claimed as
           </Text>
           <Text className="font-bold text-blue-600 capitalize">
-            {proof?.claimType}
+            {data?.claimType}
           </Text>
         </View>
       </View>
 
       {/* Proof Content */}
       <View className="p-5">
-        <Content proof={proof} setSelectedImage={setSelectedImage} />
+        <Content data={data} setSelectedImage={setSelectedImage} />
       </View>
       <Underline />
 
       {/* Action Buttons */}
-      <View className="px-4 py-4 flex-row gap-3">
-        {notificationDetailPostActionBtns.map((b) => (
-          <TouchableOpacity
-            onPress={() => handleAction(b.accessor as ActionType)}
-            key={b.id}
-            className={`flex-1 py-2 rounded-xl flex-row items-center justify-center gap-2 
+      {parent === "myReports" ? (
+        <TouchableOpacity
+          // onPress={() => handleAction(b.accessor as ActionType)}
+          className={`flex-1 py-2 rounded-xl flex-row items-center justify-center gap-2 
+                  dark:bg-white/5
+                  border  "border-red-500/30
+
+        `}
+          activeOpacity={0.8}
+        >
+          <Ionicons name={"close-circle"} size={22} color={"#ef4444"} />
+          <Text className=" dark:text-white font-bold text-base">
+            Widthdraw Report
+          </Text>
+        </TouchableOpacity>
+      ) : (
+        <View className="px-4 py-4 flex-row gap-3">
+          {notificationDetailPostActionBtns.map((b) => (
+            <TouchableOpacity
+              onPress={() => handleAction(b.accessor as ActionType)}
+              key={b.id}
+              className={`flex-1 py-2 rounded-xl flex-row items-center justify-center gap-2 
                   dark:bg-white/5
                   border ${b.accessor === "accept" ? "border-green-500/30" : "border-red-500/30"}
 
         `}
-            activeOpacity={0.8}
-          >
-            <Ionicons
-              name={
-                b.accessor === "accept" ? "checkmark-circle" : "close-circle"
-              }
-              size={22}
-              color={b.accessor === "accept" ? "#22c55e" : "#ef4444"}
-            />
-            <Text className=" dark:text-white font-bold text-base">
-              {b.label}
-            </Text>
-          </TouchableOpacity>
-        ))}
-      </View>
+              activeOpacity={0.8}
+            >
+              <Ionicons
+                name={
+                  b.accessor === "accept" ? "checkmark-circle" : "close-circle"
+                }
+                size={22}
+                color={b.accessor === "accept" ? "#22c55e" : "#ef4444"}
+              />
+              <Text className=" dark:text-white font-bold text-base">
+                {b.label}
+              </Text>
+            </TouchableOpacity>
+          ))}
+        </View>
+      )}
     </View>
   );
 }

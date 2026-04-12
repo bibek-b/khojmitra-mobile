@@ -3,12 +3,12 @@ import { useEffect, useState } from "react";
 import { Image, View } from "react-native";
 import { TouchableOpacity } from "react-native";
 import ImagePickerModal from "./common/ImagePickerModal";
-import { imageType } from "@/types/image";
 import { serverUrl } from "@/env/serverUrl";
+import { ImgType } from "@/types/image";
 
 export default function ProfileImage({setImg, isSignup}: any) {
   const [isModalOpen, setIsModalOpen] = useState(false);
-  const [image, setImage] = useState<imageType>({});
+  const [image, setImage] = useState<ImgType>({});
 
   useEffect(() => {
     if(image) setImg(image)

@@ -7,9 +7,8 @@ import {
   Ionicons,
 } from "@expo/vector-icons";
 import { router } from "expo-router";
-import { useEffect, useState } from "react";
+import React, { useEffect, useMemo, useRef, useState } from "react";
 import {
-  Image,
   Modal,
   Text,
   TouchableOpacity,
@@ -17,17 +16,16 @@ import {
   View,
   Animated,
 } from "react-native";
+import { Image } from 'expo-image';
 import { useContext } from "react";
 import { ThemeContext } from "@/context/ThemeContext";
 import { ProofFormContext } from "@/context/ProofFormContext";
 import { format } from "timeago.js";
-import { getItem } from "@/utils/AsyncStorage";
 import { FeedProps } from "@/types/feed";
 import { useConfirmModalStore } from "@/store/useConfirmModalStore";
 import { ImgType } from "@/types/image";
 import { usePostStore } from "@/store/usePostStore";
 import ImageViewer from 'react-native-image-zoom-viewer';
-
 
 
 const moreOptions = [
@@ -45,15 +43,15 @@ const moreOptions = [
   },
 ];
 
-export default function Feed({ post, onDeletePost }: FeedProps) {
+const Feed =  ({ post, onDeletePost, myId }: FeedProps) => {
   const [expanded, setExpanded] = useState(false);
   const [selectedImage, setSelectedImage] = useState<ImgType | null>(null);
   const [imageIndex, setImageIndex] = useState(0);
-  const isLost = post?.type === "Lost";
+  const isLost = useMemo(() => post?.type === "Lost", [post]);
   const [moreOptionOpen, setMoreOptionOpen] = useState(false);
-  const [myId, setMyId] = useState("");
-  const [scaleAnim] = useState(new Animated.Value(0));
-  const [fadeAnim] = useState(new Animated.Value(0));
+
+  const scaleAnim = useRef(new Animated.Value(0)).current;
+  const fadeAnim = useRef(new Animated.Value(0)).current;
   
   const { showConfirmModal, setModalContent, setOnConfirm } =
     useConfirmModalStore();
@@ -61,13 +59,7 @@ export default function Feed({ post, onDeletePost }: FeedProps) {
   const { isDarkMode } = useContext(ThemeContext);
   const { showForm, setProofForm } = useContext(ProofFormContext);
 
-  useEffect(() => {
-    (async () => {
-      const user = await getItem("user");
-      setMyId(user?._id);
-    })();
-  }, []);
-
+  
   useEffect(() => {
     if (moreOptionOpen) {
       Animated.parallel([
@@ -106,12 +98,20 @@ export default function Feed({ post, onDeletePost }: FeedProps) {
   const handleMorePress = async () => {
     setMoreOptionOpen(true);
   };
+  const handleEdit = () => {
+  TrueEditPost();
+  router.push({
+    pathname: "/screens/addEditReportScreen",
+    params: { idToUpdate: post?._id },
+  });
+};
 
   const images = post?.images!;
   const type = post?.type!;
   const description = post?.description!;
   const parent = "myPost";
 
+console.log({images})
   return (
     <View 
       className={`mx-4 mb-6 rounded-3xl overflow-hidden shadow-2xl ${
@@ -165,11 +165,7 @@ export default function Feed({ post, onDeletePost }: FeedProps) {
                       }}
                       onPress={() => {
                         opt.label === "Edit Post"
-                          ? (router.push({
-                              pathname: "/screens/addEditReportScreen",
-                              params: { idToUpdate: post?._id },
-                            }),
-                            TrueEditPost())
+                          ? handleEdit()
                           : handleDeletePost(post?._id!);
                       }}
                     >
@@ -285,12 +281,13 @@ export default function Feed({ post, onDeletePost }: FeedProps) {
           >
             <View className="relative">
               <Image
-                source={{
-                  uri:
-                    post?.user?.avatar ||
-                    "https://thumb.ac-illust.com/51/51e1c1fc6f50743937e62fca9b942694_t.jpeg",
-                }}
+                source={{uri: 
+                    post.user.avatar ??
+                    "https://thumb.ac-illust.com/51/51e1c1fc6f50743937e62fca9b942694_t.jpeg"}
+                }
                 className="w-14 h-14 rounded-full"
+                contentFit="cover"
+                transition={300}
                 style={{
                   borderWidth: 3,
                   borderColor: isLost ? "#ef4444" : "#22c55e",
@@ -456,9 +453,10 @@ export default function Feed({ post, onDeletePost }: FeedProps) {
                   }}
                 >
                   <Image
-                    source={{ uri: img.uri }}
+                    source={{uri: img.uri} }
                     className="w-full h-full"
-                    resizeMode="cover"
+                    contentFit="cover"
+                    transition={300}
                   />
                 </TouchableOpacity>
               ))}
@@ -523,3 +521,5 @@ export default function Feed({ post, onDeletePost }: FeedProps) {
     </View>
   );
 }
+
+export default React.memo(Feed);

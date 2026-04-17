@@ -1,6 +1,6 @@
 import Feed from "@/components/feed/Feed";
 import { FlatList, ScrollView, Text, View } from "react-native";
-import { useContext, useEffect, useMemo, useState } from "react";
+import { useCallback, useContext, useEffect, useMemo, useState } from "react";
 import { postApi } from "@/api/postApi";
 import { PopupNotificationContext } from "@/context/PopupNotificationContext";
 import { useLoaderStore } from "@/store/useLoaderStore";
@@ -62,35 +62,29 @@ export default function HomeTab() {
 
   const { handleDeletePost } = useDeletePost();
 
+  const renderItem = useCallback(
+    ({ item }: { item: PostType }) => (
+      <Feed post={item} onDeletePost={handleDeletePost} myId={myId} />
+    ),
+    [handleDeletePost, myId],
+  );
+
   return (
     <View className="relative h-full">
-      {/* <ScrollView showsVerticalScrollIndicator={false}>
-        <SeparatorLine />
-        {filteredPost?.length > 0 ? (
-          filteredPost.map((data) => (
-            <View key={data?._id} className=" justify-center w-full">
-              <Feed post={data} onDeletePost={handleDeletePost} myId={myId} />
-              <SeparatorLine />
-            </View>
-          ))
-        ) : (
+      <SeparatorLine />
+      <FlatList
+        data={filteredPost}
+        renderItem={renderItem}
+        keyExtractor={(item) => item._id!}
+        initialNumToRender={5}
+        maxToRenderPerBatch={5}
+        ItemSeparatorComponent={() => <SeparatorLine />}
+        ListEmptyComponent={
           <View className="items-center justify-center h-screen">
             <Text className="text-xl dark:text-white/50">No post found!</Text>
           </View>
-        )}
-      </ScrollView> */}
-      {filteredPost?.length > 0 ? (
-        <FlatList
-          data={filteredPost}
-          renderItem={({ item }) => (
-            <Feed post={item} onDeletePost={handleDeletePost} myId={myId} />
-          )}
-        />
-      ) : (
-        <View className="items-center justify-center h-screen">
-          <Text className="text-xl dark:text-white/50">No post found!</Text>
-        </View>
-      )}
+        }
+      />
     </View>
   );
 }

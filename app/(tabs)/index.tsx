@@ -1,18 +1,17 @@
 import Feed from "@/components/feed/Feed";
-import { FlatList, ScrollView, Text, View } from "react-native";
-import { useCallback, useContext, useEffect, useMemo, useState } from "react";
+import { useContext, useEffect, useState } from "react";
 import { postApi } from "@/api/postApi";
 import { PopupNotificationContext } from "@/context/PopupNotificationContext";
 import { useLoaderStore } from "@/store/useLoaderStore";
 import { usePostStore } from "@/store/usePostStore";
 import { useSearchFeedStore } from "@/store/useSearchFeedStore";
-import SeparatorLine from "@/components/common/SeparatorLine";
 import { useDeletePost } from "@/customHooks/useDeletePost";
 import socket from "../lib/socket";
 import { PostType } from "@/types/post.types";
 import { useDebouncedValue } from "@/customHooks/useDebouncedValue";
 import { useFilteredPost } from "@/customHooks/useFilteredPost";
 import { getItem } from "@/utils/AsyncStorage";
+import OptimizedList from "@/components/common/OptimizedList";
 
 export default function HomeTab() {
   const { showLoading, hideLoading } = useLoaderStore();
@@ -62,29 +61,13 @@ export default function HomeTab() {
 
   const { handleDeletePost } = useDeletePost();
 
-  const renderItem = useCallback(
-    ({ item }: { item: PostType }) => (
-      <Feed post={item} onDeletePost={handleDeletePost} myId={myId} />
-    ),
-    [handleDeletePost, myId],
-  );
-
   return (
-    <View className="relative h-full">
-      <SeparatorLine />
-      <FlatList
-        data={filteredPost}
-        renderItem={renderItem}
-        keyExtractor={(item) => item._id!}
-        initialNumToRender={5}
-        maxToRenderPerBatch={5}
-        ItemSeparatorComponent={() => <SeparatorLine />}
-        ListEmptyComponent={
-          <View className="items-center justify-center h-screen">
-            <Text className="text-xl dark:text-white/50">No post found!</Text>
-          </View>
-        }
-      />
-    </View>
+    <OptimizedList
+      data={filteredPost}
+      renderItem={({ item }) => (
+        <Feed post={item} onDeletePost={handleDeletePost} myId={myId} />
+      )}
+      keyExtractor={(item) => item._id!}
+    />
   );
 }

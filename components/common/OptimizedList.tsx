@@ -6,6 +6,8 @@ import { OptimizedListProps } from '@/types/optimizedList';
 const OptimizedList  = <T, >({data, renderItem, keyExtractor}: OptimizedListProps<T>) => {
     const memoizedRenderItem  = useCallback(renderItem, [renderItem]);
   return (
+   <>
+   <SeparatorLine />
     <FlatList
             data={data}
             renderItem={memoizedRenderItem}
@@ -15,10 +17,11 @@ const OptimizedList  = <T, >({data, renderItem, keyExtractor}: OptimizedListProp
             ItemSeparatorComponent={() => <SeparatorLine />}
             ListEmptyComponent={
               <View className="items-center justify-center h-screen">
-                <Text className="text-xl dark:text-white/50">No post found!</Text>
+                <Text className="text-xl dark:text-white/50">No data found!</Text>
               </View>
             }
           />
+   </>
   )
 }
 

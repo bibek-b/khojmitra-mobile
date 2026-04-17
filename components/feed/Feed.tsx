@@ -111,7 +111,6 @@ const Feed =  ({ post, onDeletePost, myId }: FeedProps) => {
   const description = post?.description!;
   const parent = "myPost";
 
-console.log({images})
   return (
     <View 
       className={`mx-4 mb-6 rounded-3xl overflow-hidden shadow-2xl ${
@@ -285,12 +284,15 @@ console.log({images})
                     post.user.avatar ??
                     "https://thumb.ac-illust.com/51/51e1c1fc6f50743937e62fca9b942694_t.jpeg"}
                 }
-                className="w-14 h-14 rounded-full"
+             
                 contentFit="cover"
                 transition={300}
                 style={{
                   borderWidth: 3,
                   borderColor: isLost ? "#ef4444" : "#22c55e",
+                  width: 56,
+                  height: 56,
+                  borderRadius: 50
                 }}
               />
               <View
@@ -454,7 +456,7 @@ console.log({images})
                 >
                   <Image
                     source={{uri: img.uri} }
-                    className="w-full h-full"
+                    style={{width: "100%", height: "100%"}}
                     contentFit="cover"
                     transition={300}
                   />

@@ -25,9 +25,11 @@ export default function MyPostsTab() {
   const { isDarkMode } = useContext(ThemeContext);
   const { activeReportNav, setActiveReportNav }  = useActiveReportNavStore();
   const { reports, setReports} = useReportStore();
+  const [myId, setMyId] = useState("");
   useEffect(() => {
     (async () => {
       const user = await getItem("user");
+      setMyId(user._id);
       showLoading("myPosts");
       const userPosts = allPosts?.filter((ap) => ap?.user?._id === user?._id);
       setMyPosts(userPosts);
@@ -73,7 +75,7 @@ export default function MyPostsTab() {
           myPosts?.map((data) => (
             <View key={data._id} className=" justify-center w-full">
               
-              <Feed post={data} onDeletePost={handleDeletePost} />
+              <Feed post={data} onDeletePost={handleDeletePost} myId={myId} />
               <View
                 className={`h-[3px] w-full bg-black/30 mt-2 dark:bg-white/30}`}
               />

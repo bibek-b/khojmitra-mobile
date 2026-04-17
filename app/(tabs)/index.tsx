@@ -1,5 +1,5 @@
 import Feed from "@/components/feed/Feed";
-import { ScrollView, Text, View } from "react-native";
+import { FlatList, ScrollView, Text, View } from "react-native";
 import { useContext, useEffect, useMemo, useState } from "react";
 import { postApi } from "@/api/postApi";
 import { PopupNotificationContext } from "@/context/PopupNotificationContext";
@@ -18,27 +18,24 @@ export default function HomeTab() {
   const { showLoading, hideLoading } = useLoaderStore();
 
   const { showPopupNotification } = useContext(PopupNotificationContext);
-    const [myId, setMyId] = useState("");
+  const [myId, setMyId] = useState("");
   const { allPosts, setAllPosts, addNewPost } = usePostStore();
   const { searchInput } = useSearchFeedStore();
 
   useEffect(() => {
-      (async () => {
-        const user = await getItem("user");
-        setMyId(user?._id);
-      })();
-    }, []);
-  
-  
+    (async () => {
+      const user = await getItem("user");
+      setMyId(user?._id);
+    })();
+  }, []);
+
   const fetchAllPosts = async () => {
     try {
-      
       showLoading("fetchPosts");
-      console.time("Posts loads")
+      console.time("Posts loaded");
       const res = await postApi.getAll();
       setAllPosts(res?.data.data);
-  console.timeEnd("Posts loads")
-
+      console.timeEnd("Posts loaded");
     } catch (error: any) {
       showPopupNotification?.({ type: "error", message: "Can't fetch post" });
     } finally {
@@ -67,7 +64,7 @@ export default function HomeTab() {
 
   return (
     <View className="relative h-full">
-      <ScrollView showsVerticalScrollIndicator={false}>
+      {/* <ScrollView showsVerticalScrollIndicator={false}>
         <SeparatorLine />
         {filteredPost?.length > 0 ? (
           filteredPost.map((data) => (
@@ -81,7 +78,19 @@ export default function HomeTab() {
             <Text className="text-xl dark:text-white/50">No post found!</Text>
           </View>
         )}
-      </ScrollView>
+      </ScrollView> */}
+      {filteredPost?.length > 0 ? (
+        <FlatList
+          data={filteredPost}
+          renderItem={({ item }) => (
+            <Feed post={item} onDeletePost={handleDeletePost} myId={myId} />
+          )}
+        />
+      ) : (
+        <View className="items-center justify-center h-screen">
+          <Text className="text-xl dark:text-white/50">No post found!</Text>
+        </View>
+      )}
     </View>
   );
 }

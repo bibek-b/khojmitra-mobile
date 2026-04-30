@@ -11,6 +11,8 @@ import { useLoaderStore } from "@/store/useLoaderStore";
 import GlobalConfirmModal from "@/components/common/GlobalConfirmModal";
 import socket from "./lib/socket";
 import { getItem } from "@/utils/AsyncStorage";
+import registerForPushNotifications from "@/utils/registerForPushNotifications";
+import * as Notifications from 'expo-notifications';
 
 function LayoutWithTheme() {
   const { isDarkMode } = useContext(ThemeContext);
@@ -110,8 +112,25 @@ function LayoutWithTheme() {
 
 export default function RootLayout() {
   const { loading } = useLoaderStore();
+
+  Notifications.setNotificationHandler({
+    handleNotification: async () => ({
+      shouldShowBanner: true,
+      shouldPlaySound: true,
+      shouldSetBadge: true,
+      shouldShowList: true
+    })
+  })
   
   useEffect(() => {
+
+    async function setup() {
+      const token = await registerForPushNotifications();
+      console.log({token});
+      
+    }
+    setup();
+
     const initializeSocket = async () => {
       const user = await getItem("user");
       socket.connect();

@@ -4,12 +4,12 @@ import { Link } from "expo-router";
 import { ThemeContext } from "@/context/ThemeContext";
 import ProfileImage from "./ProfileImage";
 import { AuthSubmitTypes } from "@/types/auth.types";
-import { imageType } from "@/types/image";
+import { ImgType } from "@/types/image";
 
 export default function AuthForm({ title, onSubmit, errors, isSignIn }: AuthSubmitTypes) {
   const { isDarkMode } = useContext(ThemeContext);
 
-  const [image, setImage] = useState<imageType>({});
+  const [image, setImage] = useState<ImgType>({});
   const [fullname, setFullname] = useState<string | "">("");
   const [email, setEmail] = useState<string | "">("");
   const [password, setPassword] = useState<string | "">("");

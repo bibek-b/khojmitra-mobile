@@ -80,7 +80,6 @@ export default function ProofForm() {
     }
     try {
       showLoading("ProofModal");
-      console.log({fd})
       const res = await proofApi.addProof({ data: fd, type: proofType });
 
       socket.emit("sendReport", {

@@ -7,6 +7,8 @@ import { useLoaderStore } from "@/store/useLoaderStore";
 import { AuthFormPayloadType } from "@/types/auth.types";
 import AuthForm from "@/components/AuthForm";
 import { setItem } from "@/utils/AsyncStorage";
+import registerForPushNotifications from "@/utils/registerForPushNotifications";
+import { notificationApi } from "@/api/notificationApi";
 
 export default function SignUpScreen() {
   const { showPopupNotification } = useContext(PopupNotificationContext);
@@ -45,6 +47,10 @@ export default function SignUpScreen() {
       const res = await authApi.signUp(fd);
         setItem("user", res?.data.user);
             setItem("access_token", res?.data.accessToken);
+
+             const token = await registerForPushNotifications();
+            
+                  await notificationApi.sendPushToken(res.data.user._id, token!);
       showPopupNotification?.({ type: "success", message: res.data.message });
       router.navigate('/');
     } catch (error: any) {

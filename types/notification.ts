@@ -27,7 +27,6 @@ export interface NotificationPropType {
   post: NotificationDetailPostType;
   createdAt: string;
   title: string;
-  message: string;
   type: NotificationType;
   matchedPosts?: MatchedPostsType[];
   relatedPost?: PostType ; 

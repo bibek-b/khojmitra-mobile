@@ -12,7 +12,6 @@ export default function Notification({
   post,
   createdAt,
   title,
-  message,
   type,
   matchedPosts,
   relatedPost,
@@ -73,7 +72,7 @@ export default function Notification({
           }`}
           numberOfLines={2}
         >
-          {message}
+          {title}
         </Text>
 
         <View className="flex-row items-center gap-1.5 mt-1">

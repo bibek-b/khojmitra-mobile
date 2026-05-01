@@ -46,7 +46,6 @@ export default function NotificationScreen() {
             post={item.post}
             createdAt={item?.createdAt}
             title= {item.title}
-            message={item.message}
             type={item.type}
             matchedPosts={item.matchedPosts}
             relatedPost={item.relatedPost}

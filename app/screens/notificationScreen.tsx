@@ -22,6 +22,7 @@ export default function NotificationScreen() {
         showLoading("notificationScreen");
         const me = await getItem("user");
         const res = await notificationApi.getMyNotifications(me?._id);
+        console.log({res})
         setNotifications(res?.data?.data);
       } catch (error: any) {
         showPopupNotification?.({
@@ -44,6 +45,7 @@ export default function NotificationScreen() {
             sender={item.sender}
             post={item.post}
             createdAt={item?.createdAt}
+            title= {item.title}
             message={item.message}
             type={item.type}
             matchedPosts={item.matchedPosts}

@@ -32,12 +32,13 @@ export default function NotificationDetailScreen() {
   const [selectedImage, setSelectedImage] = useState<ImgType | null>(null);
   const { setModalContent, showConfirmModal } = useConfirmModalStore();
   const { showLoading, hideLoading } = useLoaderStore();
+  
   useEffect(() => {
     if (!type) return;
     (async () => {
       try {
         showLoading("");
-        if (type === "REPORT") {
+        if (type === "PROOF") {
           if (!sender._id || !post._id) {
             setProof(undefined);
             return;
@@ -94,7 +95,7 @@ export default function NotificationDetailScreen() {
 
 
 const renderContent = () => {
-  if (type === "REPORT") {
+  if (type === "PROOF") {
     if (proof) {
       return (
         <ReportDetail

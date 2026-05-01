@@ -11,6 +11,7 @@ export default function Notification({
   sender,
   post,
   createdAt,
+  title,
   message,
   type,
   matchedPosts,

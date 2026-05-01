@@ -1,7 +1,7 @@
 import { NotificationDetailPostType, SenderType } from "./notificationDetail";
 import { PostType } from "./post.types";
 
-export type NotificationType = "REPORT" | "POSSIBLE_MATCH_OWNER" | "POSSIBLE_MATCH_EXISTING";
+export type NotificationType = "PROOF" | "POSSIBLE_MATCH_OWNER" | "POSSIBLE_MATCH_EXISTING";
 
 export interface NotificationStoreType {
   notifications: NotificationPropType[];
@@ -26,6 +26,7 @@ export interface NotificationPropType {
   sender: SenderType;
   post: NotificationDetailPostType;
   createdAt: string;
+  title: string;
   message: string;
   type: NotificationType;
   matchedPosts?: MatchedPostsType[];

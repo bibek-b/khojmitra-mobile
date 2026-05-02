@@ -1,8 +1,8 @@
-import { Stack } from "expo-router";
+import { Stack, useRouter } from "expo-router";
 import "@/global.css";
 import { ThemeContext, ThemeContextProvider } from "@/context/ThemeContext";
 import { useContext, useEffect } from "react";
-import {  PopupNotificationContextProvider } from "@/context/PopupNotificationContext";
+import { PopupNotificationContextProvider } from "@/context/PopupNotificationContext";
 import { ProofFormContextProvider } from "@/context/ProofFormContext";
 import ProofForm from "@/components/feed/ProofForm";
 import PopupNotification from "@/components/common/PopupNotification";
@@ -12,7 +12,7 @@ import GlobalConfirmModal from "@/components/common/GlobalConfirmModal";
 import socket from "./lib/socket";
 import { getItem } from "@/utils/AsyncStorage";
 import registerForPushNotifications from "@/utils/registerForPushNotifications";
-import * as Notifications from 'expo-notifications';
+import * as Notifications from "expo-notifications";
 
 function LayoutWithTheme() {
   const { isDarkMode } = useContext(ThemeContext);
@@ -26,7 +26,7 @@ function LayoutWithTheme() {
       }}
     >
       <Stack.Screen name="(tabs)" options={{ headerShown: false }} />
-       <Stack.Screen
+      <Stack.Screen
         name="screens/notificationScreen"
         options={{
           title: "Notifications",
@@ -109,37 +109,56 @@ function LayoutWithTheme() {
     </Stack>
   );
 }
+Notifications.setNotificationHandler({
+  handleNotification: async () => ({
+    shouldShowBanner: true,
+    shouldPlaySound: true,
+    shouldSetBadge: true,
+    shouldShowList: true,
+  }),
+});
 
 export default function RootLayout() {
   const { loading } = useLoaderStore();
+  const router = useRouter();
 
-  Notifications.setNotificationHandler({
-    handleNotification: async () => ({
-      shouldShowBanner: true,
-      shouldPlaySound: true,
-      shouldSetBadge: true,
-      shouldShowList: true
-    })
-  })
-  
   useEffect(() => {
 
-    async function setup() {
+    Notifications.getLastNotificationResponse();
+
+    async function pushNotificationsetup() {
       const token = await registerForPushNotifications();
-      console.log({token});
-      
-    }
-    setup();
+      console.log({ token });
+    };
+
+    pushNotificationsetup();
+
+    const notificationTapListener =
+      Notifications.addNotificationResponseReceivedListener((res) => {
+        const data = res.notification.request.content.data;
+
+        console.log({data})
+
+        if (data.redirectScreen === "notificationDetailScreen") {
+          setTimeout(() => {
+            router.push("/screens/notificationDetailScreen");
+          }, 500);
+        }
+      });
 
     const initializeSocket = async () => {
       const user = await getItem("user");
       socket.connect();
       socket.emit("joinRoom", user?._id);
     };
+
     initializeSocket();
+
     return () => {
+      notificationTapListener.remove();
       socket.disconnect();
     };
+
   }, []);
 
   return (

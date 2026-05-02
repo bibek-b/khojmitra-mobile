@@ -32,7 +32,7 @@ export default function NotificationDetailScreen() {
   const [selectedImage, setSelectedImage] = useState<ImgType | null>(null);
   const { setModalContent, showConfirmModal } = useConfirmModalStore();
   const { showLoading, hideLoading } = useLoaderStore();
-  
+
   useEffect(() => {
     if (!type) return;
     (async () => {
@@ -93,77 +93,76 @@ export default function NotificationDetailScreen() {
     }
   };
 
-
-const renderContent = () => {
-  if (type === "PROOF") {
-    if (proof) {
+  const renderContent = () => {
+    if (type === "PROOF") {
+      if (proof) {
+        return (
+          <ReportDetail
+            sender={sender}
+            data={proof}
+            setSelectedImage={setSelectedImage}
+            handleAction={handleAction}
+          />
+        );
+      }
       return (
-        <ReportDetail
-          sender={sender}
-          data={proof}
-          setSelectedImage={setSelectedImage}
-          handleAction={handleAction}
-        />
+        <View className="flex-1 items-center justify-center py-16 px-6">
+          <View
+            className="w-20 h-20 rounded-full items-center justify-center mb-4"
+            style={{ backgroundColor: "rgba(239, 68, 68, 0.15)" }}
+          >
+            <Ionicons name="document-text-outline" size={36} color="#ef4444" />
+          </View>
+          <Text className="text-white text-lg font-semibold mb-2">
+            Proof Unavailable
+          </Text>
+          <Text className="text-gray-400 text-center text-sm">
+            The proof is no longer available
+          </Text>
+        </View>
+      );
+    } else if (type === "POSSIBLE_MATCH_EXISTING") {
+      if (relatedPost) {
+        return <PossibleMatchDetail posts={relatedPost} />;
+      }
+      return (
+        <View className="flex-1 items-center justify-center py-16 px-6">
+          <View
+            className="w-20 h-20 rounded-full items-center justify-center mb-4"
+            style={{ backgroundColor: "rgba(59, 130, 246, 0.15)" }}
+          >
+            <MaterialIcons name="post-add" size={36} color="#3b82f6" />
+          </View>
+          <Text className="text-white text-lg font-semibold mb-2">
+            Post Unavailable
+          </Text>
+          <Text className="text-gray-400 text-center text-sm">
+            The post is no longer available
+          </Text>
+        </View>
+      );
+    } else if (type === "POSSIBLE_MATCH_OWNER") {
+      if (postsDetail && postsDetail.length > 0) {
+        return <PossibleMatchDetail posts={postsDetail} />;
+      }
+      return (
+        <View className="flex-1 items-center justify-center py-16 px-6">
+          <View
+            className="w-20 h-20 rounded-full items-center justify-center mb-4"
+            style={{ backgroundColor: "rgba(139, 92, 246, 0.15)" }}
+          >
+            <Feather name="inbox" size={36} color="#8b5cf6" />
+          </View>
+          <Text className="text-white text-lg font-semibold mb-2">
+            No Posts Found
+          </Text>
+          <Text className="text-gray-400 text-center text-sm">
+            The posts are no longer available
+          </Text>
+        </View>
       );
     }
-    return (
-      <View className="flex-1 items-center justify-center py-16 px-6">
-        <View
-          className="w-20 h-20 rounded-full items-center justify-center mb-4"
-          style={{ backgroundColor: "rgba(239, 68, 68, 0.15)" }}
-        >
-          <Ionicons name="document-text-outline" size={36} color="#ef4444" />
-        </View>
-        <Text className="text-white text-lg font-semibold mb-2">
-          Proof Unavailable
-        </Text>
-        <Text className="text-gray-400 text-center text-sm">
-          The proof is no longer available
-        </Text>
-      </View>
-    );
-  } else if (type === "POSSIBLE_MATCH_EXISTING") {
-    if (relatedPost) {
-      return <PossibleMatchDetail posts={relatedPost} />;
-    }
-    return (
-      <View className="flex-1 items-center justify-center py-16 px-6">
-        <View
-          className="w-20 h-20 rounded-full items-center justify-center mb-4"
-          style={{ backgroundColor: "rgba(59, 130, 246, 0.15)" }}
-        >
-          <MaterialIcons name="post-add" size={36} color="#3b82f6" />
-        </View>
-        <Text className="text-white text-lg font-semibold mb-2">
-          Post Unavailable
-        </Text>
-        <Text className="text-gray-400 text-center text-sm">
-          The post is no longer available
-        </Text>
-      </View>
-    );
-  } else if (type === "POSSIBLE_MATCH_OWNER") {
-    if (postsDetail && postsDetail.length > 0) {
-      return <PossibleMatchDetail posts={postsDetail} />;
-    }
-    return (
-      <View className="flex-1 items-center justify-center py-16 px-6">
-        <View
-          className="w-20 h-20 rounded-full items-center justify-center mb-4"
-          style={{ backgroundColor: "rgba(139, 92, 246, 0.15)" }}
-        >
-          <Feather name="inbox" size={36} color="#8b5cf6" />
-        </View>
-        <Text className="text-white text-lg font-semibold mb-2">
-          No Posts Found
-        </Text>
-        <Text className="text-gray-400 text-center text-sm">
-          The posts are no longer available
-        </Text>
-      </View>
-    );
-  }
-};
+  };
 
   return (
     <View className={`flex-1 ${isDarkMode ? "bg-[#0f0f0f]" : "bg-[#F9FAFB]"}`}>

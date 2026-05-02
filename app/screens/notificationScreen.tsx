@@ -39,6 +39,7 @@ export default function NotificationScreen() {
     <View className={`${isDarkMode ? "bg-[#1a1a1a]" : "bg-[#F9FAFB]"} flex-1`}>
       <OptimizedList
         data={notifications}
+        parent="notification"
         renderItem={({ item }) => (
           <Notification
             key={item?._id}

@@ -63,6 +63,7 @@ export default function HomeTab() {
 
   return (
     <OptimizedList
+    parent="postList"
       data={filteredPost}
       renderItem={({ item }) => (
         <Feed post={item} onDeletePost={handleDeletePost} myId={myId} />

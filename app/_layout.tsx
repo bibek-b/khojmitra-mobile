@@ -13,6 +13,9 @@ import socket from "./lib/socket";
 import { getItem } from "@/utils/AsyncStorage";
 import registerForPushNotifications from "@/utils/registerForPushNotifications";
 import * as Notifications from "expo-notifications";
+import { useNotificationDetailStore } from "@/store/useNotificationDetailStore";
+import { NotificationDetailPostType, SenderType } from "@/types/notificationDetail";
+import { NotificationType } from "@/types/notification";
 
 function LayoutWithTheme() {
   const { isDarkMode } = useContext(ThemeContext);
@@ -121,6 +124,7 @@ Notifications.setNotificationHandler({
 export default function RootLayout() {
   const { loading } = useLoaderStore();
   const router = useRouter();
+  const  {setSender, setPost, setType }= useNotificationDetailStore();
 
   useEffect(() => {
 
@@ -137,7 +141,10 @@ export default function RootLayout() {
       Notifications.addNotificationResponseReceivedListener((res) => {
         const data = res.notification.request.content.data;
 
-        console.log({data})
+        console.log({data});
+        setType(data.type as NotificationType);
+        setSender(data.sender as SenderType);
+        setPost(data.post as NotificationDetailPostType);
 
         if (data.redirectScreen === "notificationDetailScreen") {
           setTimeout(() => {

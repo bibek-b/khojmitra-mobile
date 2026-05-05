@@ -14,8 +14,14 @@ import { getItem } from "@/utils/AsyncStorage";
 import registerForPushNotifications from "@/utils/registerForPushNotifications";
 import * as Notifications from "expo-notifications";
 import { useNotificationDetailStore } from "@/store/useNotificationDetailStore";
-import { NotificationDetailPostType, SenderType } from "@/types/notificationDetail";
+import {
+  NotificationDetailPostType,
+  SenderType,
+} from "@/types/notificationDetail";
 import { NotificationType } from "@/types/notification";
+import { userApi } from "@/api/userApi";
+import { postApi } from "@/api/postApi";
+import { notificationApi } from "@/api/notificationApi";
 
 function LayoutWithTheme() {
   const { isDarkMode } = useContext(ThemeContext);
@@ -112,6 +118,7 @@ function LayoutWithTheme() {
     </Stack>
   );
 }
+
 Notifications.setNotificationHandler({
   handleNotification: async () => ({
     shouldShowBanner: true,
@@ -124,27 +131,47 @@ Notifications.setNotificationHandler({
 export default function RootLayout() {
   const { loading } = useLoaderStore();
   const router = useRouter();
-  const  {setSender, setPost, setType }= useNotificationDetailStore();
+  const { setSender, setPost, setType, setMatchedPosts, setRelatedPost } =
+    useNotificationDetailStore();
 
   useEffect(() => {
-
     Notifications.getLastNotificationResponse();
 
     async function pushNotificationsetup() {
       const token = await registerForPushNotifications();
       console.log({ token });
-    };
+    }
 
     pushNotificationsetup();
 
     const notificationTapListener =
-      Notifications.addNotificationResponseReceivedListener((res) => {
+      Notifications.addNotificationResponseReceivedListener(async (res) => {
         const data = res.notification.request.content.data;
+        const type = data.type as NotificationType;
 
-        console.log({data});
-        setType(data.type as NotificationType);
-        setSender(data.sender as SenderType);
-        setPost(data.post as NotificationDetailPostType);
+        console.log({ data });
+
+        setType(type as NotificationType);
+        const senderDetail = await userApi.getUserById(data.senderId as string);
+        const postDetail = await postApi.getPost(data.postId as string);
+
+        const notification = await notificationApi.getNotificationById(
+          data.notificationId as string,
+        );
+        console.log({ notification });
+
+        if (type === "POSSIBLE_MATCH_OWNER") {
+          const {matchedPosts, ...rest} = notification.data.data;
+          console.log({matchedPosts})
+          setMatchedPosts(matchedPosts);
+        } else if (type === "POSSIBLE_MATCH_EXISTING") {
+          const {relatedPost, ...rest} = notification.data.data;
+          console.log({relatedPost})
+          setRelatedPost(relatedPost);
+        }
+
+        setSender(senderDetail?.data.data as SenderType);
+        setPost(postDetail?.data.data as NotificationDetailPostType);
 
         if (data.redirectScreen === "notificationDetailScreen") {
           setTimeout(() => {
@@ -165,7 +192,6 @@ export default function RootLayout() {
       notificationTapListener.remove();
       socket.disconnect();
     };
-
   }, []);
 
   return (

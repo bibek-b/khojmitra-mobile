@@ -30,7 +30,6 @@ export default function SignInScreen() {
 
 
       const res2 = await notificationApi.sendPushToken(res.data.user._id, token!);
-      console.log({res2})
 
       showPopupNotification?.({
         type: "success",

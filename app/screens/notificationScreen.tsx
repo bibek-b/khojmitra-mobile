@@ -22,7 +22,6 @@ export default function NotificationScreen() {
         showLoading("notificationScreen");
         const me = await getItem("user");
         const res = await notificationApi.getMyNotifications(me?._id);
-        console.log({res})
         setNotifications(res?.data?.data);
       } catch (error: any) {
         showPopupNotification?.({

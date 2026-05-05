@@ -27,14 +27,13 @@ export default function HomeTab() {
       setMyId(user?._id);
     })();
   }, []);
+  
 
   const fetchAllPosts = async () => {
     try {
       showLoading("fetchPosts");
-      console.time("Posts loaded");
       const res = await postApi.getAll();
       setAllPosts(res?.data.data);
-      console.timeEnd("Posts loaded");
     } catch (error: any) {
       showPopupNotification?.({ type: "error", message: "Can't fetch post" });
     } finally {
@@ -47,6 +46,7 @@ export default function HomeTab() {
 
     const handleNewPost = (data: PostType) => {
       addNewPost(data);
+      
     };
     socket.on("new-post", handleNewPost);
 
@@ -61,10 +61,12 @@ export default function HomeTab() {
 
   const { handleDeletePost } = useDeletePost();
 
+
+
   return (
     <OptimizedList
     parent="postList"
-      data={filteredPost}
+      data={searchInput.trim() !== "" ? filteredPost : allPosts}
       renderItem={({ item }) => (
         <Feed post={item} onDeletePost={handleDeletePost} myId={myId} />
       )}

@@ -1,5 +1,7 @@
 import { ImgType } from "./image";
 
+export type updateFeedType = "add" | "delete" | "update";
+
 export enum postCategories {
   "Electronics",
   "Clothes & Accessories",
@@ -35,7 +37,7 @@ export interface PostStoreType {
   isEditPost: boolean,
   TrueEditPost(): void;
   FalseEditPost(): void;
-  addNewPost: (data: PostType) => void
+  updateFeed: (data: PostType, type:) => void
 
 }
 

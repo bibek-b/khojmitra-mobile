@@ -7,7 +7,7 @@ import { usePostStore } from "@/store/usePostStore";
 import { useSearchFeedStore } from "@/store/useSearchFeedStore";
 import { useDeletePost } from "@/customHooks/useDeletePost";
 import socket from "../lib/socket";
-import { PostType } from "@/types/post.types";
+import { PostType, updateFeedType } from "@/types/post.types";
 import { useDebouncedValue } from "@/customHooks/useDebouncedValue";
 import { useFilteredPost } from "@/customHooks/useFilteredPost";
 import { getItem } from "@/utils/AsyncStorage";
@@ -18,7 +18,7 @@ export default function HomeTab() {
 
   const { showPopupNotification } = useContext(PopupNotificationContext);
   const [myId, setMyId] = useState("");
-  const { allPosts, setAllPosts, addNewPost } = usePostStore();
+  const { allPosts, setAllPosts, updateFeed } = usePostStore();
   const { searchInput } = useSearchFeedStore();
 
   useEffect(() => {
@@ -27,7 +27,6 @@ export default function HomeTab() {
       setMyId(user?._id);
     })();
   }, []);
-  
 
   const fetchAllPosts = async () => {
     try {
@@ -44,14 +43,20 @@ export default function HomeTab() {
   useEffect(() => {
     fetchAllPosts();
 
-    const handleNewPost = (data: PostType) => {
-      addNewPost(data);
-      
+    const handleNewPost = (data: PostType, type: updateFeedType) => {
+      console.log("new: ", data, type)
+      updateFeed(data, type);
+    };
+    const handleDeletePost = (data: PostType, type: updateFeedType) => {
+      console.log("delete: ", data, type)
+      updateFeed(data, type);
     };
     socket.on("new-post", handleNewPost);
+    socket.on("delete-post", handleDeletePost);
 
     return () => {
       socket.off("new-post", handleNewPost);
+      socket.off("delete-post", handleDeletePost);
     };
   }, []);
 
@@ -61,11 +66,9 @@ export default function HomeTab() {
 
   const { handleDeletePost } = useDeletePost();
 
-
-
   return (
     <OptimizedList
-    parent="postList"
+      parent="postList"
       data={searchInput.trim() !== "" ? filteredPost : allPosts}
       renderItem={({ item }) => (
         <Feed post={item} onDeletePost={handleDeletePost} myId={myId} />

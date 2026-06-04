@@ -7,7 +7,6 @@ import { setItem } from "@/utils/AsyncStorage";
 import { AuthFormPayloadType } from "@/types/auth.types";
 import AuthForm from "@/components/AuthForm";
 import { useLoaderStore } from "@/store/useLoaderStore";
-import { notificationApi } from "@/api/notificationApi";
 import registerForPushNotifications from "@/utils/registerForPushNotifications";
 
 export default function SignInScreen() {
@@ -28,26 +27,22 @@ export default function SignInScreen() {
 
       const token = await registerForPushNotifications();
 
-
-      const res2 = await notificationApi.sendPushToken(res.data.user._id, token!);
-
       showPopupNotification?.({
         type: "success",
         message: "Sign in successful",
       });
-      
+
       router.navigate("/");
     } catch (error: any) {
-      console.log({error})
+      console.log({ error });
       showPopupNotification?.({
         type: "error",
         message:
-          error?.response?.data.message ||
+          error?.response?.data?.message ||
           "Oops! Something went wrong. please try again",
       });
     } finally {
-      hideLoading
-      ();
+      hideLoading();
     }
   };
   return (

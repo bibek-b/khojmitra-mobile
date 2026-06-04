@@ -25,8 +25,6 @@ export default function SignInScreen() {
       setItem("user", res?.data.user);
       setItem("access_token", res?.data.accessToken);
 
-      const token = await registerForPushNotifications();
-
       showPopupNotification?.({
         type: "success",
         message: "Sign in successful",

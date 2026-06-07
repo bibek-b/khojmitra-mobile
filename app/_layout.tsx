@@ -138,8 +138,7 @@ export default function RootLayout() {
     Notifications.getLastNotificationResponse();
 
     async function pushNotificationsetup() {
-      const token = await registerForPushNotifications();
-      console.log({ token });
+       registerForPushNotifications();
     }
 
     pushNotificationsetup();
@@ -149,8 +148,6 @@ export default function RootLayout() {
         const data = res.notification.request.content.data;
         const type = data.type as NotificationType;
 
-        console.log({ data });
-
         setType(type as NotificationType);
         const senderDetail = await userApi.getUserById(data.senderId as string);
         const postDetail = await postApi.getPost(data.postId as string);
@@ -158,15 +155,12 @@ export default function RootLayout() {
         const notification = await notificationApi.getNotificationById(
           data.notificationId as string,
         );
-        console.log({ notification });
 
         if (type === "POSSIBLE_MATCH_OWNER") {
-          const {matchedPosts, ...rest} = notification.data.data;
-          console.log({matchedPosts})
+          const { matchedPosts, ...rest } = notification.data.data;
           setMatchedPosts(matchedPosts);
         } else if (type === "POSSIBLE_MATCH_EXISTING") {
-          const {relatedPost, ...rest} = notification.data.data;
-          console.log({relatedPost})
+          const { relatedPost, ...rest } = notification.data.data;
           setRelatedPost(relatedPost);
         }
 

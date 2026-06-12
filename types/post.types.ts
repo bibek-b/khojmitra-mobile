@@ -28,7 +28,8 @@ export interface PostType  {
       _id: string;
       fullname: string;
       avatar?:string;
-    }
+    },
+    status: PostStatus;
 };
 
 export interface PostStoreType {
@@ -40,6 +41,8 @@ export interface PostStoreType {
   updateFeed: (data: PostType, type:) => void
 
 }
+
+export type PostStatus = "pending" | "resolved" | "unresolved";
 
 
 

@@ -7,59 +7,82 @@ import {
   Ionicons,
 } from "@expo/vector-icons";
 import { router } from "expo-router";
-import React, { useEffect, useMemo, useRef, useState } from "react";
+import { useEffect, useState } from "react";
 import {
+  Image,
   Modal,
   Text,
   TouchableOpacity,
   TouchableWithoutFeedback,
   View,
   Animated,
+  ScrollView,
 } from "react-native";
-import { Image } from 'expo-image';
 import { useContext } from "react";
 import { ThemeContext } from "@/context/ThemeContext";
 import { ProofFormContext } from "@/context/ProofFormContext";
 import { format } from "timeago.js";
+import { getItem } from "@/utils/AsyncStorage";
 import { FeedProps } from "@/types/feed";
 import { useConfirmModalStore } from "@/store/useConfirmModalStore";
 import { ImgType } from "@/types/image";
 import { usePostStore } from "@/store/usePostStore";
-import ImageViewer from 'react-native-image-zoom-viewer';
+import React from "react";
 
+/**
+ * VARIANT 3 — "Soft Premium"
+ * - Status badge becomes a small floating "ribbon" pill on the card corner
+ * - Header keeps avatar + name but trims vertical padding
+ * - Title is promoted to its own large heading line (separate from info row)
+ * - Category / location / date condensed into a single horizontal stat bar
+ *   with vertical dividers (like a boarding-pass / ticket stub)
+ * - Image gallery becomes a horizontal ScrollView with paging + dot indicator
+ * - Softer rounded corners (rounded-[28px]) and subtle 1px border for depth
+ */
 
 const moreOptions = [
-  { 
-    id: 1, 
-    label: "Edit Post", 
-    icon: <Entypo name="edit" size={22} />,
-    color: "#3b82f6"
+  {
+    id: 1,
+    label: "Edit Post",
+    icon: <Entypo name="edit" size={20} />,
+    color: "#3b82f6",
   },
-  { 
-    id: 2, 
-    label: "Delete Post", 
-    icon: <FontAwesome name="trash" size={20} />,
-    color: "#ef4444"
+  {
+    id: 2,
+    label: "Delete Post",
+    icon: <FontAwesome name="trash" size={18} />,
+    color: "#ef4444",
   },
 ];
 
-const Feed =  ({ post, onDeletePost, myId }: FeedProps) => {
+const Feed = ({ post, onDeletePost }: FeedProps) => {
   const [expanded, setExpanded] = useState(false);
   const [selectedImage, setSelectedImage] = useState<ImgType | null>(null);
   const [imageIndex, setImageIndex] = useState(0);
-  const isLost = useMemo(() => post?.type === "Lost", [post]);
+  const [activeDot, setActiveDot] = useState(0);
+  const isLost = post?.type === "Lost";
   const [moreOptionOpen, setMoreOptionOpen] = useState(false);
+  const [myId, setMyId] = useState("");
+  const [scaleAnim] = useState(new Animated.Value(0));
+  const [fadeAnim] = useState(new Animated.Value(0));
 
-  const scaleAnim = useRef(new Animated.Value(0)).current;
-  const fadeAnim = useRef(new Animated.Value(0)).current;
-  
   const { showConfirmModal, setModalContent, setOnConfirm } =
     useConfirmModalStore();
   const { TrueEditPost } = usePostStore();
   const { isDarkMode } = useContext(ThemeContext);
   const { showForm, setProofForm } = useContext(ProofFormContext);
 
-  
+  const accent = isLost ? "#ef4444" : "#22c55e";
+  const accentSoft = isLost ? "rgba(239,68,68,0.12)" : "rgba(34,197,94,0.12)";
+  const border = isDarkMode ? "#2a2a2a" : "#f0f0f0";
+
+  useEffect(() => {
+    (async () => {
+      const user = await getItem("user");
+      setMyId(user?._id);
+    })();
+  }, []);
+
   useEffect(() => {
     if (moreOptionOpen) {
       Animated.parallel([
@@ -85,7 +108,8 @@ const Feed =  ({ post, onDeletePost, myId }: FeedProps) => {
     showConfirmModal();
     setModalContent({
       title: "Delete post",
-      detail: "Are you sure you want to delete this post? This action is irreversible!",
+      detail:
+        "Are you sure you want to delete this post? This action is irreversible!",
       confirmText: "Yes, Delete",
       confirmBtnVariant: "danger",
     });
@@ -98,30 +122,27 @@ const Feed =  ({ post, onDeletePost, myId }: FeedProps) => {
   const handleMorePress = async () => {
     setMoreOptionOpen(true);
   };
-  const handleEdit = () => {
-  TrueEditPost();
-  router.push({
-    pathname: "/screens/addEditReportScreen",
-    params: { idToUpdate: post?._id },
-  });
-};
 
   const images = post?.images!;
   const type = post?.type!;
   const description = post?.description!;
   const parent = "myPost";
 
+
   return (
-    <View 
-      className={`mx-4 mb-6 rounded-3xl overflow-hidden shadow-2xl ${
+    <View
+      className={`mx-4 m-6 overflow-hidden ${
         isDarkMode ? "bg-[#1a1a1a]" : "bg-white"
       }`}
       style={{
-        shadowColor: isDarkMode ? "#000" : "#000",
-        shadowOffset: { width: 0, height: 8 },
-        shadowOpacity: isDarkMode ? 0.5 : 0.1,
-        shadowRadius: 12,
-        elevation: 8,
+        borderRadius: 28,
+        borderWidth: 1.5,
+        borderColor: border,
+        shadowColor: "#000",
+        shadowOffset: { width: 0, height: 6 },
+        shadowOpacity: isDarkMode ? 0.4 : 0.05,
+        shadowRadius: 14,
+        elevation: 5,
       }}
     >
       {/* More Options Modal */}
@@ -132,7 +153,7 @@ const Feed =  ({ post, onDeletePost, myId }: FeedProps) => {
         onRequestClose={() => setMoreOptionOpen(false)}
       >
         <TouchableWithoutFeedback onPress={() => setMoreOptionOpen(false)}>
-          <View className="flex-1 bg-black/50 backdrop-blur-lg justify-end">
+          <View className="flex-1 bg-black/50 justify-end">
             <TouchableWithoutFeedback>
               <Animated.View
                 style={{
@@ -151,7 +172,6 @@ const Feed =  ({ post, onDeletePost, myId }: FeedProps) => {
                 } rounded-t-3xl overflow-hidden`}
               >
                 <View className="h-1.5 w-12 bg-gray-400 rounded-full self-center mt-3 mb-4" />
-                
                 <View className="px-6 pb-8">
                   {moreOptions.map((opt, idx) => (
                     <TouchableOpacity
@@ -164,7 +184,11 @@ const Feed =  ({ post, onDeletePost, myId }: FeedProps) => {
                       }}
                       onPress={() => {
                         opt.label === "Edit Post"
-                          ? handleEdit()
+                          ? (router.push({
+                              pathname: "/screens/addEditReportScreen",
+                              params: { idToUpdate: post?._id },
+                            }),
+                            TrueEditPost())
                           : handleDeletePost(post?._id!);
                       }}
                     >
@@ -202,279 +226,233 @@ const Feed =  ({ post, onDeletePost, myId }: FeedProps) => {
             <View className="absolute top-0 left-0 right-0 z-20 pt-12 px-6 pb-6">
               <View className="flex-row justify-between items-center">
                 <TouchableOpacity
-                  className="w-10 h-10 rounded-full bg-white/20 backdrop-blur-md items-center justify-center"
+                  className="w-10 h-10 rounded-full bg-white/20 items-center justify-center"
                   onPress={() => setSelectedImage(null)}
                 >
                   <Feather name="x" size={24} color="#fff" />
                 </TouchableOpacity>
-                <View className="bg-white/20 backdrop-blur-md px-4 py-2 rounded-full">
+                <View className="bg-white/20 px-4 py-2 rounded-full">
                   <Text className="text-white font-semibold">
                     {imageIndex + 1} / {images.length}
                   </Text>
                 </View>
               </View>
             </View>
-
-            <ImageViewer
-              imageUrls={images.map(img => ({url: img.uri!}))}
-              enableSwipeDown
-              onSwipeDown={() => setSelectedImage(null)}
-              // backgroundColor="black"
-              renderIndicator={() => <View />}
+            <Image
+              source={{ uri: String(selectedImage) }}
+              className="w-full h-full"
+              resizeMode="contain"
             />
           </View>
         </Modal>
       )}
 
       {/* Header */}
-      <View className="relative">
-        {/* Status Badge with Gradient */}
-        <View className="absolute top-4 left-4 z-10">
-          <View
-            className="px-4 py-2 rounded-full flex-row items-center gap-2"
-            style={{
-              backgroundColor: isLost
-                ? "rgba(239, 68, 68, 0.15)"
-                : "rgba(34, 197, 94, 0.15)",
+      <View className="flex-row items-center px-5 pt-5 pb-4">
+        <TouchableOpacity
+          className="flex-row items-center gap-3 flex-1"
+          onPress={() => router.push("/screens/profileScreen")}
+        >
+          <Image
+            source={{
+              uri:
+                post?.user?.avatar ||
+                "https://thumb.ac-illust.com/51/51e1c1fc6f50743937e62fca9b942694_t.jpeg",
             }}
-          >
-            <View
-              className={`w-2 h-2 rounded-full ${
-                isLost ? "bg-red-500" : "bg-green-500"
-              }`}
-            />
+            className="w-12 h-12 rounded-full"
+          />
+          <View className="flex-1">
             <Text
-              className={`font-bold text-sm ${
-                isLost ? "text-red-500" : "text-green-500"
+              className={`text-base font-bold ${
+                isDarkMode ? "text-[#f5f5f5]" : "text-gray-900"
+              }`}
+              numberOfLines={1}
+            >
+              {post?.user?.fullname}
+            </Text>
+            <Text
+              className={`text-xs ${
+                isDarkMode ? "text-gray-400" : "text-gray-500"
               }`}
             >
-              {isLost ? "LOST" : "FOUND"}
+              {format(new Date(post?.createdAt!))}
             </Text>
           </View>
+        </TouchableOpacity>
+
+        {/* Ribbon-style status */}
+        <View
+          className="px-3 py-1.5 rounded-xl mr-2 flex-row items-center gap-1.5"
+          style={{ backgroundColor: accentSoft }}
+        >
+          <Ionicons
+            name={isLost ? "help-circle" : "checkmark-circle"}
+            size={14}
+            color={accent}
+          />
+          <Text className="font-bold text-xs" style={{ color: accent }}>
+            {isLost ? "LOST" : "FOUND"}
+          </Text>
         </View>
 
-        {/* More Options Button */}
         {post.user?._id === myId && (
           <TouchableOpacity
-            className="absolute right-4 top-4 z-10 w-10 h-10 rounded-full items-center justify-center"
-            style={{
-              backgroundColor: isDarkMode
-                ? "rgba(255, 255, 255, 0.1)"
-                : "rgba(0, 0, 0, 0.05)",
-            }}
+            className="w-8 h-8 rounded-full items-center justify-center"
             onPress={() => parent === "myPost" && handleMorePress()}
           >
             <Entypo
               name="dots-three-horizontal"
-              size={20}
-              color={isDarkMode ? "#fff" : "#000"}
+              size={16}
+              color={isDarkMode ? "#9ca3af" : "#6b7280"}
             />
           </TouchableOpacity>
         )}
-
-        {/* User Info */}
-        <View className="px-5 pt-20 pb-5">
-          <TouchableOpacity
-            className="flex-row items-center gap-3"
-            onPress={() => router.push("/screens/profileScreen")}
-          >
-            <View className="relative">
-              <Image
-                source={{uri: 
-                    post.user.avatar ??
-                    "https://thumb.ac-illust.com/51/51e1c1fc6f50743937e62fca9b942694_t.jpeg"}
-                }
-             
-                contentFit="cover"
-                transition={300}
-                style={{
-                  borderWidth: 3,
-                  borderColor: isLost ? "#ef4444" : "#22c55e",
-                  width: 56,
-                  height: 56,
-                  borderRadius: 50
-                }}
-              />
-              <View
-                className="absolute -bottom-1 -right-1 w-5 h-5 rounded-full items-center justify-center"
-                style={{
-                  backgroundColor: isLost ? "#ef4444" : "#22c55e",
-                }}
-              >
-                <Ionicons
-                  name={isLost ? "alert-circle" : "checkmark-circle"}
-                  size={12}
-                  color="white"
-                />
-              </View>
-            </View>
-
-            <View className="flex-1">
-              <Text
-                className={`text-lg font-bold ${
-                  isDarkMode ? "text-[#f5f5f5]" : "text-gray-900"
-                }`}
-              >
-                {post?.user?.fullname}
-              </Text>
-              <View className="flex-row items-center gap-2">
-                <Ionicons
-                  name="time-outline"
-                  size={14}
-                  color={isDarkMode ? "#9ca3af" : "#6b7280"}
-                />
-                <Text
-                  className={`text-sm ${
-                    isDarkMode ? "text-gray-400" : "text-gray-500"
-                  }`}
-                >
-                  {format(new Date(post?.createdAt!))}
-                </Text>
-              </View>
-            </View>
-          </TouchableOpacity>
-        </View>
       </View>
 
-      {/* Content */}
-      <View className="px-5 pb-5">
-        {/* Info Cards */}
-        <View className="gap-3 mb-4">
-          {[
-            {
-              key: `${isLost ? "Lost" : "Found"} Item`,
-              value: post.title,
-              icon: "cube-outline",
-            },
-            {
-              key: "Category",
-              value: post.category,
-              icon: "pricetag-outline",
-            },
-            {
-              key: `${isLost ? "Lost" : "Found"} Location`,
-              value: post.location,
-              icon: "location-outline",
-            },
-            {
-              key: `${isLost ? "Lost" : "Found"} Date`,
-              value: post.date,
-              icon: "calendar-outline",
-            },
-          ].map((item) => (
-            <View
-              key={item.key}
-              className={`p-4 rounded-2xl flex-row items-center gap-3 ${
-                isDarkMode ? "bg-[#252525]" : "bg-gray-50"
-              }`}
-            >
-              <View
-                className="w-10 h-10 rounded-xl items-center justify-center"
-                style={{
-                  backgroundColor: isLost
-                    ? "rgba(239, 68, 68, 0.1)"
-                    : "rgba(34, 197, 94, 0.1)",
-                }}
-              >
-                <Ionicons
-                  name={item.icon as any}
-                  size={20}
-                  color={isLost ? "#ef4444" : "#22c55e"}
-                />
-              </View>
-              <View className="flex-1">
-                <Text
-                  className={`text-xs font-medium mb-1 ${
-                    isDarkMode ? "text-gray-400" : "text-gray-500"
-                  }`}
-                >
-                  {item.key}
-                </Text>
-                <Text
-                  className={`text-base font-semibold ${
-                    isDarkMode ? "text-[#f5f5f5]" : "text-gray-900"
-                  }`}
-                >
-                  {item.value}
-                </Text>
-              </View>
-            </View>
-          ))}
-        </View>
-
-        {/* Description */}
-        <View
-          className={`p-4 rounded-2xl mb-4 ${
-            isDarkMode ? "bg-[#252525]" : "bg-gray-50"
+      {/* Title */}
+      <View className="px-5 mb-3">
+        <Text
+          className={`text-xl font-extrabold ${
+            isDarkMode ? "text-[#f5f5f5]" : "text-gray-900"
           }`}
         >
-          <Text
-            numberOfLines={expanded ? undefined : 3}
-            ellipsizeMode="tail"
-            className={`text-base leading-6 ${
-              isDarkMode ? "text-gray-300" : "text-gray-700"
-            }`}
-          >
-            {description}
-          </Text>
-          {description.trim().length > 97 && (
-            <TouchableOpacity
-              onPress={() => setExpanded(!expanded)}
-              className="mt-2"
-            >
-              <Text
-                className="font-semibold"
-                style={{ color: isLost ? "#ef4444" : "#22c55e" }}
-              >
-                {expanded ? "Show Less" : "Read More"}
-              </Text>
-            </TouchableOpacity>
-          )}
-        </View>
+          {post.title}
+        </Text>
+      </View>
 
-        {/* Images Grid */}
-        {images && images.length > 0 && (
-          <View className="mb-4">
-            <View
-              className={`flex-row flex-wrap justify-center gap-2`}
-            >
-              {images.map((img: ImgType, idx: number) => (
-                <TouchableOpacity
+      {/* Image carousel */}
+      {images && images.length > 0 && (
+        <View className="mb-4">
+          <ScrollView
+            horizontal
+            pagingEnabled
+            style={{ width: "100%", aspectRatio: 16 / 10 }}
+            showsHorizontalScrollIndicator={false}
+            onScroll={(e) => {
+              const idx = Math.round(
+                e.nativeEvent.contentOffset
+                  .x /*current horz scroll position - Image 1 → x = 0
+Image 2 → x = 360
+Image 3 → x = 720*/ / e.nativeEvent.layoutMeasurement.width, //width of the ScrollView (viewport)
+              );
+              setActiveDot(idx);
+            }}
+            scrollEventThrottle={16}
+          >
+            {images.map((img: ImgType, idx: number) => (
+              <TouchableOpacity
+                key={idx}
+                activeOpacity={0.9}
+                onPress={() => {
+                  setSelectedImage(img.uri as ImgType);
+                  setImageIndex(idx);
+                }}
+                style={{aspectRatio: 16 / 10}}
+                className="px-5"
+              >
+                <Image
+                  source={{ uri: img.uri }}
+                  className="w-full h-full rounded-2xl"
+                  resizeMode="cover"
+                />
+              </TouchableOpacity>
+            ))}
+          </ScrollView>
+
+          {images.length > 1 && (
+            <View className="flex-row justify-center gap-1.5 mt-3">
+              {images.map((_: ImgType, idx: number) => (
+                <View
                   key={idx}
-                  onPress={() => {
-                    setSelectedImage(img.uri as ImgType);
-                    setImageIndex(idx);
-                  }}
-                  className="rounded-xl overflow-hidden"
+                  className="rounded-full"
                   style={{
-                    width:
-                      images.length === 1
-                        ? "100%"
-                        : 142,
-                    height: images.length === 1 ? 250 : 140,
+                    width: activeDot === idx ? 16 : 6,
+                    height: 6,
+                    backgroundColor:
+                      activeDot === idx
+                        ? accent
+                        : isDarkMode
+                          ? "#3a3a3a"
+                          : "#e5e7eb",
                   }}
-                >
-                  <Image
-                    source={{uri: img.uri} }
-                    style={{width: "100%", height: "100%"}}
-                    contentFit="cover"
-                    transition={300}
-                  />
-                </TouchableOpacity>
+                />
               ))}
             </View>
-          </View>
-        )}
+          )}
+        </View>
+      )}
 
-        {/* Action Button */}
+      {/* Stat bar (ticket stub style) */}
+      <View
+        className="flex-row mx-5 mb-4 rounded-2xl overflow-hidden"
+        style={{ borderWidth: 1, borderColor: border }}
+      >
+        {[
+          { label: "Category", value: post.category, icon: "pricetag-outline" },
+          {
+            label: isLost ? "Lost at" : "Found at",
+            value: post.location,
+            icon: "location-outline",
+          },
+          { label: "Date", value: post.date, icon: "calendar-outline" },
+        ].map((item, i) => (
+          <View
+            key={item.label}
+            className="flex-1 items-center py-3 px-1"
+            style={{
+              borderLeftWidth: i === 0 ? 0 : 1,
+              borderLeftColor: border,
+            }}
+          >
+            <Ionicons name={item.icon as any} size={16} color={accent} />
+            <Text
+              className={`text-[10px] mt-1 ${
+                isDarkMode ? "text-gray-500" : "text-gray-400"
+              }`}
+            >
+              {item.label}
+            </Text>
+            <Text
+              numberOfLines={1}
+              className={`text-xs font-bold mt-0.5 ${
+                isDarkMode ? "text-[#f5f5f5]" : "text-gray-900"
+              }`}
+            >
+              {item.value}
+            </Text>
+          </View>
+        ))}
+      </View>
+
+      {/* Description */}
+      <View className="px-5 mb-4">
+        <Text
+          numberOfLines={expanded ? undefined : 3}
+          ellipsizeMode="tail"
+          className={`text-base leading-6 ${
+            isDarkMode ? "text-gray-300" : "text-gray-700"
+          }`}
+        >
+          {description}
+        </Text>
+        {description.trim().length > 97 && (
+          <TouchableOpacity
+            onPress={() => setExpanded(!expanded)}
+            className="mt-2"
+          >
+            <Text className="font-semibold" style={{ color: accent }}>
+              {expanded ? "Show Less" : "Read More"}
+            </Text>
+          </TouchableOpacity>
+        )}
+      </View>
+
+      {/* Action button */}
+      <View className="px-5 pb-5">
         {post.user?._id === myId ? (
           <TouchableOpacity
             className="flex-row items-center justify-center gap-3 py-4 rounded-2xl"
-            style={{
-              backgroundColor: isDarkMode
-                ? "rgba(34, 197, 94, 0.15)"
-                : "rgba(34, 197, 94, 0.1)",
-            }}
+            style={{ backgroundColor: "rgba(34,197,94,0.12)" }}
           >
             <AntDesign name="check-circle" size={22} color="#22c55e" />
             <Text className="text-green-500 font-bold text-base">
@@ -492,29 +470,14 @@ const Feed =  ({ post, onDeletePost, myId }: FeedProps) => {
               })
             )}
             className="flex-row items-center justify-center gap-3 py-4 rounded-2xl"
-            style={{
-              backgroundColor: isLost
-                ? "rgba(59, 130, 246, 0.15)"
-                : "rgba(139, 92, 246, 0.15)",
-            }}
+            style={{ backgroundColor: accent }}
           >
             {type === "Lost" ? (
-              <FontAwesome5
-                name="handshake"
-                size={20}
-                color={isLost ? "#3b82f6" : "#8b5cf6"}
-              />
+              <FontAwesome5 name="handshake" size={20} color="#fff" />
             ) : (
-              <Feather
-                name="user-check"
-                size={22}
-                color={isLost ? "#3b82f6" : "#8b5cf6"}
-              />
+              <Feather name="user-check" size={22} color="#fff" />
             )}
-            <Text
-              className="font-bold text-base"
-              style={{ color: isLost ? "#3b82f6" : "#8b5cf6" }}
-            >
+            <Text className="font-bold text-base text-white">
               {type === "Lost" ? "I Found This Item!" : "This is My Item!"}
             </Text>
           </TouchableOpacity>
@@ -522,6 +485,6 @@ const Feed =  ({ post, onDeletePost, myId }: FeedProps) => {
       </View>
     </View>
   );
-}
+};
 
 export default React.memo(Feed);

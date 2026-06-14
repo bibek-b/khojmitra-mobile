@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "49294171617",
+    "project_id": "khojmitra-e99eb",
+    "storage_bucket": "khojmitra-e99eb.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:49294171617:android:c074f7b316c0a55b1a06a0",
+        "android_client_info": {
+          "package_name": "com.vieek.KhojMitra"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDM09AHnhGqmne9y3PQW00pdvH6f78cuMY"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

@@ -1,20 +1,21 @@
 import { notificationApi } from "@/api/notificationApi";
 import OptimizedList from "@/components/common/OptimizedList";
 import Notification from "@/components/Notification";
-import { PopupNotificationContext } from "@/context/PopupNotificationContext";
 import { ThemeContext } from "@/context/ThemeContext";
 import { useLoaderStore } from "@/store/useLoaderStore";
 import { useNotificationStore } from "@/store/useNotificationStore";
 import { getItem } from "@/utils/AsyncStorage";
+import { getErrorMessage } from "@/utils/getErrorMessage";
 import { useContext, useEffect } from "react";
 import { View } from "react-native";
+import { useToast } from "react-native-toast-notifications";
 
 export default function NotificationScreen() {
   const { isDarkMode } = useContext(ThemeContext);
-  const { showPopupNotification } = useContext(PopupNotificationContext);
   const { showLoading, hideLoading } = useLoaderStore();
 
   const { notifications, setNotifications } = useNotificationStore();
+  const toast = useToast();
 
   useEffect(() => {
     (async () => {
@@ -24,10 +25,10 @@ export default function NotificationScreen() {
         const res = await notificationApi.getMyNotifications(me?._id);
         setNotifications(res?.data?.data);
       } catch (error: any) {
-        showPopupNotification?.({
-          type: "error",
-          message: "Error fetching notifications!",
-        });
+      const message = getErrorMessage(error);
+        toast.show(message, {
+          type: "danger",
+        }); 
       } finally {
         hideLoading();
       }

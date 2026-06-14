@@ -14,20 +14,20 @@ import {
 import UploadImgBtn from "../common/UploadImgBtn";
 import ImagePickerModal from "../common/ImagePickerModal";
 import DisplayImages from "../common/DisplayImages";
-import { PopupNotificationContext } from "@/context/PopupNotificationContext";
 import { ProofFormContext } from "@/context/ProofFormContext";
 import { useLoaderStore } from "@/store/useLoaderStore";
 import { proofApi } from "@/api/proofApi";
 import { getItem } from "@/utils/AsyncStorage";
 import socket from "@/app/lib/socket";
 import { ImgType } from "@/types/image";
+import { useToast } from "react-native-toast-notifications";
+import { getErrorMessage } from "@/utils/getErrorMessage";
 
 export default function ProofForm() {
   const { isDarkMode } = useContext(ThemeContext);
   const { isFormVisible, hideForm, proofForm } = useContext(ProofFormContext);
-
+const toast = useToast();
   const { showLoading, hideLoading } = useLoaderStore();
-  const { showPopupNotification } = useContext(PopupNotificationContext);
   const [images, setImages] = useState<ImgType[]>([]);
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [description, setDescription] = useState("");
@@ -51,9 +51,8 @@ export default function ProofForm() {
 
   const handleSubmit = async () => {
     if (images.length === 0 && description.trim().length === 0) {
-      showPopupNotification?.({
-        type: "error",
-        message: "Please fill description or upload an image.",
+      toast.show("Please fill description or upload an image.", {
+        type: "danger",
       });
       return;
     }
@@ -88,22 +87,20 @@ export default function ProofForm() {
         postId: proofForm?.postId
       });
       
-      showPopupNotification?.({
+      toast.show(res?.data.data.message || "Proof form submitted successfully", {
         type: "success",
-        message: res?.data.data.message || "Proof form submitted successfully",
       });
 
       hideForm?.();
       setDescription("");
       setImages([]);
     } catch (error: any) {
-      console.log({error})
       if(error.response.status === 401) {
         hideForm?.();
       }
-      showPopupNotification?.({
-        type: "error",
-        message: error?.response.data.message || "Error submitting Proof form",
+      const message = getErrorMessage (error);
+      toast.show(message, {
+        type: "danger",
       });
       // hideForm?.();
     } finally {

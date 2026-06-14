@@ -2,7 +2,6 @@ import { postApi } from "@/api/postApi";
 import { proofApi } from "@/api/proofApi";
 import PossibleMatchDetail from "@/components/notification/notificationDetail/PossibleMatchDetail";
 import ReportDetail from "@/components/notification/notificationDetail/ReportDetail";
-import { PopupNotificationContext } from "@/context/PopupNotificationContext";
 import { ThemeContext } from "@/context/ThemeContext";
 import { useConfirmModalStore } from "@/store/useConfirmModalStore";
 import { useLoaderStore } from "@/store/useLoaderStore";
@@ -11,6 +10,7 @@ import { modalContentType } from "@/types/ConfirmModal";
 import { ImgType } from "@/types/image";
 import { PostType } from "@/types/post.types";
 import { ProofType } from "@/types/proofForm";
+import { getErrorMessage } from "@/utils/getErrorMessage";
 import { Feather, Ionicons, MaterialIcons } from "@expo/vector-icons";
 import React, { useContext, useEffect, useState } from "react";
 import {
@@ -21,6 +21,7 @@ import {
   TouchableOpacity,
   View,
 } from "react-native";
+import { useToast } from "react-native-toast-notifications";
 
 export default function NotificationDetailScreen() {
   const { isDarkMode } = useContext(ThemeContext);
@@ -28,10 +29,10 @@ export default function NotificationDetailScreen() {
     useNotificationDetailStore();
   const [proof, setProof] = useState<ProofType>();
   const [postsDetail, setPostsDetail] = useState<PostType[]>();
-  const { showPopupNotification } = useContext(PopupNotificationContext);
   const [selectedImage, setSelectedImage] = useState<ImgType | null>(null);
   const { setModalContent, showConfirmModal } = useConfirmModalStore();
   const { showLoading, hideLoading } = useLoaderStore();
+  const toast = useToast();
 
   useEffect(() => {
     if (!type) return;
@@ -64,9 +65,9 @@ export default function NotificationDetailScreen() {
           setPostsDetail(posts.map((p) => p.data.data));
         }
       } catch (error: any) {
-        showPopupNotification?.({
-          type: "error",
-          message: error.response?.data?.message ?? "Something went wrong",
+       const message = getErrorMessage(error);
+        toast.show(message, {
+          type: "danger",
         });
       } finally {
         hideLoading();

@@ -1,5 +1,4 @@
-import { useContext, useState } from "react";
-import { PopupNotificationContext } from "@/context/PopupNotificationContext";
+import {  useState } from "react";
 import { authApi } from "@/api/authApi";
 import { validateSignup } from "../validations/authFormValidator";
 import { useRouter } from "expo-router";
@@ -9,12 +8,14 @@ import AuthForm from "@/components/AuthForm";
 import { setItem } from "@/utils/AsyncStorage";
 import registerForPushNotifications from "@/utils/registerForPushNotifications";
 import { notificationApi } from "@/api/notificationApi";
+import { useToast } from "react-native-toast-notifications";
+import { getErrorMessage } from "@/utils/getErrorMessage";
 
 export default function SignUpScreen() {
-  const { showPopupNotification } = useContext(PopupNotificationContext);
   const { showLoading, hideLoading } = useLoaderStore();
   const [errors, setErrors] = useState<AuthFormPayloadType>({});
   const router = useRouter();
+  const toast = useToast();
 
   const handleSubmit = async ({
     fullname,
@@ -51,14 +52,15 @@ export default function SignUpScreen() {
         setItem("user", res?.data.user);
             setItem("access_token", res?.data.accessToken);
 
-      showPopupNotification?.({ type: "success", message: res.data.message });
       router.navigate('/');
     } catch (error: any) {
-      console.log({error})
-      showPopupNotification?.({
-        type: "error",
-        message: error?.response?.data.message || "Oops! something went wrong. Please try again"
-      });
+      const message = getErrorMessage(error);
+      toast.show(
+        message,  
+        {
+          type: "danger",
+        }
+        );
     } finally {
       hideLoading()
     }

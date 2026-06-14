@@ -1,5 +1,5 @@
 import Feed from "@/components/feed/Feed";
-import {  Text, TouchableOpacity, View } from "react-native";
+import { Text, TouchableOpacity, View } from "react-native";
 import { useContext, useEffect, useState } from "react";
 import { PopupNotificationContext } from "@/context/PopupNotificationContext";
 import { useLoaderStore } from "@/store/useLoaderStore";
@@ -16,16 +16,18 @@ import MyReports from "@/components/myActivity/MyReports";
 import { PostType } from "@/types/post.types";
 import { useDeletePost } from "@/customHooks/useDeletePost";
 import OptimizedList from "@/components/common/OptimizedList";
+import { useToast } from "react-native-toast-notifications";
+import { getErrorMessage } from "@/utils/getErrorMessage";
 
 export default function MyPostsTab() {
   const { showLoading, hideLoading } = useLoaderStore();
-  const { showPopupNotification } = useContext(PopupNotificationContext);
   const [myPosts, setMyPosts] = useState<PostType[]>([]);
   const { allPosts } = usePostStore();
   const { isDarkMode } = useContext(ThemeContext);
   const { activeReportNav, setActiveReportNav } = useActiveReportNavStore();
   const { reports, setReports } = useReportStore();
   const [myId, setMyId] = useState("");
+  const toast = useToast();
   useEffect(() => {
     (async () => {
       const user = await getItem("user");
@@ -44,14 +46,8 @@ export default function MyPostsTab() {
         const res = await proofApi.getUserProofs(user?._id);
         setReports(res?.data.data);
       } catch (error: any) {
-        console.log(error);
-        const message =
-          error?.response?.data?.message ||
-          "Oops! Something went wrong. Please try again";
-        showPopupNotification?.({
-          type: "error",
-          message,
-        });
+        const message = getErrorMessage(error);
+        toast.show(message, { type: "danger" });
       } finally {
         hideLoading();
       }
@@ -80,9 +76,9 @@ export default function MyPostsTab() {
         ))}
       </View>
 
-      
       {activeReportNav === "myPosts" ? (
         <OptimizedList
+        parent="myPosts"
           data={myPosts}
           renderItem={({ item }) => (
             <View className=" justify-center w-full">
@@ -93,6 +89,7 @@ export default function MyPostsTab() {
         />
       ) : (
         <OptimizedList
+        parent="myActivity"
           data={reports}
           renderItem={({ item }) => (
             <View className=" justify-center w-full">

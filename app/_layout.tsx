@@ -5,7 +5,6 @@ import { useContext, useEffect } from "react";
 import { PopupNotificationContextProvider } from "@/context/PopupNotificationContext";
 import { ProofFormContextProvider } from "@/context/ProofFormContext";
 import ProofForm from "@/components/feed/ProofForm";
-import PopupNotification from "@/components/common/PopupNotification";
 import { GlobalLoader } from "@/components/common/GlobalLoader";
 import { useLoaderStore } from "@/store/useLoaderStore";
 import GlobalConfirmModal from "@/components/common/GlobalConfirmModal";
@@ -22,6 +21,10 @@ import { NotificationType } from "@/types/notification";
 import { userApi } from "@/api/userApi";
 import { postApi } from "@/api/postApi";
 import { notificationApi } from "@/api/notificationApi";
+import { ToastProvider } from "react-native-toast-notifications";
+import { customToastRenderers } from "@/components/ToastConfig";
+import Ionicons from "@expo/vector-icons/Ionicons";
+import MaterialIcons from "@expo/vector-icons/MaterialIcons";
 
 function LayoutWithTheme() {
   const { isDarkMode } = useContext(ThemeContext);
@@ -138,7 +141,7 @@ export default function RootLayout() {
     Notifications.getLastNotificationResponse();
 
     async function pushNotificationsetup() {
-       registerForPushNotifications();
+      registerForPushNotifications();
     }
 
     pushNotificationsetup();
@@ -189,8 +192,25 @@ export default function RootLayout() {
   }, []);
 
   return (
-    <ProofFormContextProvider>
-      <PopupNotificationContextProvider>
+    <ToastProvider
+      duration={3000}
+      offset={50}
+      animationType="slide-in"
+      dangerIcon={
+        <MaterialIcons name="error-outline" size={24} color="white" />
+      }
+      successIcon={
+        <Ionicons
+          name="checkmark-done-circle-outline"
+          size={24}
+          color="white"
+        />
+      }
+      swipeEnabled={true}
+      successColor="#4BB543"
+      dangerColor="#FF3333"
+    >
+      <ProofFormContextProvider>
         <ThemeContextProvider>
           <LayoutWithTheme />
           <ProofForm />
@@ -203,9 +223,8 @@ export default function RootLayout() {
             />
           )}
           <GlobalConfirmModal />
-          <PopupNotification />
         </ThemeContextProvider>
-      </PopupNotificationContextProvider>
-    </ProofFormContextProvider>
+      </ProofFormContextProvider>
+    </ToastProvider>
   );
 }

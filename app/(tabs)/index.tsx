@@ -1,7 +1,6 @@
 import Feed from "@/components/feed/Feed";
-import { useContext, useEffect, useState } from "react";
+import {  useEffect, useState } from "react";
 import { postApi } from "@/api/postApi";
-import { PopupNotificationContext } from "@/context/PopupNotificationContext";
 import { useLoaderStore } from "@/store/useLoaderStore";
 import { usePostStore } from "@/store/usePostStore";
 import { useSearchFeedStore } from "@/store/useSearchFeedStore";
@@ -12,14 +11,16 @@ import { useDebouncedValue } from "@/customHooks/useDebouncedValue";
 import { useFilteredPost } from "@/customHooks/useFilteredPost";
 import { getItem } from "@/utils/AsyncStorage";
 import OptimizedList from "@/components/common/OptimizedList";
+import { useToast } from "react-native-toast-notifications";
+import { getErrorMessage } from "@/utils/getErrorMessage";
 
 export default function HomeTab() {
   const { showLoading, hideLoading } = useLoaderStore();
 
-  const { showPopupNotification } = useContext(PopupNotificationContext);
   const [myId, setMyId] = useState("");
   const { allPosts, setAllPosts, updateFeed } = usePostStore();
   const { searchInput } = useSearchFeedStore();
+  const toast = useToast();
 
   useEffect(() => {
     (async () => {
@@ -31,10 +32,19 @@ export default function HomeTab() {
   const fetchAllPosts = async () => {
     try {
       showLoading("fetchPosts");
-      const res = await postApi.getAll();
+      const res = await postApi.getAll
+      ();
       setAllPosts(res?.data.data);
+      toast.show("Posts loaded successfully!", {
+        type: "success",
+      });
+
+      
     } catch (error: any) {
-      showPopupNotification?.({ type: "error", message: "Can't fetch post" });
+      const message = getErrorMessage(error);
+      toast.show(message, {
+        type: "danger",
+      });
     } finally {
       hideLoading();
     }
@@ -44,11 +54,11 @@ export default function HomeTab() {
     fetchAllPosts();
 
     const handleNewPost = (data: PostType, type: updateFeedType) => {
-      console.log("new: ", data, type)
+      console.log("new: ", data, type);
       updateFeed(data, type);
     };
     const handleDeletePost = (data: PostType, type: updateFeedType) => {
-      console.log("delete: ", data, type)
+      console.log("delete: ", data, type);
       updateFeed(data, type);
     };
     socket.on("new-post", handleNewPost);

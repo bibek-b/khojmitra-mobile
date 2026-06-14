@@ -11,7 +11,6 @@ import { ThemeContext } from "@/context/ThemeContext";
 import ImagePickerModal from "./common/ImagePickerModal";
 import UploadImgBtn from "./common/UploadImgBtn";
 import DisplayImages from "./common/DisplayImages";
-import { PopupNotificationContext } from "@/context/PopupNotificationContext";
 import { postApi } from "@/api/postApi";
 import { getItem } from "@/utils/AsyncStorage";
 import { useLoaderStore } from "@/store/useLoaderStore";
@@ -20,6 +19,7 @@ import { AddEditReportFormTypes } from "@/types/report";
 import { usePostStore } from "@/store/usePostStore";
 import { postCategories } from "@/types/post.types";
 import { ImgType } from "@/types/image";
+import {useToast} from "react-native-toast-notifications";
 
 const reportType = [
   { id: 1, sign: "🔴", label: "Lost" },
@@ -28,7 +28,6 @@ const reportType = [
 
 export default function ReportForm({ idToUpdate }: { idToUpdate?: string }) {
   const { isDarkMode } = useContext(ThemeContext);
-  const { showPopupNotification } = useContext(PopupNotificationContext);
   const { showLoading, hideLoading } = useLoaderStore();
   const { allPosts, isEditPost } = usePostStore();
 
@@ -42,6 +41,7 @@ export default function ReportForm({ idToUpdate }: { idToUpdate?: string }) {
   const [description, setDescription] = useState("");
   const [errors, setErrors] = useState<AddEditReportFormTypes>({});
   const [isModalOpen, setIsModalOpen] = useState(false);
+  const toast = useToast();
 
   useEffect(() => {
     if (idToUpdate) {
@@ -119,16 +119,13 @@ export default function ReportForm({ idToUpdate }: { idToUpdate?: string }) {
       } else {
         res = await postApi.create(fd);
       }
-      showPopupNotification?.({ type: "success", message: res.data.message });
+      toast.show(res.data.message, { type: "success" });
       router.push("/");
     } catch (error: any) {
       const message =
         error?.response?.data?.message ||
         "Oops! Something went wrong. Please try again";
-      showPopupNotification?.({
-        type: "error",
-        message,
-      });
+      toast.show(message, { type: "danger" });
     } finally {
       hideLoading();
     }

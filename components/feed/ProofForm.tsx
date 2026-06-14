@@ -97,6 +97,7 @@ export default function ProofForm() {
       setDescription("");
       setImages([]);
     } catch (error: any) {
+      console.log({error})
       if(error.response.status === 401) {
         hideForm?.();
       }

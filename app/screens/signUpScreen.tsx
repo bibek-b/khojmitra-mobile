@@ -44,13 +44,13 @@ export default function SignUpScreen() {
     fd.append("confirmPassword", confirmPassword || "");
     try {
       showLoading('SignUp');
+      const token = await registerForPushNotifications();
+     
       const res = await authApi.signUp(fd);
+      await notificationApi.sendPushToken(res.data.user._id, token!);
         setItem("user", res?.data.user);
             setItem("access_token", res?.data.accessToken);
 
-             const token = await registerForPushNotifications();
-            
-                  await notificationApi.sendPushToken(res.data.user._id, token!);
       showPopupNotification?.({ type: "success", message: res.data.message });
       router.navigate('/');
     } catch (error: any) {

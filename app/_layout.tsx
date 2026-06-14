@@ -196,19 +196,9 @@ export default function RootLayout() {
       duration={3000}
       offset={50}
       animationType="slide-in"
-      dangerIcon={
-        <MaterialIcons name="error-outline" size={24} color="white" />
-      }
-      successIcon={
-        <Ionicons
-          name="checkmark-done-circle-outline"
-          size={24}
-          color="white"
-        />
-      }
       swipeEnabled={true}
-      successColor="#4BB543"
-      dangerColor="#FF3333"
+      renderType={customToastRenderers}
+    
     >
       <ProofFormContextProvider>
         <ThemeContextProvider>

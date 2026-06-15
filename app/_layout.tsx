@@ -2,7 +2,6 @@ import { Stack, useRouter } from "expo-router";
 import "@/global.css";
 import { ThemeContext, ThemeContextProvider } from "@/context/ThemeContext";
 import { useContext, useEffect } from "react";
-import { PopupNotificationContextProvider } from "@/context/PopupNotificationContext";
 import { ProofFormContextProvider } from "@/context/ProofFormContext";
 import ProofForm from "@/components/feed/ProofForm";
 import { GlobalLoader } from "@/components/common/GlobalLoader";
@@ -23,8 +22,6 @@ import { postApi } from "@/api/postApi";
 import { notificationApi } from "@/api/notificationApi";
 import { ToastProvider } from "react-native-toast-notifications";
 import { customToastRenderers } from "@/components/ToastConfig";
-import Ionicons from "@expo/vector-icons/Ionicons";
-import MaterialIcons from "@expo/vector-icons/MaterialIcons";
 
 function LayoutWithTheme() {
   const { isDarkMode } = useContext(ThemeContext);
@@ -112,7 +109,7 @@ function LayoutWithTheme() {
       />
 
       <Stack.Screen
-        name="screens/addEditReportScreen"
+        name="screens/addEditPostScreen"
         options={{
           title: "",
           headerTintColor: isDarkMode ? "white" : "black",

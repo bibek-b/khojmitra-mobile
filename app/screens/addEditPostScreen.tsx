@@ -1,6 +1,5 @@
-import ReportForm from "@/components/PostForm";
+import PostForm from "@/components/PostForm";
 import { usePostStore } from "@/store/usePostStore";
-import { getItem } from "@/utils/AsyncStorage";
 import { useLocalSearchParams, useNavigation } from "expo-router";
 import { useLayoutEffect } from "react";
 
@@ -16,7 +15,7 @@ export default function AddReportScreen() {
     });
   }, [navigation]);
   return (
-    <ReportForm
+    <PostForm
       idToUpdate={idToUpdate}
     />
   );

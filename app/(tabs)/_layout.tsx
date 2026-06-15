@@ -89,7 +89,7 @@ export default function TabLayout() {
               className="absolute shadow-white bottom-4 w-16 h-16 rounded-full p-2 bg-[#1976D2] mx-2  items-center flex-row justify-center gap-2 shadow-lg dark:shadow-white  elevation-10 "
               onPress={() => (
                 FalseEditPost(),
-                router.push("/screens/addEditReportScreen")
+                router.push("/screens/addEditPostScreen")
               )}
             >
               <AntDesign name="plus" size={24} color="white" />

@@ -1,30 +1,27 @@
 import { postApi } from "@/api/postApi";
-import { PopupNotificationContext } from "@/context/PopupNotificationContext";
 import { useLoaderStore } from "@/store/useLoaderStore";
 import { usePostStore } from "@/store/usePostStore";
-import { useContext } from "react";
+import { getErrorMessage } from "@/utils/getErrorMessage";
+import { useToast } from "react-native-toast-notifications";
 
 export const useDeletePost = () => {
   const { showLoading, hideLoading } = useLoaderStore();
   const { setAllPosts, allPosts } = usePostStore();
-  const { showPopupNotification } = useContext(PopupNotificationContext);
+  const toast = useToast();
+
   const handleDeletePost = async (id: string) => {
     try {
       showLoading("Feed");
 
       await postApi.delete(id);
       setAllPosts(allPosts.filter((p) => p._id !== id));
-      showPopupNotification?.({
+      toast.show("Post deleted successfully", {
         type: "success",
-        message: "Post deleted successfully",
       });
     } catch (error: any) {
-      const message =
-        error?.response?.data?.message ||
-        "Oops! Something went wrong. Please try again";
-      showPopupNotification?.({
+     const message = getErrorMessage(error);
+      toast.show(message, {
         type: "error",
-        message,
       });
     } finally {
       hideLoading();

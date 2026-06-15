@@ -16,7 +16,7 @@ export type ImagePickerTypes = {
   visible?: boolean;
   onClose?: () => void;
   selectionLimit: number;
-  setImages?: React.Dispatch<React.SetStateAction<ImgType[]>>;
+  setImages?: (images: ImgType[]) => void;
   setImage?: React.Dispatch<React.SetStateAction<ImgType>>;
   singleImage?: boolean;
   images?: ImgType[];
@@ -30,5 +30,5 @@ export type UploadImgBtnProp = {
 
 export type displayImageProps = {
   images: ImgType[];
-  setImages: React.Dispatch<React.SetStateAction<ImgType[]>>;
+  setImages: (images: ImgType[]) => void;
 };

@@ -19,7 +19,8 @@ import { AddEditReportFormTypes } from "@/types/report";
 import { usePostStore } from "@/store/usePostStore";
 import { postCategories } from "@/types/post.types";
 import { ImgType } from "@/types/image";
-import {useToast} from "react-native-toast-notifications";
+import { useToast } from "react-native-toast-notifications";
+import { validateReportForm } from "@/validations/validateReportForm";
 
 const reportType = [
   { id: 1, sign: "🔴", label: "Lost" },
@@ -31,14 +32,17 @@ export default function ReportForm({ idToUpdate }: { idToUpdate?: string }) {
   const { showLoading, hideLoading } = useLoaderStore();
   const { allPosts, isEditPost } = usePostStore();
 
-  const [checkedValue, setCheckedValue] = useState<string | null>(null);
-  const [selCategory, setSelCategory] = useState<postCategories | string>("");
-  const [date, setDate] = useState<Date>(new Date());
+  const [formData, setFormData] = useState({
+    checkedValue: "",
+    selCategory: "" as unknown as postCategories,
+    date: new Date(),
+    images: [] as ImgType[],
+    title: "",
+    location: "",
+    description: "",
+  });
+
   const [showDatePicker, setShowDatePicker] = useState(false);
-  const [images, setImages] = useState<ImgType[]>([]);
-  const [title, setTitle] = useState("");
-  const [location, setLocation] = useState("");
-  const [description, setDescription] = useState("");
   const [errors, setErrors] = useState<AddEditReportFormTypes>({});
   const [isModalOpen, setIsModalOpen] = useState(false);
   const toast = useToast();
@@ -46,29 +50,25 @@ export default function ReportForm({ idToUpdate }: { idToUpdate?: string }) {
   useEffect(() => {
     if (idToUpdate) {
       const post = allPosts.find((p) => p._id === idToUpdate);
-      setCheckedValue(post?.type!);
-      setTitle(post?.title!);
-      setSelCategory(post?.category!);
-      setLocation(post?.location!);
-      setDate(new Date(post?.date!));
-      setDescription(post?.description!);
-      setImages(post?.images!);
+      if (post) {
+        setFormData((prev) => ({
+          ...post,
+          ...prev,
+          checkedValue: post.type,
+          selCategory: post.category,
+        }));
+      }
     }
   }, [isEditPost]);
   const handleSubmit = async () => {
     const newErrors: AddEditReportFormTypes = {};
 
-    if (!title) newErrors.title = "Please input item title.";
-    if (title.trim().length > 25)
-      newErrors.title = "Title can be up to 25 chars or fewer.";
-    if (!selCategory) newErrors.selCategory = "Please select item category.";
-    if (!checkedValue) newErrors.checkedValue = "Please select report type.";
-    if (!location) newErrors.location = "Please input item location.";
-    if (location.trim().length > 50)
-      newErrors.location = "Location can be up to 50 chars or fewer.";
-    if (!description) newErrors.description = "Please input description.";
-    if (description.trim().length > 200)
-      newErrors.description = "Descripton can be up to 200 chars or fewer.";
+    const errors = validateReportForm(formData);
+
+    if (Object.keys(errors).length > 0) {
+      setErrors(errors);
+      return;
+    }
 
     setErrors(newErrors);
 
@@ -77,22 +77,22 @@ export default function ReportForm({ idToUpdate }: { idToUpdate?: string }) {
     const user = await getItem("user");
     const fd = new FormData();
 
-    fd.append("type", checkedValue!);
-    fd.append("title", title!);
-    fd.append("category", String(selCategory));
-    fd.append("location", location!);
+    fd.append("type", formData.checkedValue);
+    fd.append("title", formData.title);
+    fd.append("category", String(formData.selCategory));
+    fd.append("location", formData.location);
 
-    const numericDate = `${date.getFullYear()}-${(date.getMonth() + 1).toString().padStart(2, "0")}-${date.getDate().toString().padStart(2, "0")}`;
+    const numericDate = `${formData.date.getFullYear()}-${(formData.date.getMonth() + 1).toString().padStart(2, "0")}-${formData.date.getDate().toString().padStart(2, "0")}`;
     fd.append("date", numericDate);
 
-    fd.append("description", description!);
+    fd.append("description", formData.description);
     fd.append("user", user?._id);
 
-    if (images.length > 0) {
-      const newImages = images.filter(
+    if (formData.images.length > 0) {
+      const newImages = formData.images.filter(
         (img) => typeof img === "object" && img.uri,
       );
-      const oldImages = images.filter((img) => typeof img === "string");
+      const oldImages = formData.images.filter((img) => typeof img === "string");
       newImages.forEach((img, index) => {
         fd.append("postImages", {
           uri: typeof img === "object" && img.uri ? img.uri : img,
@@ -156,12 +156,12 @@ export default function ReportForm({ idToUpdate }: { idToUpdate?: string }) {
                   <TouchableOpacity
                     className="flex-row gap-2"
                     onPress={() =>
-                      setCheckedValue(checkedValue === r.label ? null : r.label)
+                      setFormData({ ...formData, checkedValue: formData.checkedValue === r.label ? "" : r.label })
                     }
                   >
                     <Checkbox
                       style={{ width: 18, height: 18 }}
-                      value={checkedValue === r.label}
+                      value={formData.checkedValue === r.label}
                       color={isDarkMode ? "#bbb" : "black"}
                     />
                     <Text className={`${isDarkMode && "text-[#f5f5f5]"}`}>
@@ -181,8 +181,8 @@ export default function ReportForm({ idToUpdate }: { idToUpdate?: string }) {
             <TextInput
               placeholder="Item title.."
               className={`border ${isDarkMode ? "border-[#f5f5f5]/40 text-[#f5f5f5]  placeholder:text-[#f5f5f5]/50 " : "border-black/40"}  rounded-3xl px-4`}
-              value={title}
-              onChangeText={setTitle}
+              value={formData.title}
+              onChangeText={(text) => setFormData({ ...formData, title: text })}
             />
             {errors?.title && (
               <Text className="text-red-600">{errors.title}</Text>
@@ -193,11 +193,11 @@ export default function ReportForm({ idToUpdate }: { idToUpdate?: string }) {
               Category
             </Text>
             <SelectList
-              setSelected={(val: string) => setSelCategory(val)}
+              setSelected={(val: string) => setFormData({ ...formData, selCategory: val as unknown as  postCategories })}
               data={Category}
               defaultOption={{
-                key: selCategory,
-                value: selCategory,
+                key: formData.selCategory,
+                value: formData.selCategory,
               }}
               save="value"
               notFoundText="Not found"
@@ -240,13 +240,13 @@ export default function ReportForm({ idToUpdate }: { idToUpdate?: string }) {
 
           <View className="gap-2">
             <Text className={`${isDarkMode && "text-[#f5f5f5]"}`}>
-              {checkedValue} Location
+              {formData.checkedValue} Location
             </Text>
             <TextInput
-              placeholder={`Item ${checkedValue ? checkedValue.toLowerCase() + " location" : "location"}`}
+              placeholder={`Item ${formData.checkedValue ? formData.checkedValue.toLowerCase() + " location" : "location"}`}
               className={`border ${isDarkMode ? "border-[#f5f5f5]/40  placeholder:text-[#f5f5f5]/50 text-[#f5f5f5]" : "border-black/40"}  rounded-3xl px-4`}
-              value={location}
-              onChangeText={setLocation}
+              value={formData.location}
+              onChangeText={(text) => setFormData({ ...formData, location: text })}
             />
             {errors?.location && (
               <Text className="text-red-600">{errors.location}</Text>
@@ -254,14 +254,14 @@ export default function ReportForm({ idToUpdate }: { idToUpdate?: string }) {
           </View>
           <View className="gap-2 ">
             <Text className={`${isDarkMode && "text-[#f5f5f5]"}`}>
-              {checkedValue} Date
+              {formData.checkedValue} Date
             </Text>
             <View
               className={`border ${isDarkMode ? "border-[#f5f5f5]/40  placeholder:text-[#f5f5f5]/50 text-[#f5f5f5]" : "border-black/40"}  rounded-3xl px-4`}
             >
               <TextInput
                 className={`w-[80%] ${isDarkMode && "text-[#f5f5f5]"}`}
-                value={date.toDateString()}
+                value={formData.date.toDateString()}
                 editable={false}
               />
               <Fontisto
@@ -274,12 +274,12 @@ export default function ReportForm({ idToUpdate }: { idToUpdate?: string }) {
             </View>
             {showDatePicker && (
               <DatePicker
-                value={date}
+                value={formData.date}
                 display="spinner"
                 className="text-[#f5f5f5]"
                 onChange={(evt, selDate) => {
                   setShowDatePicker(false);
-                  if (selDate) setDate(selDate);
+                  if (selDate) setFormData({ ...formData, date: selDate });
                 }}
               />
             )}
@@ -294,8 +294,8 @@ export default function ReportForm({ idToUpdate }: { idToUpdate?: string }) {
               className={`border ${isDarkMode ? "border-[#f5f5f5]/40  placeholder:text-[#f5f5f5]/50 text-[#f5f5f5]" : "border-black/40"} rounded-3xl px-4  min-h-[100px]`}
               multiline={true}
               textAlignVertical="top"
-              value={description}
-              onChangeText={setDescription}
+              value={formData.description}
+              onChangeText={(text) => setFormData({ ...formData, description: text })}
             />
             {errors?.description && (
               <Text className="text-red-600">{errors.description}</Text>
@@ -307,11 +307,11 @@ export default function ReportForm({ idToUpdate }: { idToUpdate?: string }) {
               visible={isModalOpen}
               selectionLimit={4}
               onClose={() => setIsModalOpen(false)}
-              setImages={setImages}
-              images={images}
+              setImages={(images) => setFormData({ ...formData, images })}
+              images={formData.images}
             />
-            <DisplayImages images={images} setImages={setImages} />
-            <UploadImgBtn images={images} setIsModalOpen={setIsModalOpen} />
+            <DisplayImages images={formData.images} setImages={(images) => setFormData({ ...formData, images })} />
+            <UploadImgBtn images={formData.images} setIsModalOpen={setIsModalOpen} />
           </View>
 
           <View className="flex-row gap-6">

@@ -33,8 +33,7 @@ api.interceptors.response.use(
       //   return api(originalReq);
       // } catch (error) {
         await removeItem("access_token");
-        await removeItem("user");
-        router.replace("/screens/signInScreen");
+        router.navigate("/screens/signInScreen");
 
         // redirectToLogin()
       // }

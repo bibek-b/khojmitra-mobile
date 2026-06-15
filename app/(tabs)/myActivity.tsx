@@ -1,7 +1,6 @@
 import Feed from "@/components/feed/Feed";
 import { Text, TouchableOpacity, View } from "react-native";
 import { useContext, useEffect, useState } from "react";
-import { PopupNotificationContext } from "@/context/PopupNotificationContext";
 import { useLoaderStore } from "@/store/useLoaderStore";
 import { getItem } from "@/utils/AsyncStorage";
 import { usePostStore } from "@/store/usePostStore";
@@ -18,6 +17,7 @@ import { useDeletePost } from "@/customHooks/useDeletePost";
 import OptimizedList from "@/components/common/OptimizedList";
 import { useToast } from "react-native-toast-notifications";
 import { getErrorMessage } from "@/utils/getErrorMessage";
+import { useUserStore } from "@/store/useUserStore";
 
 export default function MyPostsTab() {
   const { showLoading, hideLoading } = useLoaderStore();
@@ -26,14 +26,12 @@ export default function MyPostsTab() {
   const { isDarkMode } = useContext(ThemeContext);
   const { activeReportNav, setActiveReportNav } = useActiveReportNavStore();
   const { reports, setReports } = useReportStore();
-  const [myId, setMyId] = useState("");
   const toast = useToast();
+  const { userId } = useUserStore();
   useEffect(() => {
     (async () => {
-      const user = await getItem("user");
-      setMyId(user._id);
       showLoading("myPosts");
-      const userPosts = allPosts?.filter((ap) => ap?.user?._id === user?._id);
+      const userPosts = allPosts?.filter((ap) => ap?.user?._id === userId);
       setMyPosts(userPosts);
       hideLoading();
     })();
@@ -41,9 +39,8 @@ export default function MyPostsTab() {
 
   useEffect(() => {
     (async () => {
-      const user = await getItem("user");
       try {
-        const res = await proofApi.getUserProofs(user?._id);
+        const res = await proofApi.getUserProofs(userId);
         setReports(res?.data.data);
       } catch (error: any) {
         const message = getErrorMessage(error);
@@ -82,7 +79,7 @@ export default function MyPostsTab() {
           data={myPosts}
           renderItem={({ item }) => (
             <View className=" justify-center w-full">
-              <Feed post={item} onDeletePost={handleDeletePost} myId={myId} />
+              <Feed post={item} onDeletePost={handleDeletePost} myId={userId} />
             </View>
           )}
           keyExtractor={(item) => item._id!}

@@ -1,17 +1,32 @@
 export const validatePostForm = (formData: { [key: string]: any }) => {
   const errors: { [key: string]: string } = {};
-  const { title, selCategory, checkedValue, location, description } = formData;
+  const { title, selCategory, checkedValue, location, description} =
+    formData;
 
   if (!title) errors.title = "Please input item title.";
-  if (title.trim().length > 25)
-    errors.title = "Title can be up to 25 chars or fewer.";
+
+  if (title.trim().length < 3)
+    errors.title = "Title should be at least 3 chars.";
+  else if (title.trim().length > 50)
+    errors.title = "Title can be up to 50 chars or fewer.";
+
   if (!selCategory) errors.selCategory = "Please select item category.";
-  if (!checkedValue) errors.checkedValue = "Please select report type.";
+
+  if (!checkedValue) errors.checkedValue = "Please select post type.";
+
   if (!location) errors.location = "Please input item location.";
-  if (location.trim().length > 50)
+
+  if (location.trim().length < 3)
+    errors.location = "Location should be at least 3 chars.";
+  else if (location.trim().length > 50)
     errors.location = "Location can be up to 50 chars or fewer.";
+
   if (!description) errors.description = "Please input description.";
-  if (description.trim().length > 200)
-    errors.description = "Description can be up to 200 chars or fewer.";
+
+  if (description.trim().length < 10)
+    errors.description = "Description should be at least 10 chars.";
+  else if (description.trim().length > 500)
+    errors.description = "Description can be up to 500 chars or fewer.";
+
   return errors;
 };

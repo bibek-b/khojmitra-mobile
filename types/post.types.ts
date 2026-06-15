@@ -12,6 +12,7 @@ export enum postCategories {
   "Gadgets & Accessories",
   "Household Items",
   "Personal Items",
+  "Pets",
 }
 export interface PostType  {
     _id?: string;

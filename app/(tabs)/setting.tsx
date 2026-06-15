@@ -69,9 +69,9 @@ const { fullname, avatar} = useUserStore();
           </View>
         </TouchableWithoutFeedback>
       </Modal>
-      <TouchableOpacity
+     {(avatar && fullname) &&  <TouchableOpacity
         className={`flex-row items-center justify-between ${isDarkMode ? "bg-[#242424]" : "bg-white"}  shadow-lg p-4 rounded-3xl`}
-        onPress={() => (router.push("/screens/profileScreen"), handleLogout())}
+        onPress={() => (router.push("/screens/profileScreen"))}
       >
         <View className="flex-row items-center gap-2">
           <Image
@@ -94,14 +94,14 @@ const { fullname, avatar} = useUserStore();
           className={`${isDarkMode ? "bg-gray-500/30" : "bg-gray-200"} rounded-full p-1`}
           color={isDarkMode ? "#e0e0e0" : "black"}
         />
-      </TouchableOpacity>
+      </TouchableOpacity>}
 
       <View
         className={` ${isDarkMode ? "bg-[#242424]" : "bg-white"} shadow-lg py-4 rounded-3xl`}
       >
         <SettingDetails />
       </View>
-      <TouchableOpacity
+     {(avatar && fullname) &&  <TouchableOpacity
         className={` ${isDarkMode ? "bg-[#242424]" : "bg-gray-200"} py-3 rounded-lg mt-[240px]`}
         onPress={() => setIsLogoutClicked(true)}
       >
@@ -110,7 +110,7 @@ const { fullname, avatar} = useUserStore();
         >
           Log Out
         </Text>
-      </TouchableOpacity>
+      </TouchableOpacity>}
     </View>
   );
 }

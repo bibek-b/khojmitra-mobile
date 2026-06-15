@@ -38,11 +38,21 @@ export interface PostStoreType {
   isEditPost: boolean,
   TrueEditPost(): void;
   FalseEditPost(): void;
-  updateFeed: (data: PostType, type:) => void
+  updateFeed: (data: PostType, type: updateFeedType) => void
 
 }
 
 export type PostStatus = "pending" | "resolved" | "unresolved";
+
+//setting all ? - using this type for error state also thats why
+export type AddEditPostFormTypes = {
+  checkedValue?: string | null;
+  title?: string;
+  selCategory?: string;
+  location?: string;
+  date?: Date;
+  description?: string;
+};
 
 
 

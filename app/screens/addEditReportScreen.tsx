@@ -1,4 +1,4 @@
-import ReportForm from "@/components/ReportForm";
+import ReportForm from "@/components/PostForm";
 import { usePostStore } from "@/store/usePostStore";
 import { getItem } from "@/utils/AsyncStorage";
 import { useLocalSearchParams, useNavigation } from "expo-router";

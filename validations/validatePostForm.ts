@@ -1,4 +1,4 @@
-export const validateReportForm = (formData: { [key: string]: any }) => {
+export const validatePostForm = (formData: { [key: string]: any }) => {
   const errors: { [key: string]: string } = {};
   const { title, selCategory, checkedValue, location, description } = formData;
 

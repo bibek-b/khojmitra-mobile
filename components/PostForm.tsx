@@ -15,19 +15,17 @@ import { postApi } from "@/api/postApi";
 import { getItem } from "@/utils/AsyncStorage";
 import { useLoaderStore } from "@/store/useLoaderStore";
 import { GlobalLoader } from "./common/GlobalLoader";
-import { AddEditReportFormTypes } from "@/types/report";
+import { AddEditPostFormTypes } from "@/types/post.types";
 import { usePostStore } from "@/store/usePostStore";
 import { postCategories } from "@/types/post.types";
 import { ImgType } from "@/types/image";
 import { useToast } from "react-native-toast-notifications";
-import { validateReportForm } from "@/validations/validateReportForm";
+import { validatePostForm } from "@/validations/validatePostForm";
+import { postType } from "@/constants/post";
 
-const reportType = [
-  { id: 1, sign: "🔴", label: "Lost" },
-  { id: 2, sign: "🟢", label: "Found" },
-];
 
-export default function ReportForm({ idToUpdate }: { idToUpdate?: string }) {
+
+export default function PostForm({ idToUpdate }: { idToUpdate?: string }) {
   const { isDarkMode } = useContext(ThemeContext);
   const { showLoading, hideLoading } = useLoaderStore();
   const { allPosts, isEditPost } = usePostStore();
@@ -43,7 +41,7 @@ export default function ReportForm({ idToUpdate }: { idToUpdate?: string }) {
   });
 
   const [showDatePicker, setShowDatePicker] = useState(false);
-  const [errors, setErrors] = useState<AddEditReportFormTypes>({});
+  const [errors, setErrors] = useState<AddEditPostFormTypes>({});
   const [isModalOpen, setIsModalOpen] = useState(false);
   const toast = useToast();
 
@@ -61,9 +59,9 @@ export default function ReportForm({ idToUpdate }: { idToUpdate?: string }) {
     }
   }, [isEditPost]);
   const handleSubmit = async () => {
-    const newErrors: AddEditReportFormTypes = {};
+    const newErrors: AddEditPostFormTypes = {};
 
-    const errors = validateReportForm(formData);
+    const errors = validatePostForm(formData);
 
     if (Object.keys(errors).length > 0) {
       setErrors(errors);
@@ -113,7 +111,7 @@ export default function ReportForm({ idToUpdate }: { idToUpdate?: string }) {
     let res;
 
     try {
-      showLoading("reportSubmit");
+      showLoading("postSubmit");
       if (isEditPost) {
         res = await postApi.update(idToUpdate!, fd);
       } else {
@@ -151,7 +149,7 @@ export default function ReportForm({ idToUpdate }: { idToUpdate?: string }) {
             <View className="flex-row gap-4">
               <Text className={`${isDarkMode && "text-[#f5f5f5]"}`}>Type</Text>
 
-              {reportType.map((r) => (
+              {postType.map((r) => (
                 <View className="  items-center" key={r.id}>
                   <TouchableOpacity
                     className="flex-row gap-2"
@@ -331,7 +329,7 @@ export default function ReportForm({ idToUpdate }: { idToUpdate?: string }) {
               onPress={handleSubmit}
             >
               <Text className="text-[#f5f5f5] text-[16px] text-center">
-                {isEditPost ? "Save Changes" : "Submit Report"}
+                {isEditPost ? "Save Changes" : "Submit Post"}
               </Text>
             </TouchableOpacity>
           </View>

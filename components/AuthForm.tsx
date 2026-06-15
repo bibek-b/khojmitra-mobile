@@ -1,5 +1,5 @@
 import { useContext, useState } from "react";
-import { Image, KeyboardAvoidingView, Platform, Text, TextInput, TouchableOpacity, View } from "react-native";
+import {  KeyboardAvoidingView, Platform, Text, TextInput, TouchableOpacity, View } from "react-native";
 import { Link } from "expo-router";
 import { ThemeContext } from "@/context/ThemeContext";
 import ProfileImage from "./ProfileImage";

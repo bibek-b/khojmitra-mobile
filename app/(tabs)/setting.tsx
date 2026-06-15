@@ -21,7 +21,12 @@ export default function SettingTab() {
 
  useEffect(() => {
   const getMyDetails = async () => {
+
     const value = await getItem("user");
+    const token = await getItem("access_token");
+    console.log({token})
+
+    console.log({value})
     setMe(value)
   }
   getMyDetails()

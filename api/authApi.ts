@@ -8,5 +8,6 @@ export const authApi = {
         }
     }),
     signIn: (data: AuthFormPayloadType) => api.post('/auth/signIn', data),
-    refreshToken: () => api.get('/auth/refresh')
+    getCurrentUser: () => api.get('/auth/getCurrentUser'),
+    // refreshToken: () => api.get('/auth/refresh'),
 }

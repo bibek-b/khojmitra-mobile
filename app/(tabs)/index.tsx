@@ -1,5 +1,5 @@
 import Feed from "@/components/feed/Feed";
-import {  useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import { postApi } from "@/api/postApi";
 import { useLoaderStore } from "@/store/useLoaderStore";
 import { usePostStore } from "@/store/usePostStore";
@@ -9,10 +9,11 @@ import socket from "../lib/socket";
 import { PostType, updateFeedType } from "@/types/post.types";
 import { useDebouncedValue } from "@/customHooks/useDebouncedValue";
 import { useFilteredPost } from "@/customHooks/useFilteredPost";
-import { getItem } from "@/utils/AsyncStorage";
 import OptimizedList from "@/components/common/OptimizedList";
 import { useToast } from "react-native-toast-notifications";
 import { getErrorMessage } from "@/utils/getErrorMessage";
+import { authApi } from "@/api/authApi";
+import { removeItem } from "@/utils/AsyncStorage";
 
 export default function HomeTab() {
   const { showLoading, hideLoading } = useLoaderStore();
@@ -24,22 +25,28 @@ export default function HomeTab() {
 
   useEffect(() => {
     (async () => {
-      const user = await getItem("user");
-      setMyId(user?._id);
+      try {
+        const res = await authApi.getCurrentUser();
+        setMyId(res.data.data?._id);
+      } catch (error) {
+        await removeItem("user");
+        await removeItem("access_token");
+        const message = getErrorMessage(error);
+        toast.show(message, {
+          type: "danger",
+        });
+      }
     })();
   }, []);
 
   const fetchAllPosts = async () => {
     try {
       showLoading("fetchPosts");
-      const res = await postApi.getAll
-      ();
+      const res = await postApi.getAll();
       setAllPosts(res?.data.data);
       toast.show("Posts loaded successfully!", {
         type: "success",
       });
-
-      
     } catch (error: any) {
       const message = getErrorMessage(error);
       toast.show(message, {

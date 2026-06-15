@@ -17,7 +17,6 @@ export default async function registerForPushNotifications() {
   // Get the token
   try {
     const tokenData = await Notifications.getExpoPushTokenAsync();
-    console.log("Push token:", tokenData.data);
     return tokenData.data;
   } catch (error) {
     console.error("Error getting push token:", error);

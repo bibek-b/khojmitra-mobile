@@ -1,7 +1,6 @@
 import SettingDetails from "@/components/SettingDetails";
 import { ThemeContext } from "@/context/ThemeContext";
-import { serverUrl } from "@/env/serverUrl";
-import { getItem } from "@/utils/AsyncStorage";
+import { useUserStore } from "@/store/useUserStore";
 import { AntDesign } from "@expo/vector-icons";
 import { router } from "expo-router";
 import { useContext, useEffect, useState } from "react";
@@ -17,20 +16,7 @@ import {
 export default function SettingTab() {
   const [isLogoutClicked, setIsLogoutClicked] = useState(false);
   const { isDarkMode } = useContext(ThemeContext);
-  const [me, setMe] = useState({fullname: "", avatar: ""});
-
- useEffect(() => {
-  const getMyDetails = async () => {
-
-    const value = await getItem("user");
-    const token = await getItem("access_token");
-    console.log({token})
-
-    console.log({value})
-    setMe(value)
-  }
-  getMyDetails()
- },[])
+const { fullname, avatar} = useUserStore();
 
   const handleLogout = () => {
     setIsLogoutClicked(false);
@@ -51,19 +37,29 @@ export default function SettingTab() {
             className={`flex-1 items-center justify-center  bg-black/30 backdrop-blur-md`}
           >
             <TouchableWithoutFeedback>
-              <View className={`${isDarkMode ? "bg-[#242424]" : "bg-white"} rounded-lg`}>
-                <Text className={`px-10 py-6 text-xl font-semibold ${isDarkMode ? "text-[#f5f5f5]": "text-black"}`}>
+              <View
+                className={`${isDarkMode ? "bg-[#242424]" : "bg-white"} rounded-lg`}
+              >
+                <Text
+                  className={`px-10 py-6 text-xl font-semibold ${isDarkMode ? "text-[#f5f5f5]" : "text-black"}`}
+                >
                   Log out of your account?
                 </Text>
                 <View className="h-[1px]  bg-gray-400" />
                 <View className="flex-row justify-evenly">
                   <TouchableOpacity onPress={() => setIsLogoutClicked(false)}>
-                    <Text className={`${isDarkMode ? "text-[#f5f5f5]" : "text-blue-500"} text-xl pt-4`}>Cancel</Text>
+                    <Text
+                      className={`${isDarkMode ? "text-[#f5f5f5]" : "text-blue-500"} text-xl pt-4`}
+                    >
+                      Cancel
+                    </Text>
                   </TouchableOpacity>
                   <View className="h-full w-[1px] bg-gray-400" />
 
                   <TouchableOpacity onPress={() => handleLogout()}>
-                    <Text className={`${isDarkMode ? "text-red-500" : "text-red-600"} text-xl font-medium pb-3.5 pt-4`}>
+                    <Text
+                      className={`${isDarkMode ? "text-red-500" : "text-red-600"} text-xl font-medium pb-3.5 pt-4`}
+                    >
                       Log Out
                     </Text>
                   </TouchableOpacity>
@@ -80,14 +76,16 @@ export default function SettingTab() {
         <View className="flex-row items-center gap-2">
           <Image
             source={{
-              uri: me?.avatar || "https://i.pinimg.com/736x/79/e5/2f/79e52ff7ce03e1e30ab4a1dd63e68730.jpg",
+              uri:
+                avatar ||
+                "https://i.pinimg.com/736x/79/e5/2f/79e52ff7ce03e1e30ab4a1dd63e68730.jpg",
             }}
             className="w-16 h-16 object-cover rounded-full"
           />
           <Text
             className={`text-2xl ${isDarkMode ? "text-[#f5f5f5]" : "text-black"} font-bold`}
           >
-            {me?.fullname}
+            {fullname}
           </Text>
         </View>
         <AntDesign
@@ -104,10 +102,14 @@ export default function SettingTab() {
         <SettingDetails />
       </View>
       <TouchableOpacity
-        className={` ${isDarkMode ? "bg-[#242424]": "bg-gray-200"} py-3 rounded-lg mt-[240px]`}
+        className={` ${isDarkMode ? "bg-[#242424]" : "bg-gray-200"} py-3 rounded-lg mt-[240px]`}
         onPress={() => setIsLogoutClicked(true)}
       >
-        <Text className={`font-medium text-[16px] text-center ${isDarkMode ? "text-white": "text-black"}`}>Log Out</Text>
+        <Text
+          className={`font-medium text-[16px] text-center ${isDarkMode ? "text-white" : "text-black"}`}
+        >
+          Log Out
+        </Text>
       </TouchableOpacity>
     </View>
   );

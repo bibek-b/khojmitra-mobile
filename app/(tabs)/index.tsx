@@ -14,21 +14,22 @@ import { useToast } from "react-native-toast-notifications";
 import { getErrorMessage } from "@/utils/getErrorMessage";
 import { authApi } from "@/api/authApi";
 import { getItem, removeItem } from "@/utils/AsyncStorage";
+import { useUserStore } from "@/store/useUserStore";
 
 export default function HomeTab() {
   const { showLoading, hideLoading } = useLoaderStore();
 
-  const [myId, setMyId] = useState("");
   const { allPosts, setAllPosts, updateFeed } = usePostStore();
   const { searchInput } = useSearchFeedStore();
   const toast = useToast();
+  const { setUser, userId } = useUserStore();
 
   useEffect(() => {
     (async () => {
       const token = await getItem("access_token");
       const user = await getItem("user");
 
-      console.log(token, user)
+
       if (!token) {
         console.log("No token found");
         return; // Don't make API call without token
@@ -37,7 +38,7 @@ export default function HomeTab() {
       try {
         const res = await authApi.getCurrentUser();
 
-        setMyId(res.data.data?._id);
+        setUser({...res.data.data, userId: res.data.data._id});
       } catch (error) {
         await removeItem("user");
         await removeItem("access_token");
@@ -98,7 +99,7 @@ export default function HomeTab() {
       parent="postList"
       data={searchInput.trim() !== "" ? filteredPost : allPosts}
       renderItem={({ item }) => (
-        <Feed post={item} onDeletePost={handleDeletePost} myId={myId} />
+        <Feed post={item} onDeletePost={handleDeletePost} myId={userId} />
       )}
       keyExtractor={(item) => item._id!}
     />

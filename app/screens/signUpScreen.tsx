@@ -1,4 +1,4 @@
-import {  useState } from "react";
+import { useState } from "react";
 import { authApi } from "@/api/authApi";
 import { validateSignup } from "../validations/authFormValidator";
 import { useRouter } from "expo-router";
@@ -26,7 +26,7 @@ export default function SignUpScreen() {
   }: AuthFormPayloadType) => {
     const isValid = validateSignup(
       { fullname, email, password, confirmPassword },
-      setErrors
+      setErrors,
     );
 
     if (!isValid) return;
@@ -35,8 +35,8 @@ export default function SignUpScreen() {
       const isObject = typeof avatar === "object";
       fd.append("userAvatarImg", {
         uri: isObject && avatar.uri,
-        type: isObject && avatar.mimeType || "image/jpeg",
-        name: isObject && avatar.fileName || "avatar.jpg",
+        type: (isObject && avatar.mimeType) || "image/jpeg",
+        name: (isObject && avatar.fileName) || "avatar.jpg",
       } as any);
     }
     fd.append("fullname", fullname || "");
@@ -44,25 +44,21 @@ export default function SignUpScreen() {
     fd.append("password", password || "");
     fd.append("confirmPassword", confirmPassword || "");
     try {
-      showLoading('SignUp');
+      showLoading("SignUp");
       const token = await registerForPushNotifications();
-     
+
       const res = await authApi.signUp(fd);
       await notificationApi.sendPushToken(res.data.user._id, token!);
-        setItem("user", res?.data.user);
-            setItem("access_token", res?.data.accessToken);
+      setItem("access_token", res?.data.accessToken);
 
-      router.navigate('/');
+      router.navigate("/");
     } catch (error: any) {
       const message = getErrorMessage(error);
-      toast.show(
-        message,  
-        {
-          type: "danger",
-        }
-        );
+      toast.show(message, {
+        type: "danger",
+      });
     } finally {
-      hideLoading()
+      hideLoading();
     }
   };
   return <AuthForm title="Sign Up" onSubmit={handleSubmit} errors={errors} />;

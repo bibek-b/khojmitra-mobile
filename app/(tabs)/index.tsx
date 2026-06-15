@@ -27,8 +27,6 @@ export default function HomeTab() {
   useEffect(() => {
     (async () => {
       const token = await getItem("access_token");
-      const user = await getItem("user");
-
 
       if (!token) {
         console.log("No token found");
@@ -38,7 +36,7 @@ export default function HomeTab() {
       try {
         const res = await authApi.getCurrentUser();
 
-        setUser({...res.data.data, userId: res.data.data._id});
+        setUser({ ...res.data.data, userId: res.data.data._id });
       } catch (error) {
         await removeItem("user");
         await removeItem("access_token");

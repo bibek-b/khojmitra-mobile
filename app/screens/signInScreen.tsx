@@ -9,12 +9,10 @@ import { useLoaderStore } from "@/store/useLoaderStore";
 import { useToast } from "react-native-toast-notifications";
 import { getErrorMessage } from "@/utils/getErrorMessage";
 import { Keyboard } from "react-native";
-import { useUserStore } from "@/store/useUserStore";
 
 export default function SignInScreen() {
   const [errors, setErrors] = useState<AuthFormPayloadType>({});
   const { showLoading, hideLoading } = useLoaderStore();
-  const { setUser } = useUserStore();
   const router = useRouter();
   const toast = useToast();
 
@@ -27,11 +25,8 @@ export default function SignInScreen() {
     try {
       showLoading("signIn");
       const res = await authApi.signIn({ email, password });
-      const userData = res?.data.user;
-      setItem("user", userData);
       setItem("access_token", res?.data.accessToken);
 
-      setUser(userData);
       toast.show("Sign in successful", {
         type: "success",
       });

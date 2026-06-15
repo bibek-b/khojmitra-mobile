@@ -6,16 +6,21 @@ export default async function registerForPushNotifications() {
 
   const { status: existingStatus } = await Notifications.getPermissionsAsync();
 
-  let finalStatus = existingStatus;
-
   if (existingStatus !== "granted") {
-    const { status } = await Notifications.getPermissionsAsync();
-    finalStatus = status;
+    const { status } = await Notifications.requestPermissionsAsync();
+    if (status !== "granted") {
+      console.log("Failed to get push token for push notification!");
+      return null;
+    }
   }
 
-  if(finalStatus !== "granted") return null;
-
-  const tokenData = await Notifications.getExpoPushTokenAsync();
-
-  return tokenData.data;
+  // Get the token
+  try {
+    const tokenData = await Notifications.getExpoPushTokenAsync();
+    console.log("Push token:", tokenData.data);
+    return tokenData.data;
+  } catch (error) {
+    console.error("Error getting push token:", error);
+    return null;
+  }
 }

@@ -13,7 +13,7 @@ import OptimizedList from "@/components/common/OptimizedList";
 import { useToast } from "react-native-toast-notifications";
 import { getErrorMessage } from "@/utils/getErrorMessage";
 import { authApi } from "@/api/authApi";
-import { removeItem } from "@/utils/AsyncStorage";
+import { getItem, removeItem } from "@/utils/AsyncStorage";
 
 export default function HomeTab() {
   const { showLoading, hideLoading } = useLoaderStore();
@@ -25,8 +25,18 @@ export default function HomeTab() {
 
   useEffect(() => {
     (async () => {
+      const token = await getItem("access_token");
+      const user = await getItem("user");
+
+      console.log(token, user)
+      if (!token) {
+        console.log("No token found");
+        return; // Don't make API call without token
+      }
+
       try {
         const res = await authApi.getCurrentUser();
+
         setMyId(res.data.data?._id);
       } catch (error) {
         await removeItem("user");

@@ -27,7 +27,7 @@ import { useConfirmModalStore } from "@/store/useConfirmModalStore";
 import { ImgType } from "@/types/image";
 import { usePostStore } from "@/store/usePostStore";
 import React from "react";
-import {Image} from 'expo-image';
+import { Image } from "expo-image";
 
 /**
  * VARIANT 3 — "Soft Premium"
@@ -127,7 +127,6 @@ const Feed = ({ post, onDeletePost }: FeedProps) => {
   const type = post?.type!;
   const description = post?.description!;
   const parent = "myPost";
-
 
   return (
     <View
@@ -229,7 +228,7 @@ const Feed = ({ post, onDeletePost }: FeedProps) => {
                   className="w-10 h-10 rounded-full bg-white/20 items-center justify-center"
                   onPress={() => setSelectedImage(null)}
                 >
-                  <Feather name="x" size={24} color="#fff" />
+                  <Feather n ame="x" size={24} color="white" />
                 </TouchableOpacity>
                 <View className="bg-white/20 px-4 py-2 rounded-full">
                   <Text className="text-white font-semibold">
@@ -239,9 +238,8 @@ const Feed = ({ post, onDeletePost }: FeedProps) => {
               </View>
             </View>
             <Image
-              source={{ uri: String(selectedImage) }}
-              className="w-full h-full"
-              resizeMode="contain"
+              source={selectedImage}
+              style={{width: "100%", height: "100%"}}
             />
           </View>
         </Modal>
@@ -254,12 +252,11 @@ const Feed = ({ post, onDeletePost }: FeedProps) => {
           onPress={() => router.push("/screens/profileScreen")}
         >
           <Image
-            source={{
-              uri:
-                post?.user?.avatar ||
-                "https://thumb.ac-illust.com/51/51e1c1fc6f50743937e62fca9b942694_t.jpeg",
-            }}
-            className="w-12 h-12 rounded-full"
+            source={
+              post?.user?.avatar ||
+              "https://thumb.ac-illust.com/51/51e1c1fc6f50743937e62fca9b942694_t.jpeg"
+            }
+            style={{ width: 48, height: 48, borderRadius: "50%" }}
           />
           <View className="flex-1">
             <Text
@@ -347,13 +344,16 @@ Image 3 → x = 720*/ / e.nativeEvent.layoutMeasurement.width, //width of the Sc
                   setSelectedImage(img.uri as ImgType);
                   setImageIndex(idx);
                 }}
-                style={{aspectRatio: 16 / 10}}
+                style={{ aspectRatio: 16 / 10 }}
                 className="px-5"
               >
                 <Image
-                  source={{ uri: img.uri }}
-                  className="w-full h-full rounded-2xl"
-                  resizeMode="cover"
+                  source={img.uri}
+                  style={{
+                    width: "100%",
+                    height: "100%",
+                    borderRadius: "16px",
+                  }}
                 />
               </TouchableOpacity>
             ))}

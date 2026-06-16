@@ -11,20 +11,18 @@ import {
   TouchableWithoutFeedback,
   View,
 } from "react-native";
-import {Image} from 'expo-image';
-
+import { Image } from "expo-image";
 
 export default function SettingTab() {
   const [isLogoutClicked, setIsLogoutClicked] = useState(false);
   const { isDarkMode } = useContext(ThemeContext);
-const { fullname, avatar} = useUserStore();
+  const { fullname, avatar } = useUserStore();
 
   const handleLogout = () => {
     setIsLogoutClicked(false);
 
     router.navigate("/screens/signInScreen");
   };
-
   return (
     <View className="py-4 px-2 gap-4">
       <Modal
@@ -70,48 +68,56 @@ const { fullname, avatar} = useUserStore();
           </View>
         </TouchableWithoutFeedback>
       </Modal>
-     {(avatar && fullname) &&  <TouchableOpacity
-        className={`flex-row items-center justify-between ${isDarkMode ? "bg-[#242424]" : "bg-white"}  shadow-lg p-4 rounded-3xl`}
-        onPress={() => (router.push("/screens/profileScreen"))}
-      >
-        <View className="flex-row items-center gap-2">
-          <Image
-            source={{
-              uri:
-                avatar ||
-                "https://i.pinimg.com/736x/79/e5/2f/79e52ff7ce03e1e30ab4a1dd63e68730.jpg",
-            }}
-            className="w-16 h-16 object-cover rounded-full"
+      {avatar && fullname && (
+        <TouchableOpacity
+          className={`flex-row items-center justify-between ${isDarkMode ? "bg-[#242424]" : "bg-white"}  shadow-lg p-4 rounded-3xl`}
+          onPress={() => router.push("/screens/profileScreen")}
+        >
+          <View className="flex-row items-center gap-2">
+            <Image
+              source={avatar}
+              style={{
+                width: 64,
+                height: 64,
+                borderRadius: 32,
+              }}
+              contentFit="cover"
+            />
+
+            <Text
+              className={`text-2xl ${isDarkMode ? "text-[#f5f5f5]" : "text-black"} font-bold`}
+            >
+              {fullname}
+            </Text>
+          </View>
+          <AntDesign
+            name="down"
+            size={20}
+            className={`${isDarkMode ? "bg-gray-500/30" : "bg-gray-200"} rounded-full p-1`}
+            color={isDarkMode ? "#e0e0e0" : "black"}
           />
-          <Text
-            className={`text-2xl ${isDarkMode ? "text-[#f5f5f5]" : "text-black"} font-bold`}
-          >
-            {fullname}
-          </Text>
-        </View>
-        <AntDesign
-          name="down"
-          size={20}
-          className={`${isDarkMode ? "bg-gray-500/30" : "bg-gray-200"} rounded-full p-1`}
-          color={isDarkMode ? "#e0e0e0" : "black"}
-        />
-      </TouchableOpacity>}
+        </TouchableOpacity>
+      )}
 
       <View
         className={` ${isDarkMode ? "bg-[#242424]" : "bg-white"} shadow-lg py-4 rounded-3xl`}
       >
         <SettingDetails />
       </View>
-     {  <TouchableOpacity
-        className={` ${isDarkMode ? "bg-[#242424]" : "bg-gray-200"} py-3 rounded-lg mt-[240px]`}
-        onPress={() => (avatar && fullname) ? setIsLogoutClicked(true) : handleLogout()}
-      >
-        <Text
-          className={`font-medium text-[16px] text-center ${isDarkMode ? "text-white" : "text-black"}`}
+      {
+        <TouchableOpacity
+          className={` ${isDarkMode ? "bg-[#242424]" : "bg-gray-200"} py-3 rounded-lg mt-[240px]`}
+          onPress={() =>
+            avatar && fullname ? setIsLogoutClicked(true) : handleLogout()
+          }
         >
-          {(avatar && fullname) ? "Log Out" : "Sign In"}
-        </Text>
-      </TouchableOpacity>}
+          <Text
+            className={`font-medium text-[16px] text-center ${isDarkMode ? "text-white" : "text-black"}`}
+          >
+            {avatar && fullname ? "Log Out" : "Sign In"}
+          </Text>
+        </TouchableOpacity>
+      }
     </View>
   );
 }

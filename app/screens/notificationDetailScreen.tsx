@@ -184,9 +184,8 @@ export default function NotificationDetailScreen() {
               <Feather name="x" size={28} color="#f5f5f5" />
             </TouchableOpacity>
             <Image
-              source={{ uri: String(selectedImage) }}
-              className="w-full h-full"
-              resizeMode="contain"
+              source={selectedImage}
+              style={{width: "100%", height: "100%"}}
             />
           </View>
         </Modal>

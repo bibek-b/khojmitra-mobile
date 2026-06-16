@@ -77,8 +77,6 @@ const Feed = ({ post, onDeletePost }: FeedProps) => {
   const accentSoft = isLost ? "rgba(239,68,68,0.12)" : "rgba(34,197,94,0.12)";
   const border = isDarkMode ? "#2a2a2a" : "#f0f0f0";
 
-
-
   useEffect(() => {
     if (moreOptionOpen) {
       Animated.parallel([
@@ -102,6 +100,7 @@ const Feed = ({ post, onDeletePost }: FeedProps) => {
 
   const handleDeletePost = (id: string) => {
     showConfirmModal();
+    setMoreOptionOpen(false);
     setModalContent({
       title: "Delete post",
       detail:
@@ -112,7 +111,6 @@ const Feed = ({ post, onDeletePost }: FeedProps) => {
     setOnConfirm(() => {
       onDeletePost?.(id);
     });
-    setMoreOptionOpen(false);
   };
 
   const handleMorePress = async () => {
@@ -179,7 +177,8 @@ const Feed = ({ post, onDeletePost }: FeedProps) => {
                       }}
                       onPress={() => {
                         opt.label === "Edit Post"
-                          ? (router.push({
+                          ? (setMoreOptionOpen(false),
+                            router.push({
                               pathname: "/screens/addEditPostScreen",
                               params: { idToUpdate: post?._id },
                             }),
@@ -235,7 +234,7 @@ const Feed = ({ post, onDeletePost }: FeedProps) => {
             </View>
             <Image
               source={selectedImage}
-              style={{width: "100%", height: "100%"}}
+              style={{ width: "100%", height: "100%" }}
             />
           </View>
         </Modal>

@@ -10,6 +10,7 @@ import registerForPushNotifications from "@/utils/registerForPushNotifications";
 import { notificationApi } from "@/api/notificationApi";
 import { useToast } from "react-native-toast-notifications";
 import { getErrorMessage } from "@/utils/getErrorMessage";
+import { Keyboard } from "react-native";
 
 export default function SignUpScreen() {
   const { showLoading, hideLoading } = useLoaderStore();
@@ -24,6 +25,7 @@ export default function SignUpScreen() {
     confirmPassword,
     avatar,
   }: AuthFormPayloadType) => {
+    Keyboard.dismiss();
     const isValid = validateSignup(
       { fullname, email, password, confirmPassword },
       setErrors,

@@ -28,6 +28,7 @@ import { ImgType } from "@/types/image";
 import { usePostStore } from "@/store/usePostStore";
 import React from "react";
 import { Image } from "expo-image";
+import { useUserStore } from "@/store/useUserStore";
 
 /**
  * VARIANT 3 — "Soft Premium"
@@ -62,7 +63,6 @@ const Feed = ({ post, onDeletePost }: FeedProps) => {
   const [activeDot, setActiveDot] = useState(0);
   const isLost = post?.type === "Lost";
   const [moreOptionOpen, setMoreOptionOpen] = useState(false);
-  const [myId, setMyId] = useState("");
   const [scaleAnim] = useState(new Animated.Value(0));
   const [fadeAnim] = useState(new Animated.Value(0));
 
@@ -71,17 +71,13 @@ const Feed = ({ post, onDeletePost }: FeedProps) => {
   const { TrueEditPost } = usePostStore();
   const { isDarkMode } = useContext(ThemeContext);
   const { showForm, setProofForm } = useContext(ProofFormContext);
+  const { userId } = useUserStore();
 
   const accent = isLost ? "#ef4444" : "#22c55e";
   const accentSoft = isLost ? "rgba(239,68,68,0.12)" : "rgba(34,197,94,0.12)";
   const border = isDarkMode ? "#2a2a2a" : "#f0f0f0";
 
-  useEffect(() => {
-    (async () => {
-      const user = await getItem("user");
-      setMyId(user?._id);
-    })();
-  }, []);
+
 
   useEffect(() => {
     if (moreOptionOpen) {
@@ -292,7 +288,7 @@ const Feed = ({ post, onDeletePost }: FeedProps) => {
           </Text>
         </View>
 
-        {post.user?._id === myId && (
+        {post.user?._id === userId && (
           <TouchableOpacity
             className="w-8 h-8 rounded-full items-center justify-center"
             onPress={() => parent === "myPost" && handleMorePress()}
@@ -352,7 +348,7 @@ Image 3 → x = 720*/ / e.nativeEvent.layoutMeasurement.width, //width of the Sc
                   style={{
                     width: "100%",
                     height: "100%",
-                    borderRadius: "16px",
+                    borderRadius: 16,
                   }}
                 />
               </TouchableOpacity>
@@ -449,7 +445,7 @@ Image 3 → x = 720*/ / e.nativeEvent.layoutMeasurement.width, //width of the Sc
 
       {/* Action button */}
       <View className="px-5 pb-5">
-        {post.user?._id === myId ? (
+        {post.user?._id === userId ? (
           <TouchableOpacity
             className="flex-row items-center justify-center gap-3 py-4 rounded-2xl"
             style={{ backgroundColor: "rgba(34,197,94,0.12)" }}

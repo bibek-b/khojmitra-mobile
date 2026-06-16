@@ -1,4 +1,4 @@
-import { Text, TextInput, TouchableOpacity, View } from "react-native";
+import { Keyboard, Text, TextInput, TouchableOpacity, View } from "react-native";
 import Checkbox from "expo-checkbox";
 import { useContext, useEffect, useState } from "react";
 import { SelectList } from "react-native-dropdown-select-list";
@@ -22,6 +22,7 @@ import { ImgType } from "@/types/image";
 import { useToast } from "react-native-toast-notifications";
 import { validatePostForm } from "@/validations/validatePostForm";
 import { postType } from "@/constants/post";
+import { useUserStore } from "@/store/useUserStore";
 
 
 
@@ -29,6 +30,7 @@ export default function PostForm({ idToUpdate }: { idToUpdate?: string }) {
   const { isDarkMode } = useContext(ThemeContext);
   const { showLoading, hideLoading } = useLoaderStore();
   const { allPosts, isEditPost } = usePostStore();
+  const { userId } = useUserStore();
 
   const [formData, setFormData] = useState({
     checkedValue: "",
@@ -59,6 +61,7 @@ export default function PostForm({ idToUpdate }: { idToUpdate?: string }) {
     }
   }, [isEditPost]);
   const handleSubmit = async () => {
+    Keyboard.dismiss();
     const newErrors: AddEditPostFormTypes = {};
 
     const errors = validatePostForm(formData);
@@ -72,7 +75,6 @@ export default function PostForm({ idToUpdate }: { idToUpdate?: string }) {
 
     if (Object.keys(newErrors).length > 0) return;
 
-    const user = await getItem("user");
     const fd = new FormData();
 
     fd.append("type", formData.checkedValue);
@@ -84,7 +86,7 @@ export default function PostForm({ idToUpdate }: { idToUpdate?: string }) {
     fd.append("date", numericDate);
 
     fd.append("description", formData.description);
-    fd.append("user", user?._id);
+    fd.append("user", userId);
 
     if (formData.images.length > 0) {
       const newImages = formData.images.filter(

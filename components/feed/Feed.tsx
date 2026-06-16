@@ -9,7 +9,6 @@ import {
 import { router } from "expo-router";
 import { useEffect, useState } from "react";
 import {
-  Image,
   Modal,
   Text,
   TouchableOpacity,
@@ -28,6 +27,7 @@ import { useConfirmModalStore } from "@/store/useConfirmModalStore";
 import { ImgType } from "@/types/image";
 import { usePostStore } from "@/store/usePostStore";
 import React from "react";
+import {Image} from 'expo-image';
 
 /**
  * VARIANT 3 — "Soft Premium"
@@ -185,7 +185,7 @@ const Feed = ({ post, onDeletePost }: FeedProps) => {
                       onPress={() => {
                         opt.label === "Edit Post"
                           ? (router.push({
-                              pathname: "/screens/addEditReportScreen",
+                              pathname: "/screens/addEditPostScreen",
                               params: { idToUpdate: post?._id },
                             }),
                             TrueEditPost())

@@ -2,7 +2,7 @@ import { ThemeContext } from "@/context/ThemeContext";
 import usePickImages from "@/customHooks/usePickImages";
 import { ImagePickerTypes } from "@/types/image";
 import { EvilIcons } from "@expo/vector-icons";
-import React, { useContext, useState } from "react";
+import React, { useContext} from "react";
 import {
   Modal,
   Text,

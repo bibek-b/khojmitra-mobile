@@ -1,8 +1,8 @@
 import { displayImageProps, ImgType } from "@/types/image";
 import { MaterialIcons } from "@expo/vector-icons";
-import { Image, Text, TouchableOpacity, View } from "react-native";
-import { serverUrl } from "@/env/serverUrl";
+import { Text, TouchableOpacity, View } from "react-native";
 import { getImageUri } from "@/utils/getImageUri";
+import { Image } from 'expo-image';
 
 export default function DisplayImages({
   images,

@@ -14,13 +14,13 @@ import { getErrorMessage } from "@/utils/getErrorMessage";
 import { Feather, Ionicons, MaterialIcons } from "@expo/vector-icons";
 import React, { useContext, useEffect, useState } from "react";
 import {
-  Image,
   Modal,
   ScrollView,
   Text,
   TouchableOpacity,
   View,
 } from "react-native";
+import {Image} from 'expo-image';
 import { useToast } from "react-native-toast-notifications";
 
 export default function NotificationDetailScreen() {
@@ -65,7 +65,7 @@ export default function NotificationDetailScreen() {
           setPostsDetail(posts.map((p) => p.data.data));
         }
       } catch (error: any) {
-       const message = getErrorMessage(error);
+        const message = getErrorMessage(error);
         toast.show(message, {
           type: "danger",
         });

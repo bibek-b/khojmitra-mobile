@@ -3,15 +3,16 @@ import { ThemeContext } from "@/context/ThemeContext";
 import { useUserStore } from "@/store/useUserStore";
 import { AntDesign } from "@expo/vector-icons";
 import { router } from "expo-router";
-import { useContext, useEffect, useState } from "react";
+import { useContext, useState } from "react";
 import {
-  Image,
   Modal,
   Text,
   TouchableOpacity,
   TouchableWithoutFeedback,
   View,
 } from "react-native";
+import {Image} from 'expo-image';
+
 
 export default function SettingTab() {
   const [isLogoutClicked, setIsLogoutClicked] = useState(false);

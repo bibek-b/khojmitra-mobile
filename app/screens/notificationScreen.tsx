@@ -1,10 +1,11 @@
 import { notificationApi } from "@/api/notificationApi";
+import LoginPrompt from "@/components/common/LoginPrompt";
 import OptimizedList from "@/components/common/OptimizedList";
 import Notification from "@/components/Notification";
 import { ThemeContext } from "@/context/ThemeContext";
 import { useLoaderStore } from "@/store/useLoaderStore";
 import { useNotificationStore } from "@/store/useNotificationStore";
-import { getItem } from "@/utils/AsyncStorage";
+import { useUserStore } from "@/store/useUserStore";
 import { getErrorMessage } from "@/utils/getErrorMessage";
 import { useContext, useEffect } from "react";
 import { View } from "react-native";
@@ -16,14 +17,16 @@ export default function NotificationScreen() {
 
   const { notifications, setNotifications } = useNotificationStore();
   const toast = useToast();
+  const { userId }  = useUserStore();
 
   useEffect(() => {
     (async () => {
       try {
-        showLoading("notificationScreen");
-        const me = await getItem("user");
-        const res = await notificationApi.getMyNotifications(me?._id);
+        if(userId) {
+          showLoading("notificationScreen");
+        const res = await notificationApi.getMyNotifications(userId);
         setNotifications(res?.data?.data);
+        }
       } catch (error: any) {
       const message = getErrorMessage(error);
         toast.show(message, {
@@ -37,7 +40,7 @@ export default function NotificationScreen() {
 
   return (
     <View className={`${isDarkMode ? "bg-[#1a1a1a]" : "bg-[#F9FAFB]"} flex-1`}>
-      <OptimizedList
+     {userId  ?  <OptimizedList
         data={notifications}
         parent="notification"
         renderItem={({ item }) => (
@@ -53,7 +56,7 @@ export default function NotificationScreen() {
           />
         )}
         keyExtractor={(item) => item._id!}
-      />
+      />: <LoginPrompt screen="notifications" />}
     </View>
   );
 }

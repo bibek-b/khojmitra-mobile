@@ -28,7 +28,7 @@ export default function usePickImages({
           });
           if (!result.canceled) {
             if (!singleImage) {
-              setImages?.((prev) => [...prev, ...result?.assets]);
+              setImages?.(result?.assests);
             } else {
               setImage?.(result?.assets[0]);
             }
@@ -50,7 +50,7 @@ export default function usePickImages({
           });
           if (!result.canceled) {
             if (!singleImage) {
-              setImages?.((prev) => [...prev, ...result?.assets]);
+              setImages?.(result?.assets);
             } else {
               const newImg = result?.assets[0];
               setImage && setImage(newImg);

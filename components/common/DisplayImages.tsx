@@ -8,24 +8,23 @@ export default function DisplayImages({
   images,
   setImages,
 }: displayImageProps) {
-  
   const removeSelImages = (imgUri: ImgType) => {
-    setImages(images.filter((img: ImgType) => img !== imgUri));
+    setImages(images?.filter((img: ImgType) => img !== imgUri));
   };
   return (
     <View className="gap-3">
-      {images.length !== 0 && (
+      {images?.length !== 0 && (
         <Text className={`dark:text-[#f5f5f5]`}>Image(s)</Text>
       )}
-      {images.map((img: ImgType, idx: number) => {
+      {images?.map((img: ImgType, idx: number) => {
         return (
           <View
             key={idx}
             className="flex-row gap-4 bg-[#f5f5f5] rounded shadow"
           >
             <Image
-              source={{ uri: getImageUri(img) }}
-              className=" w-full h-[200px]  my-8  rounded-xl"
+              source={ getImageUri(img)}
+              style={{width: "100%", height: 200, marginVertical: 8, borderRadius: 12}}
             />
             <TouchableOpacity
               onPress={() => removeSelImages(img)}

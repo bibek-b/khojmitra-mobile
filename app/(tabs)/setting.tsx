@@ -102,14 +102,14 @@ const { fullname, avatar} = useUserStore();
       >
         <SettingDetails />
       </View>
-     {(avatar && fullname) &&  <TouchableOpacity
+     {  <TouchableOpacity
         className={` ${isDarkMode ? "bg-[#242424]" : "bg-gray-200"} py-3 rounded-lg mt-[240px]`}
-        onPress={() => setIsLogoutClicked(true)}
+        onPress={() => (avatar && fullname) ? setIsLogoutClicked(true) : handleLogout()}
       >
         <Text
           className={`font-medium text-[16px] text-center ${isDarkMode ? "text-white" : "text-black"}`}
         >
-          Log Out
+          {(avatar && fullname) ? "Log Out" : "Sign In"}
         </Text>
       </TouchableOpacity>}
     </View>

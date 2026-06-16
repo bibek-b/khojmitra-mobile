@@ -1,15 +1,18 @@
+import LoginPrompt from "@/components/common/LoginPrompt";
 import ConversationList from "@/components/ConversationList";
 import OnlinePeople from "@/components/OnlinePeople";
 import { onlineData } from "@/constants/dummyData";
 import { ThemeContext } from "@/context/ThemeContext";
+import { useUserStore } from "@/store/useUserStore";
 import { useContext } from "react";
 import { ScrollView, TextInput, View } from "react-native";
 
 export default function ChatTab() {
   const { isDarkMode } = useContext(ThemeContext);
+  const { userId } = useUserStore();
   return (
     <ScrollView showsVerticalScrollIndicator={false}>
-      <View className="px-5 py-8 gap-4">
+    {userId ?   <View className="px-5 py-8 gap-4">
         <View>
           <TextInput
             placeholder="Search"
@@ -29,7 +32,7 @@ export default function ChatTab() {
             <ConversationList key={d.id} />
           ))}
         </View>
-      </View>
+      </View>: <LoginPrompt screen="chats" />}
     </ScrollView>
   );
 }

@@ -2,7 +2,6 @@ import Feed from "@/components/feed/Feed";
 import { Text, TouchableOpacity, View } from "react-native";
 import { useContext, useEffect, useState } from "react";
 import { useLoaderStore } from "@/store/useLoaderStore";
-import { getItem } from "@/utils/AsyncStorage";
 import { usePostStore } from "@/store/usePostStore";
 import { Entypo } from "@expo/vector-icons";
 import { ThemeContext } from "@/context/ThemeContext";
@@ -18,6 +17,8 @@ import OptimizedList from "@/components/common/OptimizedList";
 import { useToast } from "react-native-toast-notifications";
 import { getErrorMessage } from "@/utils/getErrorMessage";
 import { useUserStore } from "@/store/useUserStore";
+import { Link } from "expo-router";
+import LoginPrompt from "@/components/common/LoginPrompt";
 
 export default function MyPostsTab() {
   const { showLoading, hideLoading } = useLoaderStore();
@@ -28,6 +29,7 @@ export default function MyPostsTab() {
   const { reports, setReports } = useReportStore();
   const toast = useToast();
   const { userId } = useUserStore();
+
   useEffect(() => {
     (async () => {
       showLoading("myPosts");
@@ -40,8 +42,10 @@ export default function MyPostsTab() {
   useEffect(() => {
     (async () => {
       try {
-        const res = await proofApi.getUserProofs(userId);
-        setReports(res?.data.data);
+        if (userId) {
+          const res = await proofApi.getUserProofs(userId);
+          setReports(res?.data.data);
+        }
       } catch (error: any) {
         const message = getErrorMessage(error);
         toast.show(message, { type: "danger" });
@@ -54,7 +58,7 @@ export default function MyPostsTab() {
   const { handleDeletePost } = useDeletePost();
   return (
     <View className=" gap-4 px-2 py-8">
-      <View className="flex-row">
+      {userId && <View className="flex-row">
         {navItems.map((nav) => (
           <TouchableOpacity
             onPress={() =>
@@ -71,30 +75,38 @@ export default function MyPostsTab() {
             />
           </TouchableOpacity>
         ))}
-      </View>
+      </View>}
 
-      {activeReportNav === "myPosts" ? (
-        <OptimizedList
-        parent="myPosts"
-          data={myPosts}
-          renderItem={({ item }) => (
-            <View className=" justify-center w-full">
-              <Feed post={item} onDeletePost={handleDeletePost} myId={userId} />
-            </View>
-          )}
-          keyExtractor={(item) => item._id!}
-        />
+      {userId ? (
+        activeReportNav === "myPosts" ? (
+          <OptimizedList
+            parent="myPosts"
+            data={myPosts}
+            renderItem={({ item }) => (
+              <View className=" justify-center w-full">
+                <Feed
+                  post={item}
+                  onDeletePost={handleDeletePost}
+                  myId={userId}
+                />
+              </View>
+            )}
+            keyExtractor={(item) => item._id!}
+          />
+        ) : (
+          <OptimizedList
+            parent="myActivity"
+            data={reports}
+            renderItem={({ item }) => (
+              <View className=" justify-center w-full">
+                <MyReports report={item} />
+              </View>
+            )}
+            keyExtractor={(item) => item._id!}
+          />
+        )
       ) : (
-        <OptimizedList
-        parent="myActivity"
-          data={reports}
-          renderItem={({ item }) => (
-            <View className=" justify-center w-full">
-              <MyReports report={item} />
-            </View>
-          )}
-          keyExtractor={(item) => item._id!}
-        />
+      <LoginPrompt screen="activity" />
       )}
     </View>
   );

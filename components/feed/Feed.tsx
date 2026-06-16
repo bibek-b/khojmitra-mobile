@@ -256,7 +256,7 @@ const Feed = ({ post, onDeletePost }: FeedProps) => {
               post?.user?.avatar ||
               "https://thumb.ac-illust.com/51/51e1c1fc6f50743937e62fca9b942694_t.jpeg"
             }
-            style={{ width: 48, height: 48, borderRadius: "50%" }}
+            style={{ width: 48, height: 48, borderRadius: 50 }}
           />
           <View className="flex-1">
             <Text

@@ -28,11 +28,15 @@ export default function usePickImages({
           });
           if (!result.canceled) {
             if (!singleImage) {
-              setImages?.(result?.assests);
+              const picked = result?.assets ?? [];
+              // Append new selections instead of replacing existing ones
+              setImages?.([...(images ?? []), ...picked]);
             } else {
               setImage?.(result?.assets[0]);
             }
+
           }
+
         } else {
           const { status } =
           await ImagePicker.requestMediaLibraryPermissionsAsync();
@@ -50,13 +54,16 @@ export default function usePickImages({
           });
           if (!result.canceled) {
             if (!singleImage) {
-              setImages?.(result?.assets);
+              const picked = result?.assets ?? [];
+              // Append new selections instead of replacing existing ones
+              setImages?.([...(images ?? []), ...picked]);
             } else {
               const newImg = result?.assets[0];
               setImage && setImage(newImg);
               console.log(newImg)
             }
           }
+
         }
       } catch (error) {}
     },

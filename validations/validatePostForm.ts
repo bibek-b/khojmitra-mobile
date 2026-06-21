@@ -1,6 +1,6 @@
 export const validatePostForm = (formData: { [key: string]: any }) => {
   const errors: { [key: string]: string } = {};
-  const { title, selCategory, checkedValue, location, description} =
+  const { title, category, type, location, description} =
     formData;
 
   if (!title) errors.title = "Please input item title.";
@@ -10,9 +10,9 @@ export const validatePostForm = (formData: { [key: string]: any }) => {
   else if (title.trim().length > 50)
     errors.title = "Title can be up to 50 chars or fewer.";
 
-  if (!selCategory) errors.selCategory = "Please select item category.";
+  if (!category) errors.category = "Please select item category.";
 
-  if (!checkedValue) errors.checkedValue = "Please select post type.";
+  if (!type) errors.type = "Please select post type.";
 
   if (!location) errors.location = "Please input item location.";
 

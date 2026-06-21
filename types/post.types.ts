@@ -47,9 +47,9 @@ export type PostStatus = "pending" | "resolved" | "unresolved";
 
 //setting all ? - using this type for error state also thats why
 export type AddEditPostFormTypes = {
-  checkedValue?: string | null;
+  type?: string | null;
   title?: string;
-  selCategory?: string;
+  category?: string;
   location?: string;
   date?: Date;
   description?: string;

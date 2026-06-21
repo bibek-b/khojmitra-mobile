@@ -90,35 +90,33 @@ export default function PostForm({ idToUpdate }: { idToUpdate?: string }) {
     fd.append("user", userId);
 
     if (formData.images && formData.images.length > 0) {
-      const newImages = formData.images.filter(
-        (img) => typeof img === "object" && img.uri,
+      const newImages = (formData.images ?? []).filter(
+        (img) =>
+          typeof img === "object" && img !== null && !("publicId" in img),
       );
-      const oldImages = formData.images.filter(
-        (img) => typeof img === "string",
+
+      // If user is editing and keeps existing images unchanged
+      const existingImages = (formData.images ?? []).filter(
+        (img) => typeof img === "object" && img !== null && "publicId" in img,
       );
+
+      // Only append files for actually-new images.
       newImages.forEach((img, index) => {
         fd.append("postImages", {
-          uri: typeof img === "object" && img.uri ? img.uri : img,
-          type:
-            typeof img === "object" && img.mimeType
-              ? img.mimeType
-              : "image/jpeg",
-          name:
-            typeof img === "object" && img.fileName
-              ? img.fileName
-              : `image_${Date.now()}_${index}.jpg`,
+          uri: img.uri,
+          type: img.mimeType || "image/jpeg",
+          name: img.fileName || `image_${Date.now()}_${index}.jpg`,
         } as any);
       });
 
-      fd.append("existingImages", JSON.stringify(oldImages));
+      fd.append("existingImages", JSON.stringify(existingImages));
     }
 
     let res;
- 
+
     try {
       showLoading("postSubmit");
       if (isEditPost) {
-        console.log("inside update api" ,{formData})
         res = await postApi.update(idToUpdate!, fd);
       } else {
         res = await postApi.create(fd);
@@ -134,7 +132,6 @@ export default function PostForm({ idToUpdate }: { idToUpdate?: string }) {
       hideLoading();
     }
   };
-console.log("images", formData.images)
   return (
     <View
       className={`items-center py-10 flex-1 ${isDarkMode && "bg-[#1a1a1a]"}`}

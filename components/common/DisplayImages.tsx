@@ -9,7 +9,7 @@ export default function DisplayImages({
   setImages,
 }: displayImageProps) {
   const removeSelImages = (imgUri: ImgType) => {
-    setImages(images?.filter((img: ImgType) => img !== imgUri));
+    setImages(images?.filter((img: ImgType) => img.uri !== imgUri));
   };
   return (
     <View className="gap-3">
@@ -27,7 +27,7 @@ export default function DisplayImages({
               style={{width: "100%", height: 200, marginVertical: 8, borderRadius: 12}}
             />
             <TouchableOpacity
-              onPress={() => removeSelImages(img)}
+              onPress={() => removeSelImages(img.uri as ImgType)}
               className="absolute right-0 -top-2"
             >
               <MaterialIcons name="close" size={28} className={`dark:mt-2`} />

@@ -7,8 +7,10 @@ export default function AddEditPostScreen() {
   const params = useLocalSearchParams();
   const { isEditPost } = usePostStore();
 
+
   const idToUpdate = typeof params.idToUpdate === "object" ? params.idToUpdate?.[0]: params.idToUpdate;
   const navigation = useNavigation();
+
   
   useLayoutEffect(() => {
     navigation.setOptions({

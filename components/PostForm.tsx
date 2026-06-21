@@ -1,4 +1,10 @@
-import { Keyboard, Text, TextInput, TouchableOpacity, View } from "react-native";
+import {
+  Keyboard,
+  Text,
+  TextInput,
+  TouchableOpacity,
+  View,
+} from "react-native";
 import Checkbox from "expo-checkbox";
 import { useContext, useEffect, useState } from "react";
 import { SelectList } from "react-native-dropdown-select-list";
@@ -12,7 +18,6 @@ import ImagePickerModal from "./common/ImagePickerModal";
 import UploadImgBtn from "./common/UploadImgBtn";
 import DisplayImages from "./common/DisplayImages";
 import { postApi } from "@/api/postApi";
-import { getItem } from "@/utils/AsyncStorage";
 import { useLoaderStore } from "@/store/useLoaderStore";
 import { GlobalLoader } from "./common/GlobalLoader";
 import { AddEditPostFormTypes } from "@/types/post.types";
@@ -24,8 +29,6 @@ import { validatePostForm } from "@/validations/validatePostForm";
 import { postType } from "@/constants/post";
 import { useUserStore } from "@/store/useUserStore";
 
-
-
 export default function PostForm({ idToUpdate }: { idToUpdate?: string }) {
   const { isDarkMode } = useContext(ThemeContext);
   const { showLoading, hideLoading } = useLoaderStore();
@@ -33,10 +36,10 @@ export default function PostForm({ idToUpdate }: { idToUpdate?: string }) {
   const { userId } = useUserStore();
 
   const [formData, setFormData] = useState({
-    checkedValue: "",
-    selCategory: "" as unknown as postCategories,
+    type: "",
+    category: "" as unknown as postCategories,
     date: new Date(),
-    images: [] as ImgType[],
+    images: [] as ImgType[] | undefined,
     title: "",
     location: "",
     description: "",
@@ -51,35 +54,33 @@ export default function PostForm({ idToUpdate }: { idToUpdate?: string }) {
     if (idToUpdate) {
       const post = allPosts.find((p) => p._id === idToUpdate);
       if (post) {
-        setFormData((prev) => ({
-          ...post,
-          ...prev,
-          checkedValue: post.type,
-          selCategory: post.category,
-        }));
+        setFormData({
+          type: post.type,
+          title: post.title,
+          category: post.category,
+          date: new Date(post.date),
+          images: post?.images,
+          description: post.description,
+          location: post.location,
+        });
       }
     }
   }, [isEditPost]);
+
   const handleSubmit = async () => {
     Keyboard.dismiss();
-    const newErrors: AddEditPostFormTypes = {};
 
     const errors = validatePostForm(formData);
-
     if (Object.keys(errors).length > 0) {
       setErrors(errors);
       return;
     }
 
-    setErrors(newErrors);
-
-    if (Object.keys(newErrors).length > 0) return;
-
     const fd = new FormData();
 
-    fd.append("type", formData.checkedValue);
+    fd.append("type", formData.type);
     fd.append("title", formData.title);
-    fd.append("category", String(formData.selCategory));
+    fd.append("category", String(formData.category));
     fd.append("location", formData.location);
 
     const numericDate = `${formData.date.getFullYear()}-${(formData.date.getMonth() + 1).toString().padStart(2, "0")}-${formData.date.getDate().toString().padStart(2, "0")}`;
@@ -88,11 +89,13 @@ export default function PostForm({ idToUpdate }: { idToUpdate?: string }) {
     fd.append("description", formData.description);
     fd.append("user", userId);
 
-    if (formData.images.length > 0) {
+    if (formData.images && formData.images.length > 0) {
       const newImages = formData.images.filter(
         (img) => typeof img === "object" && img.uri,
       );
-      const oldImages = formData.images.filter((img) => typeof img === "string");
+      const oldImages = formData.images.filter(
+        (img) => typeof img === "string",
+      );
       newImages.forEach((img, index) => {
         fd.append("postImages", {
           uri: typeof img === "object" && img.uri ? img.uri : img,
@@ -111,10 +114,11 @@ export default function PostForm({ idToUpdate }: { idToUpdate?: string }) {
     }
 
     let res;
-
+ 
     try {
       showLoading("postSubmit");
       if (isEditPost) {
+        console.log("inside update api" ,{formData})
         res = await postApi.update(idToUpdate!, fd);
       } else {
         res = await postApi.create(fd);
@@ -130,7 +134,7 @@ export default function PostForm({ idToUpdate }: { idToUpdate?: string }) {
       hideLoading();
     }
   };
-
+console.log("images", formData.images)
   return (
     <View
       className={`items-center py-10 flex-1 ${isDarkMode && "bg-[#1a1a1a]"}`}
@@ -156,12 +160,15 @@ export default function PostForm({ idToUpdate }: { idToUpdate?: string }) {
                   <TouchableOpacity
                     className="flex-row gap-2"
                     onPress={() =>
-                      setFormData({ ...formData, checkedValue: formData.checkedValue === r.label ? "" : r.label })
+                      setFormData({
+                        ...formData,
+                        type: formData.type === r.label ? "" : r.label,
+                      })
                     }
                   >
                     <Checkbox
                       style={{ width: 18, height: 18 }}
-                      value={formData.checkedValue === r.label}
+                      value={formData.type === r.label}
                       color={isDarkMode ? "#bbb" : "black"}
                     />
                     <Text className={`${isDarkMode && "text-[#f5f5f5]"}`}>
@@ -171,9 +178,7 @@ export default function PostForm({ idToUpdate }: { idToUpdate?: string }) {
                 </View>
               ))}
             </View>
-            {errors?.checkedValue && (
-              <Text className="text-red-600">{errors.checkedValue}</Text>
-            )}
+            {errors.type && <Text className="text-red-600">{errors.type}</Text>}
           </View>
 
           <View className="gap-2">
@@ -193,11 +198,16 @@ export default function PostForm({ idToUpdate }: { idToUpdate?: string }) {
               Category
             </Text>
             <SelectList
-              setSelected={(val: string) => setFormData({ ...formData, selCategory: val as unknown as  postCategories })}
+              setSelected={(val: string) =>
+                setFormData({
+                  ...formData,
+                  category: val as unknown as postCategories,
+                })
+              }
               data={Category}
               defaultOption={{
-                key: formData.selCategory,
-                value: formData.selCategory,
+                key: formData.category,
+                value: formData.category,
               }}
               save="value"
               notFoundText="Not found"
@@ -233,20 +243,22 @@ export default function PostForm({ idToUpdate }: { idToUpdate?: string }) {
               }}
               dropdownTextStyles={{ color: isDarkMode ? "#f5f5f5" : "black" }}
             />
-            {errors?.selCategory && (
-              <Text className="text-red-600">{errors.selCategory}</Text>
+            {errors?.category && (
+              <Text className="text-red-600">{errors.category}</Text>
             )}
           </View>
 
           <View className="gap-2">
             <Text className={`${isDarkMode && "text-[#f5f5f5]"}`}>
-              {formData.checkedValue} Location
+              {formData.type} Location
             </Text>
             <TextInput
-              placeholder={`Item ${formData.checkedValue ? formData.checkedValue.toLowerCase() + " location" : "location"}`}
+              placeholder={`Item ${formData.type ? formData.type.toLowerCase() + " location" : "location"}`}
               className={`border ${isDarkMode ? "border-[#f5f5f5]/40  placeholder:text-[#f5f5f5]/50 text-[#f5f5f5]" : "border-black/40"}  rounded-3xl px-4`}
               value={formData.location}
-              onChangeText={(text) => setFormData({ ...formData, location: text })}
+              onChangeText={(text) =>
+                setFormData({ ...formData, location: text })
+              }
             />
             {errors?.location && (
               <Text className="text-red-600">{errors.location}</Text>
@@ -254,14 +266,14 @@ export default function PostForm({ idToUpdate }: { idToUpdate?: string }) {
           </View>
           <View className="gap-2 ">
             <Text className={`${isDarkMode && "text-[#f5f5f5]"}`}>
-              {formData.checkedValue} Date
+              {formData.type} Date
             </Text>
             <View
               className={`border ${isDarkMode ? "border-[#f5f5f5]/40  placeholder:text-[#f5f5f5]/50 text-[#f5f5f5]" : "border-black/40"}  rounded-3xl px-4`}
             >
               <TextInput
                 className={`w-[80%] ${isDarkMode && "text-[#f5f5f5]"}`}
-                value={formData.date.toDateString()}
+                value={formData?.date?.toDateString()}
                 editable={false}
               />
               <Fontisto
@@ -295,7 +307,9 @@ export default function PostForm({ idToUpdate }: { idToUpdate?: string }) {
               multiline={true}
               textAlignVertical="top"
               value={formData.description}
-              onChangeText={(text) => setFormData({ ...formData, description: text })}
+              onChangeText={(text) =>
+                setFormData({ ...formData, description: text })
+              }
             />
             {errors?.description && (
               <Text className="text-red-600">{errors.description}</Text>
@@ -310,8 +324,14 @@ export default function PostForm({ idToUpdate }: { idToUpdate?: string }) {
               setImages={(images) => setFormData({ ...formData, images })}
               images={formData.images}
             />
-            <DisplayImages images={formData.images} setImages={(images) => setFormData({ ...formData, images })} />
-            <UploadImgBtn images={formData.images} setIsModalOpen={setIsModalOpen} />
+            <DisplayImages
+              images={formData.images!}
+              setImages={(images) => setFormData({ ...formData, images })}
+            />
+            <UploadImgBtn
+              images={formData.images!}
+              setIsModalOpen={setIsModalOpen}
+            />
           </View>
 
           <View className="flex-row gap-6">
@@ -331,7 +351,7 @@ export default function PostForm({ idToUpdate }: { idToUpdate?: string }) {
               onPress={handleSubmit}
             >
               <Text className="text-[#f5f5f5] text-[16px] text-center">
-                {isEditPost ? "Save Changes" : "Submit Post"}
+                {isEditPost ? "Update" : "Submit"} Post
               </Text>
             </TouchableOpacity>
           </View>
